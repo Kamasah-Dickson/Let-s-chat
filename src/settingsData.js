@@ -9,26 +9,31 @@ export const settingsData = [
 	{
 		id: nanoid(),
 		name: "Notifications",
+		path: "/notifications",
 		icon: notification,
 	},
 	{
 		id: nanoid(),
 		name: "Chat Settings",
+		path: "/chat-settings",
 		icon: chatSettings,
 	},
 	{
 		id: nanoid(),
 		name: "Advanced Settings",
+		path: "/advanced-settings",
 		icon: advancedSettings,
 	},
 	{
 		id: nanoid(),
 		name: "Language",
+		path: "/language",
 		icon: language,
 	},
 	{
 		id: nanoid(),
 		name: "Ask a Question",
+		path: "/ask-a-question",
 		icon: askQuestion,
 	},
 ];
