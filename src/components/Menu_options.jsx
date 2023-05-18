@@ -4,8 +4,11 @@ import User from "./User";
 import Search from "./Search";
 import { HiOutlineArrowSmLeft } from "react-icons/hi";
 import { settingsData } from "../settingsData";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function Menu_options({ setOptions }) {
+	const { pathname } = useLocation();
 	const [focus, setFocus] = useState(false);
 
 	return (
@@ -27,11 +30,16 @@ function Menu_options({ setOptions }) {
 			>
 				<Search placeholder={"search"} focus={focus} />
 			</div>
-			<div className="mt-6 flex flex-col gap-5">
+			<div className="mt-6 flex flex-col gap-3">
 				{settingsData.map((data) => {
 					return (
-						<div
-							className=" active hover:bg-[rgba(255,255,255,0.06)] cursor-pointer rounded-md p-2 flex items-center text-white gap-4"
+						<Link
+							to={`${data.path}`}
+							className={` ${
+								data.path === `${pathname}` &&
+								"active bg-[rgba(255,255,255,0.06)]"
+							} 
+							 hover:bg-[rgba(255,255,255,0.06)] cursor-pointer rounded-md p-2 flex items-center text-white gap-3`}
 							key={data.id}
 						>
 							<div className="w-[20px] h-[20px]">
@@ -44,7 +52,7 @@ function Menu_options({ setOptions }) {
 							<div>
 								<p className="font-medium">{data.name}</p>
 							</div>
-						</div>
+						</Link>
 					);
 				})}
 			</div>
