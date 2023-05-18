@@ -5,9 +5,12 @@ export const AllContext = createContext(null);
 
 function AppContext({ children }) {
 	const [options, setOptions] = useState(true);
+	const [searchFocus, setSearchFocus] = useState(false);
 
 	return (
-		<AllContext.Provider value={{ options, setOptions }}>
+		<AllContext.Provider
+			value={{ setSearchFocus, searchFocus, options, setOptions }}
+		>
 			{children}
 		</AllContext.Provider>
 	);
