@@ -1,10 +1,16 @@
 /* eslint-disable react/prop-types */
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
-function Search({ placeholder, focus }) {
+function Search({ placeholder, searchFocus }) {
 	const [search, setSearch] = useState("");
 	const inputFocus = useRef(null);
-	focus && inputFocus.current.focus();
+
+	useEffect(() => {
+		if (searchFocus) {
+			inputFocus.current.focus();
+		}
+	}, [searchFocus]);
+
 	return (
 		<input
 			ref={inputFocus}
