@@ -1,15 +1,16 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import User from "./User";
 import Search from "./Search";
 import { HiOutlineArrowSmLeft } from "react-icons/hi";
 import { settingsData } from "../settingsData";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { AllContext } from "../context/appContext";
 
 function Menu_options({ setOptions }) {
 	const { pathname } = useLocation();
-	const [focus, setFocus] = useState(false);
+	const { setSearchFocus, searchFocus } = useContext(AllContext);
 
 	return (
 		<div className="bg-sidebar_color h-full px-2">
@@ -24,11 +25,11 @@ function Menu_options({ setOptions }) {
 			</div>
 			<User />
 			<div
-				onClick={() => setFocus(true)}
-				onBlur={() => setFocus(false)}
+				onClick={() => setSearchFocus(true)}
+				onBlur={() => setSearchFocus(false)}
 				className="mt-2 border-b-[1px] border-white bg-light_brown py-[7px] px-2 rounded-md"
 			>
-				<Search placeholder={"search"} focus={focus} />
+				<Search placeholder={"search"} searchFocus={searchFocus} />
 			</div>
 			<div className="mt-6 flex flex-col gap-3">
 				{settingsData.map((data) => {
