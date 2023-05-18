@@ -1,3 +1,67 @@
+@use "./scss/colors.scss" as c;
+@use "./scss/mixins.scss" as m;
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+	body {
+		// background-image: url("./assets/background.svg");
+		background-color: var(--very-dark);
+		min-height: 100vh;
+		overflow-y: hidden;
+		user-select: none;
+	}
+
+	::-webkit-scrollbar {
+		width: 4px;
+	}
+	::-webkit-scrollbar-thumb {
+		background-color: rgba(100, 100, 100, 0.63);
+		border-radius: 3px;
+	}
+
+	.max {
+		width: min(100% - 20px, 1500px);
+		margin-inline: auto;
+	}
+
+	.my-full {
+		width: min(100% - 80px);
+		margin-inline: auto;
+	}
+	.name {
+		color: white;
+		font-weight: 500;
+		font-size: clamp(0.7rem, 0.1rem + 1vw, 1rem);
+	}
+	.message {
+		font-size: clamp(0.8rem, 0.1rem + 1vw, 0.9rem);
+	}
+
+	.main-bg {
+		background-color: #232733;
+
+		height: 100vh;
+	}
+
+	.gradient {
+		background: linear-gradient(120deg, #262b38, #201d1bb4);
+	}
+
+	.active {
+		position: relative;
+		&::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 0px;
+			width: 3px;
+			border-radius: 10px;
+			height: 18px;
+			transform: translate(0%, -50%);
+			background-color: green;
+		}
+	}
+}
