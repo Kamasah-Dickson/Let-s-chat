@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { MdSearch, MdOutlineSettingsSuggest } from "react-icons/md";
 import Search from "./Search";
 import Sidebar_Singlechat from "./Sidebar_Singlechat";
@@ -8,8 +8,8 @@ import { Link } from "react-router-dom";
 import { AllContext } from "../context/appContext";
 
 function Sidebar() {
-	const [focus, setFocus] = useState(false);
-	const { options, setOptions } = useContext(AllContext);
+	const { options, setOptions, searchFocus, setSearchFocus } =
+		useContext(AllContext);
 
 	return options ? (
 		<Menu_options setOptions={setOptions} />
@@ -22,11 +22,11 @@ function Sidebar() {
 				cursor={"pointer"}
 			/>
 			<div
-				onClick={() => setFocus(true)}
-				onBlur={() => setFocus(false)}
+				onClick={() => setSearchFocus(true)}
+				onBlur={() => setSearchFocus(false)}
 				className="sticky mt-4 -top-2 overflow-hidden z-10 border-b-[1px] border-white bg-light_brown py-[7px] px-2 rounded-md flex items-center justify-between"
 			>
-				<Search focus={focus} placeholder="Search..." />
+				<Search searchFocus={searchFocus} placeholder="Search..." />
 				<MdSearch cursor={"pointer"} color="white" size={20} />
 			</div>
 			<div className="overflow-y-auto scrollbar flex flex-col gap-2 my-3">
