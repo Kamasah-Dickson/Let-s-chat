@@ -5,7 +5,7 @@ import Notifications from "../components/Notifications";
 function NotificationPage() {
 	return (
 		<div>
-			<div className="flex max justify-center">
+			<div className="flex">
 				<div className="flex-[12] sm:flex-[7] md:flex-[5] lg:flex-[4] xl:flex-[2.5]">
 					<Sidebar />
 				</div>
