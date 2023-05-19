@@ -23,18 +23,18 @@
 	}
 
 	.max {
-		width: min(100% - 20px, 1500px);
+		width: min(100%, 1500px);
 		margin-inline: auto;
 	}
 
 	.my-full {
-		width: min(100% - 80px);
+		width: min(100% - 10%);
 		margin-inline: auto;
 	}
 	.name {
 		color: white;
 		font-weight: 500;
-		font-size: clamp(0.7rem, 0.1rem + 1vw, 1rem);
+		font-size: clamp(0.8rem, 0.1rem + 1vw, 1rem);
 	}
 	.message {
 		font-size: clamp(0.8rem, 0.1rem + 1vw, 0.9rem);
@@ -50,6 +50,34 @@
 		background: linear-gradient(120deg, #262b38, #201d1bb4);
 	}
 
+	.owner-parent {
+		align-items: flex-end;
+		flex-direction: row-reverse;
+		.owner {
+			flex-direction: column-reverse;
+			align-items: flex-end;
+			p {
+				border-top-right-radius: 1rem;
+				border-top-left-radius: 1rem;
+				border-bottom-left-radius: 1rem;
+				background-color: #2e323e;
+			}
+		}
+	}
+
+	.coming-parent {
+		align-items: flex-start;
+		.coming {
+			flex-direction: column;
+			p {
+				border-top-right-radius: 1rem;
+				border-top-left-radius: 1rem;
+				border-bottom-right-radius: 1rem;
+				background-color: #272f47d2;
+			}
+		}
+	}
+
 	.active {
 		position: relative;
 		&::before {
@@ -63,5 +91,10 @@
 			transform: translate(0%, -50%);
 			background-color: green;
 		}
+	}
+
+	.my-width {
+		width: min(100% - 20px, 700px);
+		margin-inline: auto;
 	}
 }
