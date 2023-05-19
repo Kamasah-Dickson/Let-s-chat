@@ -9,6 +9,7 @@ export default {
 				light_white: "#8888",
 				blue: "#0F80D7",
 				green: "#26FF8E",
+				light_brown2: "#2E323E",
 			},
 		},
 	},
