@@ -1,13 +1,16 @@
 /* eslint-disable react/prop-types */
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
+import { AllContext } from "../context/appContext";
 
 function Search({ placeholder, searchFocus }) {
 	const [search, setSearch] = useState("");
+	const { setOptions } = useContext(AllContext);
 	const inputFocus = useRef(null);
 
 	useEffect(() => {
 		if (searchFocus) {
 			inputFocus.current.focus();
+			setOptions(true);
 		}
 	}, [searchFocus]);
 

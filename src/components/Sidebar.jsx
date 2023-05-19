@@ -3,20 +3,23 @@ import React, { useContext } from "react";
 import { MdSearch, MdOutlineSettingsSuggest } from "react-icons/md";
 import Search from "./Search";
 import Sidebar_Singlechat from "./Sidebar_Singlechat";
-import Menu_options from "./Menu_options";
+import Menu_settings from "./Menu_settings";
 import { Link } from "react-router-dom";
 import { AllContext } from "../context/appContext";
 
 function Sidebar() {
-	const { options, setOptions, searchFocus, setSearchFocus } =
+	const { settings, setsettings, setOptions, searchFocus, setSearchFocus } =
 		useContext(AllContext);
 
-	return options ? (
-		<Menu_options setOptions={setOptions} />
+	return settings ? (
+		<Menu_settings setsettings={setsettings} />
 	) : (
-		<div className="p-3 border-[#191D24] border-r-2 h-screen overflow-y-auto bg-sidebar_color sticky top-20 left-0">
+		<div
+			onClick={() => setOptions(true)}
+			className="p-3 border-[#191D24] border-r-2 h-screen overflow-y-auto bg-sidebar_color sticky top-20 left-0"
+		>
 			<MdOutlineSettingsSuggest
-				onClick={() => setOptions(true)}
+				onClick={() => setsettings(true)}
 				color="white"
 				size={25}
 				cursor={"pointer"}
