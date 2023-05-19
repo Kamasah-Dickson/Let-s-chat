@@ -10,13 +10,17 @@ import AdvancedSettingsPage from "./pages/AdvancedSettingsPage.jsx";
 import LanguagePage from "./pages/LanguagePage.jsx";
 import AskQuestionsPage from "./pages/AskQuestionsPage.jsx";
 import AppContext from "./context/appContext.jsx";
+import Signup from "./components/Signup.jsx";
+import Register from "./components/Register.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<React.StrictMode>
 		<AppContext>
 			<Router>
 				<Routes>
-					<Route path="/" element={<App />}></Route>
+					<Route path="/" element={<Signup />}></Route>
+					<Route path="/register" element={<Register />}></Route>
+					<Route path="/Let's-chat" element={<App />}></Route>
 					<Route path="/notifications" element={<NotificationPage />}></Route>
 					<Route path="/chat-settings" element={<ChatSettingsPage />}></Route>
 					<Route

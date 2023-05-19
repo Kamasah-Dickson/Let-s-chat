@@ -4,8 +4,8 @@ import Main from "./components/Main";
 
 function App() {
 	return (
-		<div className="flex max justify-center">
-			<div className="flex-[12] sm:flex-[7] md:flex-[5] lg:flex-[4] xl:flex-[2.5]">
+		<div className="flex">
+			<div className="flex-[8] sm:flex-[6] md:flex-[5] lg:flex-[4] xl:flex-[2.5]">
 				<Sidebar />
 			</div>
 			<div className="flex-[8] ">
