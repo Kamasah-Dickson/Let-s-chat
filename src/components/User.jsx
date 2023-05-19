@@ -4,7 +4,7 @@ import edit from "../assets/edit.svg";
 function User() {
 	return (
 		<div className="flex transition-colors p-2 items-center gap-3 w-full">
-			<div className="rounded-full w-10 md:w-16 md:h-16 h-10 relative ">
+			<div className="cursor-pointer rounded-full w-10 md:w-16 md:h-16 h-10 relative ">
 				<img
 					className="h-full w-full object-cover rounded-full"
 					src={testImage}
