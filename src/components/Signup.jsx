@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import signupImage from "../assets/Login.svg";
 import { FcGoogle } from "react-icons/fc";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../firebase";
 
 function Signup() {
 	const [loginValues, setLoginValues] = useState({
@@ -21,6 +23,29 @@ function Signup() {
 		Boolean(!loginValues.email) ||
 		Boolean(!loginValues.password) ||
 		Boolean(!loginValues.username);
+
+	const createUser = async () => {
+		try {
+			const userCredentials = await createUserWithEmailAndPassword(
+				auth,
+				loginValues.email,
+				loginValues.password
+			);
+
+			const user = userCredentials.user;
+			updateProfile(user, {
+				displayName: loginValues.username,
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		createUser();
+	};
 
 	return (
 		<div className="h-screen overflow-y-scroll flex w-full items-center justify-center bg-[#0F172A]">
@@ -42,7 +67,7 @@ function Signup() {
 						<FcGoogle size={25} />
 						Sign up with Google
 					</button>
-					<form className="py-2">
+					<form onSubmit={handleSubmit} className="py-2">
 						<div className="flex flex-col gap-3 my-3">
 							<input
 								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-4 rounded-full"
