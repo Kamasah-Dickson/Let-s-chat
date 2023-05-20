@@ -6,6 +6,9 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebase";
 
 function Signup() {
+	const [erorr, setError] = useState("");
+	const [loading, setLoading] = useState(false);
+
 	const [loginValues, setLoginValues] = useState({
 		email: "",
 		password: "",
@@ -25,19 +28,23 @@ function Signup() {
 		Boolean(!loginValues.username);
 
 	const createUser = async () => {
+		setLoading(true);
 		try {
 			const userCredentials = await createUserWithEmailAndPassword(
 				auth,
 				loginValues.email,
 				loginValues.password
 			);
-
 			const user = userCredentials.user;
+
+			setLoading(false);
+
 			updateProfile(user, {
 				displayName: loginValues.username,
 			});
 		} catch (error) {
 			console.log(error);
+			setLoading(false);
 		}
 	};
 
@@ -115,16 +122,22 @@ function Signup() {
 							</label>
 						</div>
 						<div className="mt-3">
-							<button
-								className="py-3 
+							{!loading ? (
+								<p className=" font-medium text-[#5184f1]">
+									Creating your account please wait...
+								</p>
+							) : (
+								<button
+									className="py-3 
 								 active:scale-[1.02]
 								 disabled:active:scale-100
 								 disabled:cursor-default disabled:bg-[#8080808c] px-5 cursor-pointer font-medium hover:bg-[#2f3dbe] bg-[#4254eb] rounded-full  transition-all"
-								type="submit"
-								disabled={isDisabled}
-							>
-								Create Account
-							</button>
+									type="submit"
+									disabled={isDisabled}
+								>
+									Create Account
+								</button>
+							)}
 						</div>
 					</form>
 				</div>
