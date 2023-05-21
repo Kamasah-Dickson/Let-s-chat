@@ -8,11 +8,13 @@ function App() {
 	const { user } = useAuth();
 	const navigate = useNavigate();
 
+	// TODO: when user is not logged in redirect to login or show the chat page
 	useEffect(() => {
-		if (!user) {
+		if (user) {
 			navigate("/login");
+			// console.log(user);
 		}
-	}, [user]);
+	}, []);
 
 	return (
 		<div className="flex">
