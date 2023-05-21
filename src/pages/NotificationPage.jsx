@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useContext, useLayoutEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Notifications from "../components/Notifications";
+import { AllContext } from "../context/appContext";
 
 function NotificationPage() {
+	const { setsettings } = useContext(AllContext);
+	useLayoutEffect(() => {
+		setsettings(true);
+	}, []);
+
 	return (
 		<div>
 			<div className="flex">
