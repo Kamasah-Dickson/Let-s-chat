@@ -4,11 +4,12 @@ import signupImage from "../assets/Login.svg";
 import { FcGoogle } from "react-icons/fc";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebase";
+import { Link } from "react-router-dom";
 
 function Signup() {
-	const [erorr, setError] = useState("");
+	// const [erorr, setError] = useState("");
 	const [loading, setLoading] = useState(false);
-
+	const [error, setError] = useState(true);
 	const [loginValues, setLoginValues] = useState({
 		email: "",
 		password: "",
@@ -63,7 +64,7 @@ function Signup() {
 
 				<div className="flex z-10 flex-col justify-center text-white py-5 md:py-0 flex-1 h-auto">
 					<h1 className="clamp2-h1 font-bold">Join Let's chat today 👋</h1>
-					<p className="clamp-p text-[#95a2b8] py-5">
+					<p className="clamp-p font-normal text-[#95a2b8] py-3">
 						Signup and enjoy the best experience with your friends, family and
 						loved ones
 					</p>
@@ -75,7 +76,7 @@ function Signup() {
 						Sign up with Google
 					</button>
 					<form onSubmit={handleSubmit} className="py-2">
-						<div className="flex flex-col gap-3 my-3">
+						<div className="flex flex-col gap-3 my-2">
 							<input
 								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-4 rounded-full"
 								type="text"
@@ -85,8 +86,13 @@ function Signup() {
 								id="username"
 								placeholder="Username"
 							/>
+							{error && (
+								<p className="text-[crimson] text-sm ">
+									Username cannot be blank
+								</p>
+							)}
 						</div>
-						<div className="flex flex-col gap-3 my-3">
+						<div className="flex flex-col gap-3 my-2">
 							<input
 								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-4 rounded-full"
 								type="email"
@@ -96,8 +102,11 @@ function Signup() {
 								id="email"
 								placeholder="email"
 							/>
+							{error && (
+								<p className="text-[crimson] text-sm ">Email cannot be blank</p>
+							)}
 						</div>
-						<div className="flex flex-col gap-3 my-3">
+						<div className="flex flex-col gap-3 my-2">
 							<input
 								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-4 rounded-full"
 								type="password"
@@ -108,8 +117,13 @@ function Signup() {
 								placeholder="password"
 								maxLength={16}
 							/>
+							{error && (
+								<p className="text-[crimson] text-sm ">
+									Password cannot be blank
+								</p>
+							)}
 						</div>
-						<div className="flex items-center gap-2 my-3">
+						<div className="flex items-center gap-2">
 							<input
 								className="border placeholder:text-[#95a2b8] border-[#354055] bg-transparent p-3 rounded-full"
 								type="checkbox"
@@ -121,8 +135,14 @@ function Signup() {
 								Remember me
 							</label>
 						</div>
-						<div className="mt-3">
-							{!loading ? (
+						<p>
+							Already having an acount ?{" "}
+							<Link to={"/login"} className="text-[#b63db6]">
+								Sign in
+							</Link>
+						</p>
+						<div className="mt-5">
+							{loading ? (
 								<p className=" font-medium text-[#5184f1]">
 									Creating your account please wait...
 								</p>
