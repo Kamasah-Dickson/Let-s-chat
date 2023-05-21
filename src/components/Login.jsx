@@ -9,6 +9,7 @@ function Login() {
 		email: "",
 		password: "",
 	});
+	const [error, setError] = useState(true);
 
 	const handleInputChange = (e) => {
 		setLoginValues((prev) => ({
@@ -25,14 +26,16 @@ function Login() {
 			<div className=" py-7 md:py-0 flex max-h-screen  items-center flex-col md:flex-row gap-10 md:gap-24 my-width">
 				<div className="flex-1 relative h-full py-5 md:p-0">
 					<img className="w-full h-full object-cover " src={signupImage} />
-					<div className="blur h-36 w-36 block inset-0 rounded-full translate-y-16 absolute"></div>
-					<div className="blur h-52 w-52 block translate-y-36 translate-x-40 inset-0 rounded-full   absolute"></div>
+					<div className="blur h-36 w-36 block inset-0 rounded-full translate-y-10 absolute"></div>
+					<div className="blur h-64 w-40 block translate-y-28 translate-x-40 inset-0 rounded-full   absolute"></div>
 				</div>
-
 				<div className="flex z-10 flex-col justify-center text-white py-5 md:py-0 flex-1 h-auto">
-					<h1 className="clamp-h1 font-bold">Hello there, welcome 👋</h1>
+					<h1 className="clamp-h1 font-bold">
+						Hey there, welcome{" "}
+						<span className="sm:text-4xl md:text-7xl">💬</span>
+					</h1>
 					<p className="clamp-p text-[#95a2b8] py-5">
-						We've missed you! Please sign in to catch up on what you've missed
+						We've missed you! please sign in to catch up on what you've missed
 					</p>
 					<button
 						className="hover:bg-[#1f2d4b] bg-[#20283b] active:scale-[1.02] w-full rounded-full flex items-center transition-all justify-center gap-3 p-4 my-1"
@@ -55,6 +58,11 @@ function Login() {
 								id="email"
 								placeholder="i.e Kamasahdickson19@gmail.com"
 							/>
+							{error && (
+								<p className="text-[crimson] text-sm ">
+									User cannot be found or incorrect username
+								</p>
+							)}
 						</div>
 						<div className="flex flex-col gap-3 my-3">
 							<label className="text-base" htmlFor="password">
@@ -70,6 +78,9 @@ function Login() {
 								placeholder="**********"
 								maxLength={16}
 							/>
+							{error && (
+								<p className="text-[crimson] text-sm ">incorrect password</p>
+							)}
 						</div>
 
 						<div className="mt-8">
@@ -85,7 +96,7 @@ function Login() {
 							</button>
 							<p className="pt-5">
 								Don't have an account?
-								<Link className=" text-[#4254eb]" to="/signup">
+								<Link className=" text-[#b63db6]" to="/signup">
 									{" "}
 									Create a free account
 								</Link>
