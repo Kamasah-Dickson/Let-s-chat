@@ -1,9 +1,16 @@
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
+import React, { useState } from "react";
 import signupImage from "../assets/signup.svg";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import toast, { Toaster } from "react-hot-toast";
+import {
+	signInWithPopup,
+	GoogleAuthProvider,
+	signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../firebase";
 
 function Login() {
 	const {
@@ -11,9 +18,93 @@ function Login() {
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
+	const provider = new GoogleAuthProvider();
+	const navigate = useNavigate();
+	const [disabled, setDisabled] = useState(false);
+	const [loading, setLoading] = useState(false);
 
-	const onSubmit = (data) => {
-		console.log(data);
+	const loginWithGoogle = async () => {
+		setLoading(true);
+		setDisabled(true);
+		try {
+			await signInWithPopup(auth, provider);
+			navigate("/");
+		} catch (error) {
+			setLoading(false);
+			setDisabled(false);
+			console.log(error);
+			switch (error.code) {
+				case "auth/network-request-failed":
+					toast.error("Please check your internet and try again");
+					break;
+				case "auth/invalid-email":
+					toast.error("Invalid Email Address");
+					break;
+				case "auth/user-disabled":
+					toast.error("Sorry user has been disabled");
+					break;
+				case "auth/user-not-found":
+					toast.error("User not found you can create a new account");
+					break;
+				case "auth/wrong-password":
+					toast.error("Wrong password");
+					break;
+				case "auth/popup-closed-by-user":
+					toast.error("Failed to sign in with Google");
+					break;
+				default:
+					console.log(error.code);
+					break;
+			}
+		}
+	};
+
+	const onSubmit = async (data) => {
+		setLoading(true);
+		setDisabled(true);
+		try {
+			const userCredential = await signInWithEmailAndPassword(
+				auth,
+				data.email,
+				data.password
+			);
+
+			toast.success(`Welcome ${userCredential.user.displayName}`, {
+				duration: 4000,
+			});
+
+			const time = setTimeout(() => {
+				navigate("/");
+			}, 4000);
+			return () => clearTimeout(time);
+		} catch (error) {
+			setLoading(false);
+			setDisabled(false);
+			console.log(error);
+			switch (error.code) {
+				case "auth/network-request-failed":
+					toast.error("Please check your internet and try again");
+					break;
+				case "auth/user-not-found":
+					toast.error("User not found you can create a new account");
+					break;
+				case "auth/wrong-password":
+					toast.error("Wrong password");
+					break;
+				case "auth/operation-not-allowed":
+					toast.error("Sorry operation was not allowed");
+					break;
+				case "auth/invalid-email":
+					toast.error("Invalid Email Address");
+					break;
+				case "auth/user-disabled":
+					toast.error("Sorry user has been disabled");
+					break;
+				default:
+					console.log(error.code);
+					break;
+			}
+		}
 	};
 
 	return (
@@ -33,7 +124,9 @@ function Login() {
 						We've missed you! please sign in to catch up on what you've missed
 					</p>
 					<button
-						className="shadow shadow-black hover:bg-[#1f2d4b] bg-[#20283b] active:scale-[1.02] w-full rounded-full flex items-center transition-all justify-center gap-3 p-4 my-1"
+						disabled={disabled}
+						onClick={() => loginWithGoogle()}
+						className="shadow disabled:active:scale-100 disabled:bg-[#8080808c] shadow-black hover:bg-[#1f2d4b] bg-[#20283b] active:scale-[1.02] w-full rounded-full flex items-center transition-all justify-center gap-3 p-4 my-1"
 						type="button"
 					>
 						<FcGoogle size={25} />
@@ -42,6 +135,7 @@ function Login() {
 					<form onSubmit={handleSubmit(onSubmit)} className="py-2">
 						<div className="flex flex-col gap-3 my-3">
 							<input
+								disabled={disabled}
 								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-5 rounded-full"
 								type="email"
 								{...register("email", {
@@ -64,6 +158,7 @@ function Login() {
 						</div>
 						<div className="flex flex-col gap-3 my-3">
 							<input
+								disabled={disabled}
 								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-5 rounded-full"
 								type="password"
 								autoComplete="true"
@@ -87,16 +182,23 @@ function Login() {
 						</div>
 
 						<div className="mt-5">
-							<button
-								className="py-3 
+							{loading ? (
+								<p className=" font-medium text-[#5184f1]">
+									Signing in please wait...
+								</p>
+							) : (
+								<button
+									disabled={disabled}
+									className="py-3 
 								
 								 active:scale-[1.02]
 								 disabled:active:scale-100
 								 disabled:cursor-default disabled:bg-[#8080808c] px-12 cursor-pointer font-medium hover:bg-[#2f3dbe] bg-[#4254eb] rounded-full  transition-all"
-								type="submit"
-							>
-								Sign in
-							</button>
+									type="submit"
+								>
+									Sign in
+								</button>
+							)}
 							<p className="font-semibold mt-7">
 								Don't have an account?
 								<Link className=" font-medium text-[#b63db6]" to="/signup">
@@ -106,6 +208,7 @@ function Login() {
 							</p>
 						</div>
 					</form>
+					<Toaster />
 				</div>
 			</div>
 		</div>
