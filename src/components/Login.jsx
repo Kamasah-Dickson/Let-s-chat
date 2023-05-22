@@ -1,25 +1,20 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
+import React from "react";
 import signupImage from "../assets/signup.svg";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 function Login() {
-	const [loginValues, setLoginValues] = useState({
-		email: "",
-		password: "",
-	});
-	const [error, setError] = useState(true);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm();
 
-	const handleInputChange = (e) => {
-		setLoginValues((prev) => ({
-			...prev,
-			[e.target.name]: e.target.value,
-		}));
+	const onSubmit = (data) => {
+		console.log(data);
 	};
-
-	const isDisabled =
-		Boolean(!loginValues.email) || Boolean(!loginValues.password);
 
 	return (
 		<div className="h-screen overflow-y-scroll flex w-full items-center justify-center bg-[#0F172A]">
@@ -31,72 +26,80 @@ function Login() {
 				</div>
 				<div className="flex z-10 flex-col justify-center text-white py-5 md:py-0 flex-1 h-auto">
 					<h1 className="clamp-h1 font-bold">
-						Hey there, welcome{" "}
+						Hey there, <span className="text-[#5640eb]">welcome</span>
 						<span className="sm:text-4xl md:text-7xl">💬</span>
 					</h1>
 					<p className="clamp-p text-[#95a2b8] py-5">
 						We've missed you! please sign in to catch up on what you've missed
 					</p>
 					<button
-						className="hover:bg-[#1f2d4b] bg-[#20283b] active:scale-[1.02] w-full rounded-full flex items-center transition-all justify-center gap-3 p-4 my-1"
+						className="shadow shadow-black hover:bg-[#1f2d4b] bg-[#20283b] active:scale-[1.02] w-full rounded-full flex items-center transition-all justify-center gap-3 p-4 my-1"
 						type="button"
 					>
 						<FcGoogle size={25} />
 						Sign in with Google
 					</button>
-					<form className="py-2">
+					<form onSubmit={handleSubmit(onSubmit)} className="py-2">
 						<div className="flex flex-col gap-3 my-3">
-							<label className="text-base" htmlFor="email">
-								Email Address
-							</label>
 							<input
-								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-4 rounded-full"
+								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-5 rounded-full"
 								type="email"
-								name="email"
-								onChange={(e) => handleInputChange(e)}
-								value={loginValues.email}
-								id="email"
+								{...register("email", {
+									required: {
+										value: true,
+										message: "Email is required",
+									},
+									pattern: {
+										value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+										message: "Your email is not valid",
+									},
+								})}
 								placeholder="i.e Kamasahdickson19@gmail.com"
 							/>
-							{error && (
-								<p className="text-[crimson] text-sm ">
-									User cannot be found or incorrect username
+							{errors.email?.message && (
+								<p className="mb-3 text-[crimson] text-sm ">
+									{errors.email?.message}
 								</p>
 							)}
 						</div>
 						<div className="flex flex-col gap-3 my-3">
-							<label className="text-base" htmlFor="password">
-								Password
-							</label>
 							<input
-								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-4 rounded-full"
+								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-5 rounded-full"
 								type="password"
-								name="password"
-								onChange={(e) => handleInputChange(e)}
-								value={loginValues.password}
-								id="password"
-								placeholder="**********"
-								maxLength={16}
+								autoComplete="true"
+								{...register("password", {
+									required: {
+										value: true,
+										message: "Password cannot be blank",
+									},
+									minLength: {
+										value: 8,
+										message: "Password must be at least 8 characters long",
+									},
+								})}
+								placeholder="Password"
 							/>
-							{error && (
-								<p className="text-[crimson] text-sm ">incorrect password</p>
+							{errors.password?.message && (
+								<p className="text-[crimson] text-sm ">
+									{errors.password?.message}
+								</p>
 							)}
 						</div>
 
-						<div className="mt-8">
+						<div className="mt-5">
 							<button
 								className="py-3 
+								
 								 active:scale-[1.02]
 								 disabled:active:scale-100
 								 disabled:cursor-default disabled:bg-[#8080808c] px-12 cursor-pointer font-medium hover:bg-[#2f3dbe] bg-[#4254eb] rounded-full  transition-all"
 								type="submit"
-								disabled={isDisabled}
 							>
 								Sign in
 							</button>
-							<p className="pt-5">
+							<p className="font-semibold mt-7">
 								Don't have an account?
-								<Link className=" text-[#b63db6]" to="/signup">
+								<Link className=" font-medium text-[#b63db6]" to="/signup">
 									{" "}
 									Create a free account
 								</Link>
