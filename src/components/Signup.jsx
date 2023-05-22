@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import signupImage from "../assets/Login.svg";
 import { FcGoogle } from "react-icons/fc";
 import {
@@ -13,12 +13,14 @@ import { useForm } from "react-hook-form";
 import { BiShowAlt, BiHide } from "react-icons/bi";
 import { onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
+import { AllContext } from "../context/appContext";
 
 function Signup() {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const [showPassword, setShowpassword] = useState(false);
 	const [disabled, setDisabled] = useState(false);
+	const { setUserProfile } = useContext(AllContext);
 	const {
 		handleSubmit,
 		register,
@@ -64,12 +66,17 @@ function Signup() {
 			const displayName = user.displayName;
 			const email = user.email;
 			const photoURL = user.photoURL;
-
 			updateProfile(auth, {
 				displayName,
 				email,
 				photoURL,
 			});
+			setUserProfile((prev) => ({
+				...prev,
+				username: displayName,
+				photoUrl: photoURL,
+				email,
+			}));
 		} catch (error) {
 			console.log(error);
 		}
