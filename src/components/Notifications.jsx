@@ -118,6 +118,7 @@ function Notifications() {
 					<Modal
 						notify={"Are you sure you want to reset all notification settings?"}
 						setAlert={setAlert}
+						type="reset"
 					/>
 				)}
 			</div>

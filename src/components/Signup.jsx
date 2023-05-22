@@ -102,12 +102,10 @@ function Signup() {
 					break;
 				case "auth/email-already-in-use":
 					toast.error("Sorry Email Already In Use");
-					// Handle email already in use error
 					break;
 				case "auth/operation-not-allowed":
 					toast.error("Sorry operation was not allowed");
 					break;
-				// Handle other error codes as needed
 				default:
 					console.log(error.code);
 					break;

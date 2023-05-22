@@ -66,6 +66,7 @@ function Header_main() {
 					<Modal
 						setAlert={setAlert}
 						notify={"Are you sure you want to log out from this account?"}
+						type="logout"
 					/>
 				)}
 			</div>

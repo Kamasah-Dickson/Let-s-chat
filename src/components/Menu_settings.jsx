@@ -75,6 +75,7 @@ function Menu_settings({ setsettings }) {
 				<Modal
 					notify={"Are you sure you want to log out from this account?"}
 					setAlert={setAlert}
+					type="logout"
 				/>
 			)}
 		</div>

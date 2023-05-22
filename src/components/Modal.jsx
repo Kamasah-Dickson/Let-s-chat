@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import React, { memo, useRef } from "react";
 import { TbAlertTriangleFilled } from "react-icons/tb";
+import { auth } from "../firebase";
 
-function Modal({ setAlert, notify }) {
+function Modal({ setAlert, notify, type }) {
 	const overlayRef = useRef(null);
 
 	function handleClick(e) {
@@ -10,6 +11,13 @@ function Modal({ setAlert, notify }) {
 			setAlert(false);
 		}
 	}
+
+	const modalAction = () => {
+		if (type === "logout") {
+			auth.signOut();
+		}
+	};
+
 	return (
 		<div
 			ref={overlayRef}
@@ -30,6 +38,7 @@ function Modal({ setAlert, notify }) {
 						Cancel
 					</button>
 					<button
+						onClick={() => modalAction()}
 						className=" active:scale-[1.03] text-lg rounded cursor-pointer bg-black p-1 px-10"
 						type="button"
 					>
