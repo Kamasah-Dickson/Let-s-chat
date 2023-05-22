@@ -1,19 +1,24 @@
 import React, { useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import Main from "./components/Main";
-import useAuth from "./Hooks/auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
 import { useNavigate } from "react-router-dom";
 
 function App() {
-	const { user } = useAuth();
 	const navigate = useNavigate();
 
-	// TODO: when user is not logged in redirect to login or show the chat page
 	useEffect(() => {
-		if (user) {
-			navigate("/login");
-			// console.log(user);
+		function deterMineUserLoggedIn() {
+			onAuthStateChanged(auth, (signedUser) => {
+				if (signedUser) {
+					return;
+				} else {
+					navigate("/login");
+				}
+			});
 		}
+		deterMineUserLoggedIn();
 	}, []);
 
 	return (
