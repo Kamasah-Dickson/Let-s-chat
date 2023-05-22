@@ -5,4 +5,5 @@ Login Page
 
 
 SignUp Page
-![singUp](https://github.com/Kamasah-Dickson/Let-s-chat/assets/86136379/a23ac402-4750-4109-a0e5-dad5258ac9b3)
+![singUp](https://github.com/Kamasah-Dickson/Let-s-chat/assets/86136379/05c622c9-3485-47a6-9c1e-876b5f91b402)
+
