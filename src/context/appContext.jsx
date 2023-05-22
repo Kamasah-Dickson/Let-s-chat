@@ -12,6 +12,7 @@ function AppContext({ children }) {
 		userName: "",
 		email: "",
 	});
+	const [showTargetMessage, setShowTargetMessage] = useState(false);
 
 	return (
 		<AllContext.Provider
@@ -24,6 +25,8 @@ function AppContext({ children }) {
 				setsettings,
 				userProfile,
 				setUserProfile,
+				showTargetMessage,
+				setShowTargetMessage,
 			}}
 		>
 			{children}
