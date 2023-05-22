@@ -40,7 +40,7 @@ function Main() {
 					<Message />
 				</div>
 				<div
-					className="rounded-md shadow-sm shadow-[#0000004f] bg-[#2E323C] sticky bottom-10 my-full gap-5 p-3 w-full flex items-center"
+					className="rounded-md shadow-sm shadow-[#0000004f] bg-[#2E323C] sticky bottom-5 my-full gap-5 p-4 md:p-5 w-full flex items-center"
 					onClick={() => (setFocus(true), setOptions(true))}
 					onBlur={() => setFocus(false)}
 				>
@@ -50,7 +50,7 @@ function Main() {
 					<img src={record} alt="" className="cursor-pointer" />
 					<BsSendFill
 						color="#8A8A8A"
-						size={25}
+						size={30}
 						className="ml-5 cursor-pointer"
 					/>
 				</div>
