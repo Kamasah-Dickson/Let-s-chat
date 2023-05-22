@@ -1,17 +1,25 @@
 import React, { useContext, useState } from "react";
 import testImage from "../assets/background.svg";
 import { MdSearch } from "react-icons/md";
-import { HiOutlineDotsVertical } from "react-icons/hi";
+import { HiOutlineArrowSmLeft, HiOutlineDotsVertical } from "react-icons/hi";
 import { AllContext } from "../context/appContext";
 import { TbLogout } from "react-icons/tb";
 import Modal from "./Modal";
 
 function Header_main() {
-	const { setSearchFocus, options, setOptions } = useContext(AllContext);
+	const { setSearchFocus, options, setOptions, setShowTargetMessage } =
+		useContext(AllContext);
 	const [alert, setAlert] = useState(false);
 
 	return (
 		<div className="bg-[#232733] border-b-[1px] border-[rgba(255,255,255,0.10)] px-5 flex transition-colors p-2 items-center gap-5 w-full">
+			<HiOutlineArrowSmLeft
+				onClick={() => setShowTargetMessage(false)}
+				className="md:hidden flex"
+				color="white"
+				size={25}
+				cursor={"pointer"}
+			/>
 			<div className=" cursor-pointer rounded-full w-10 md:w-14 md:h-14 h-10  ">
 				<img
 					className="h-full w-full object-cover rounded-full"

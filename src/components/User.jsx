@@ -11,8 +11,8 @@ function User() {
 			<div className="cursor-pointer rounded-full w-10 md:w-16 md:h-16 h-10 relative ">
 				<img
 					className="h-full w-full object-cover rounded-full"
-					src={userProfile.photoUrl || testImage}
-					alt={userProfile.userName}
+					src={userProfile?.photoUrl || testImage}
+					alt={userProfile?.userName}
 				/>
 			</div>
 			<div className="flex-1 ">

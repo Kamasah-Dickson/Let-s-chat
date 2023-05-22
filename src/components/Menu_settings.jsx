@@ -17,7 +17,7 @@ function Menu_settings({ setsettings }) {
 	return (
 		<div
 			onClick={() => setOptions(true)}
-			className="bg-sidebar_color h-full px-2"
+			className="bg-sidebar_color h-screen px-2"
 		>
 			<div className="flex items-center py-3 gap-5">
 				<Link to={"/"}>
