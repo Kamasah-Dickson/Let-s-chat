@@ -27,7 +27,7 @@ function Sidebar() {
 			<div
 				onClick={() => setSearchFocus(true)}
 				onBlur={() => setSearchFocus(false)}
-				className="sticky mt-4 -top-2 overflow-hidden z-10 border-b-[1px] border-white bg-light_brown py-[7px] px-2 rounded-md flex items-center justify-between"
+				className="sticky mt-4 -top-2 overflow-hidden z-10 shadow shadow-[#00000049] bg-light_brown py-[10px] px-2 rounded-md flex items-center justify-between"
 			>
 				<Search searchFocus={searchFocus} placeholder="Search..." />
 				<MdSearch cursor={"pointer"} color="white" size={20} />
