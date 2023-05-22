@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import signupImage from "../assets/signup.svg";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import {
 	signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebase";
+import { AllContext } from "../context/appContext";
 
 function Login() {
 	const {
@@ -22,12 +23,19 @@ function Login() {
 	const navigate = useNavigate();
 	const [disabled, setDisabled] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const { setUserProfile } = useContext(AllContext);
 
 	const loginWithGoogle = async () => {
 		setLoading(true);
 		setDisabled(true);
 		try {
-			await signInWithPopup(auth, provider);
+			const userCredential = await signInWithPopup(auth, provider);
+			const userName = userCredential.user.displayName;
+			const photoUrl = userCredential.user.photoURL;
+			const email = userCredential.email;
+
+			setUserProfile((prev) => ({ ...prev, userName, photoUrl, email }));
+
 			navigate("/");
 		} catch (error) {
 			setLoading(false);
@@ -183,9 +191,7 @@ function Login() {
 
 						<div className="mt-5">
 							{loading ? (
-								<p className=" font-medium text-[#5184f1]">
-									Signing in please wait...
-								</p>
+								<p className=" font-medium text-[#5184f1]">please wait...</p>
 							) : (
 								<button
 									disabled={disabled}
