@@ -17,7 +17,7 @@ function App() {
 	}, []);
 
 	return (
-		<div className="flex">
+		<div className="flex max">
 			<div className="flex-[8] sm:flex-[6] md:flex-[5] lg:flex-[4] xl:flex-[2.5]">
 				<Sidebar />
 			</div>

@@ -48,7 +48,6 @@
 
 	.main-bg {
 		background-color: #232733;
-
 		height: 100vh;
 	}
 
@@ -108,11 +107,12 @@
 	}
 
 	.clamp-h1 {
-		font-size: clamp(2.7rem, 1rem + 2.7vw, 3rem);
-		line-height: 0.7;
+		// font-size: clamp(2.7rem, 1rem + 2.7vw, 3rem);
+		font-size: clamp(3rem, 1rem + 5vw, 3.5rem);
+		line-height: 1.2;
 	}
 	.clamp2-h1 {
-		font-size: clamp(2.4rem, 1rem + 2.3vw, 3rem);
+		font-size: clamp(3rem, 1rem + 5vw, 3.5rem);
 		line-height: 1.2;
 	}
 	.clamp-p {
