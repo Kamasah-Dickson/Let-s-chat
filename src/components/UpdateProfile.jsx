@@ -3,22 +3,13 @@ import testImage from "../assets/background.svg";
 import { MdCameraEnhance, MdEdit } from "react-icons/md";
 import { AllContext } from "../context/appContext";
 
-// import { updateProfile } from "firebase/auth";
-// import useAuth from "../Hooks/auth";
-
 function UpdateProfile() {
-	// const { user } = useAuth();
 	const [photo, setPhoto] = useState("");
 	const [update, setUpdate] = useState(false);
 	const [userName, setUserName] = useState("");
 	const { userProfile } = useContext(AllContext);
 	const nameRef = useRef(null);
 
-	// const updateUserCredentials = () => {
-	// 	updateProfile(user, {
-	// 		photoURL: photo,
-	// 	});
-	// };
 	useEffect(() => {
 		if (update) {
 			nameRef.current.focus();
