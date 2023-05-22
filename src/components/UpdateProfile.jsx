@@ -1,6 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import testImage from "../assets/background.svg";
 import { MdCameraEnhance, MdEdit } from "react-icons/md";
+import { AllContext } from "../context/appContext";
+
 // import { updateProfile } from "firebase/auth";
 // import useAuth from "../Hooks/auth";
 
@@ -9,6 +11,7 @@ function UpdateProfile() {
 	const [photo, setPhoto] = useState("");
 	const [update, setUpdate] = useState(false);
 	const [userName, setUserName] = useState("");
+	const { userProfile } = useContext(AllContext);
 	const nameRef = useRef(null);
 
 	// const updateUserCredentials = () => {
@@ -49,8 +52,8 @@ function UpdateProfile() {
 						>
 							<img
 								className="h-full w-full object-cover rounded-full"
-								src={photo || testImage}
-								alt=""
+								src={userProfile?.photoUrl ?? testImage}
+								alt={userProfile?.userName}
 							/>
 							<div className="hover:bg-[#00000067] transiton-all bg-[#0303037e] absolute top-0 left-0 h-full w-full flex items-center justify-center">
 								<MdCameraEnhance
@@ -73,7 +76,7 @@ function UpdateProfile() {
 							<div className="flex flex-col gap-2">
 								{!update ? (
 									<h3 className="text-white text-xl md:text-4xl flex items-center font-semibold gap-5">
-										Kamasah Dickson
+										{userProfile.userName?.toLowerCase()}
 										<button type="button">
 											<MdEdit
 												onClick={() => setUpdate(true)}
