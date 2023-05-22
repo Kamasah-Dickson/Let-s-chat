@@ -1,50 +1,111 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import signupImage from "../assets/Login.svg";
 import { FcGoogle } from "react-icons/fc";
-// import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-// import { auth } from "../firebase";
-import { Link } from "react-router-dom";
+import {
+	createUserWithEmailAndPassword,
+	signInWithPopup,
+	updateProfile,
+} from "firebase/auth";
+import { auth } from "../firebase";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { BiShowAlt, BiHide } from "react-icons/bi";
+import { onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
+import toast, { Toaster } from "react-hot-toast";
 
 function Signup() {
-	// const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
 	const [showPassword, setShowpassword] = useState(false);
-
+	const [disabled, setDisabled] = useState(false);
 	const {
 		handleSubmit,
 		register,
 		formState: { errors },
 	} = useForm();
 
-	// const isDisabled =
-	// 	Boolean(!loginValues.email) ||
-	// 	Boolean(!loginValues.password) ||
-	// 	Boolean(!loginValues.username);
+	useEffect(() => {
+		function deterMineUserLoggedIn() {
+			onAuthStateChanged(auth, (signedUser) => {
+				if (signedUser) {
+					setDisabled(true);
+					toast.dismiss();
+					toast.loading(
+						"Remember to log out from your current account before creating a new one",
+						{
+							duration: 4500,
+							style: {
+								background: "black",
+								color: "white",
+							},
+						}
+					);
 
-	// const createUser = async () => {
-	// 	setLoading(true);
-	// 	try {
-	// 		const userCredentials = await createUserWithEmailAndPassword(
-	// 			auth,
-	// 			loginValues.email,
-	// 			loginValues.password
-	// 		);
-	// 		const user = userCredentials.user;
+					const time = setTimeout(() => {
+						navigate("/");
+					}, 4500);
 
-	// 		setLoading(false);
+					return () => clearTimeout(time);
+				} else {
+					setDisabled(false);
+				}
+			});
+		}
+		deterMineUserLoggedIn();
+	}, []);
 
-	// 		updateProfile(user, {
-	// 			displayName: loginValues.username,
-	// 		});
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		setLoading(false);
-	// 	}
-	// };
-	const onSubmit = (data) => {
-		console.log(data);
+	const handleGoogleSignup = async () => {
+		try {
+			const provider = new GoogleAuthProvider();
+			const result = await signInWithPopup(auth, provider);
+
+			const user = result.user;
+			const displayName = user.displayName;
+			const email = user.email;
+			const photoURL = user.photoURL;
+
+			updateProfile(auth, {
+				displayName,
+				email,
+				photoURL,
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const onSubmit = async (data) => {
+		setLoading(true);
+		try {
+			const userCredentials = await createUserWithEmailAndPassword(
+				auth,
+				data.email,
+				data.password
+			);
+			const user = userCredentials.user;
+			updateProfile(user, {
+				displayName: data.username,
+			});
+		} catch (error) {
+			console.log(error);
+			switch (error.code) {
+				case "auth/network-request-failed":
+					toast.error("Please check your internet and try again");
+					break;
+				case "auth/email-already-in-use":
+					toast.error("Sorry Email Already In Use");
+					// Handle email already in use error
+					break;
+				case "auth/operation-not-allowed":
+					toast.error("Sorry operation was not allowed");
+					break;
+				// Handle other error codes as needed
+				default:
+					console.log(error.code);
+					break;
+			}
+		}
 	};
 
 	return (
@@ -64,8 +125,10 @@ function Signup() {
 						loved ones
 					</p>
 					<button
-						className="shadow shadow-black hover:bg-[#1f2d4b] bg-[#20283b] active:scale-[1.02] w-full rounded-full flex items-center transition-all justify-center gap-3 p-4 my-1"
+						onClick={() => handleGoogleSignup()}
+						className="shadow disabled:active:scale-100 disabled:bg-[#8080808c] shadow-black hover:bg-[#1f2d4b] bg-[#20283b] active:scale-[1.02] w-full rounded-full flex items-center transition-all justify-center gap-3 p-4 my-1"
 						type="button"
+						disabled={disabled}
 					>
 						<FcGoogle size={25} />
 						Sign up with Google
@@ -73,6 +136,7 @@ function Signup() {
 					<form onSubmit={handleSubmit(onSubmit)} className="py-2">
 						<div className="flex flex-col gap-3 my-2">
 							<input
+								disabled={disabled}
 								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-4 rounded-full"
 								type="text"
 								{...register("username", {
@@ -92,6 +156,7 @@ function Signup() {
 						)}
 						<div className="flex flex-col gap-3 my-3">
 							<input
+								disabled={disabled}
 								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-4 rounded-full"
 								type="email"
 								{...register("email", {
@@ -112,6 +177,7 @@ function Signup() {
 						)}
 						<div className="flex flex-col gap-3 my-2 relative">
 							<input
+								disabled={disabled}
 								className="border placeholder:text-sm leading-3 placeholder:text-[#95a2b8a2] border-[#354055] bg-transparent p-4 rounded-full"
 								type={showPassword ? "text" : "password"}
 								{...register("password", {
@@ -143,6 +209,7 @@ function Signup() {
 						)}
 						<div className="flex items-center gap-2">
 							<input
+								disabled={disabled}
 								className="border placeholder:text-[#95a2b8] border-[#354055] bg-transparent p-3 rounded-full"
 								type="checkbox"
 								{...register("remember")}
@@ -159,24 +226,26 @@ function Signup() {
 							</Link>
 						</p>
 						<div className="mt-5">
-							{/* {loading ? (
+							{loading ? (
 								<p className=" font-medium text-[#5184f1]">
 									Creating your account please wait...
 								</p>
-							) : ( */}
-							<button
-								className="py-3
+							) : (
+								<button
+									className="py-3
 								
 								active:scale-[1.02]
 								disabled:active:scale-100
 								disabled:cursor-default disabled:bg-[#8080808c] px-12 cursor-pointer font-semibold hover:bg-[#2f3dbe] bg-[#4254eb] rounded-full  transition-all"
-								type="submit"
-							>
-								Create Account
-							</button>
-							{/* )} */}
+									type="submit"
+									disabled={disabled}
+								>
+									Create Account
+								</button>
+							)}
 						</div>
 					</form>
+					<Toaster />
 				</div>
 			</div>
 		</div>
