@@ -14,13 +14,17 @@ function App() {
 
 	useEffect(() => {
 		function deterMineUserLoggedIn() {
-			onAuthStateChanged(auth, (signedUser) => {
-				if (signedUser) {
-					return;
-				} else {
-					navigate("/login");
-				}
-			});
+			try {
+				onAuthStateChanged(auth, (signedUser) => {
+					if (signedUser) {
+						return;
+					} else {
+						navigate("/login");
+					}
+				});
+			} catch (error) {
+				console.log(error);
+			}
 		}
 		deterMineUserLoggedIn();
 	}, []);
