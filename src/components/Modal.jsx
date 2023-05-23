@@ -2,10 +2,11 @@
 import React, { memo, useRef } from "react";
 import { TbAlertTriangleFilled } from "react-icons/tb";
 import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 function Modal({ setAlert, notify, type }) {
 	const overlayRef = useRef(null);
-
+	const navigate = useNavigate();
 	function handleClick(e) {
 		if (e.target === overlayRef.current) {
 			setAlert(false);
@@ -15,6 +16,7 @@ function Modal({ setAlert, notify, type }) {
 	const modalAction = () => {
 		if (type === "logout") {
 			auth.signOut();
+			navigate("/login");
 		}
 	};
 
