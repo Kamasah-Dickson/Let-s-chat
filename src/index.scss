@@ -33,6 +33,11 @@
 		margin-inline: auto;
 	}
 
+	.my-max {
+		width: min(100% - 20px, 500px);
+		margin-inline: auto;
+	}
+
 	.my-full {
 		width: min(100% - 10%);
 		margin-inline: auto;

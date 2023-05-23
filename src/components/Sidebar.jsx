@@ -8,8 +8,14 @@ import { Link } from "react-router-dom";
 import { AllContext } from "../context/appContext";
 
 function Sidebar() {
-	const { settings, setsettings, setOptions, searchFocus, setSearchFocus } =
-		useContext(AllContext);
+	const {
+		settings,
+		setsettings,
+		setOptions,
+		searchFocus,
+		setSearchFocus,
+		setShowTargetMessage,
+	} = useContext(AllContext);
 
 	return settings ? (
 		<Menu_settings setsettings={setsettings} />
@@ -33,49 +39,7 @@ function Sidebar() {
 				<MdSearch cursor={"pointer"} color="white" size={20} />
 			</div>
 			<div className="overflow-y-auto scrollbar flex flex-col gap-2 my-3">
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
-					<Sidebar_Singlechat />
-				</Link>
-				<Link to="/">
+				<Link onClick={() => setShowTargetMessage(true)} to="/">
 					<Sidebar_Singlechat />
 				</Link>
 			</div>

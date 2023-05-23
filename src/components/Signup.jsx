@@ -96,6 +96,7 @@ function Signup() {
 			});
 		} catch (error) {
 			console.log(error);
+			setLoading(false);
 			switch (error.code) {
 				case "auth/network-request-failed":
 					toast.error("Please check your internet and try again");
