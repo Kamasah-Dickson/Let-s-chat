@@ -120,6 +120,7 @@ function UpdateUserProfile() {
 										type="text"
 										name="userName"
 										value={userName}
+										onBlur={() => (setUpdate(false), setUserName(""))}
 										onChange={(e) => setUserName(e.target.value)}
 									/>
 								)}
