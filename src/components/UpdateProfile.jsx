@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import testImage from "../assets/background.svg";
 import { MdCameraEnhance, MdEdit } from "react-icons/md";
 import { AllContext } from "../context/appContext";
+import { auth, storage } from "../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { updateProfile } from "firebase/auth";
+import toast, { Toaster } from "react-hot-toast";
 
-function UpdateProfile() {
-	const [photo, setPhoto] = useState("");
+function UpdateUserProfile() {
 	const [update, setUpdate] = useState(false);
 	const [userName, setUserName] = useState("");
-	const { userProfile } = useContext(AllContext);
+	const { userProfile, setUserProfile } = useContext(AllContext);
 	const nameRef = useRef(null);
 
 	useEffect(() => {
@@ -16,17 +18,52 @@ function UpdateProfile() {
 		}
 	}, [update]);
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		setUserName("");
-		setUpdate(false);
+		try {
+			updateProfile(auth.currentUser, {
+				displayName: userName,
+			});
+			toast.success("Username updated successfully");
+
+			setUserProfile((prev) => ({ ...prev, userName }));
+			setUserName("");
+			setUpdate(false);
+		} catch (error) {
+			switch (error.code) {
+				case "auth/network-request-failed":
+					toast.error("Please check your internet and try again");
+					break;
+
+				default:
+					toast.error("Please try again an error occured");
+					console.log(error.code);
+					break;
+			}
+		}
 	};
 
-	const handleSetProfile = (e) => {
-		setPhoto(e.target.value);
-	};
+	const handleSetProfile = async (e) => {
+		const profile = e.target.files[0];
+		try {
+			const storageRef = ref(storage, "user-profiles/" + profile?.name);
+			const uploadTask = uploadBytesResumable(storageRef, profile);
 
-	const isDisabled = Boolean(!photo) && Boolean(!userName);
+			uploadTask.on("state_changed", () => {
+				getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+					await updateProfile(auth.currentUser, {
+						photoURL: downloadURL,
+					});
+					setUserProfile((prev) => ({ ...prev, photoUrl: downloadURL }));
+				});
+			});
+			toast.success("Profile updated successfully");
+		} catch (error) {
+			console.log(error);
+			toast.error("Profile update failed");
+		}
+	};
+	const isDisabled = Boolean(!userProfile?.photoURL) && Boolean(!userName);
 
 	return (
 		<div className="main-bg">
@@ -43,7 +80,7 @@ function UpdateProfile() {
 						>
 							<img
 								className="h-full w-full object-cover rounded-full"
-								src={userProfile?.photoUrl ?? testImage}
+								src={userProfile?.photoUrl}
 								alt={userProfile?.userName}
 							/>
 							<div className="hover:bg-[#00000067] transiton-all bg-[#0303037e] absolute top-0 left-0 h-full w-full flex items-center justify-center">
@@ -58,7 +95,6 @@ function UpdateProfile() {
 								type="file"
 								id="profile"
 								name="profile"
-								value={photo}
 								onChange={handleSetProfile}
 							/>
 						</label>
@@ -107,9 +143,10 @@ function UpdateProfile() {
 						Update
 					</button>
 				</form>
+				<Toaster />
 			</div>
 		</div>
 	);
 }
 
-export default UpdateProfile;
+export default UpdateUserProfile;
