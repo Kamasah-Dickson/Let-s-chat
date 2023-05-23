@@ -102,7 +102,7 @@ function Signup() {
 					toast.error("Please check your internet and try again");
 					break;
 				case "auth/email-already-in-use":
-					toast.error("Sorry Email Already In Use");
+					toast.error("Sorry Email Already In Use Try A New One");
 					break;
 				case "auth/operation-not-allowed":
 					toast.error("Sorry operation was not allowed");
