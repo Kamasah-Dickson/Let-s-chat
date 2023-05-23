@@ -16,7 +16,7 @@ function User() {
 				/>
 			</div>
 			<div className="flex-1 ">
-				<h3 className="name">{userProfile?.userName || "Network error"}</h3>
+				<h3 className="name">{userProfile?.userName || "username"}</h3>
 				<span className="message text-green">
 					@{userProfile?.userName.toLowerCase() || "username"}
 				</span>
