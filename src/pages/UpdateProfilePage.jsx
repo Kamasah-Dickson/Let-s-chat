@@ -1,6 +1,6 @@
 import React, { useContext, useLayoutEffect } from "react";
 import Sidebar from "../components/Sidebar";
-import UpdateProfile from "../components/UpdateProfile";
+import UpdateUserProfile from "../components/UpdateProfile";
 import { AllContext } from "../context/appContext";
 
 function UpdateProfilePage() {
@@ -16,7 +16,7 @@ function UpdateProfilePage() {
 					<Sidebar />
 				</div>
 				<div className="flex-[8] ">
-					<UpdateProfile />
+					<UpdateUserProfile />
 				</div>
 			</div>
 		</div>
