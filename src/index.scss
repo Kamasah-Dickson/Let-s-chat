@@ -129,3 +129,56 @@
 		backdrop-filter: blur(4px);
 	}
 }
+
+// ==========================
+
+.container {
+	position: relative;
+	div {
+		position: relative;
+		input {
+			opacity: 0;
+			height: 0;
+			// width: 0;
+			visibility: hidden;
+			top: 0;
+			left: 0;
+		}
+	}
+	.checkmark {
+		background-color: grey;
+		border: 1px solid #232733;
+		border-radius: 3px;
+		height: 20px;
+		width: 20px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-30%, -50%);
+		&:after {
+			content: "";
+			position: absolute;
+			display: none;
+		}
+	}
+	input:checked ~ .checkmark {
+		background-color: blue;
+		&::after {
+			display: block;
+		}
+	}
+}
+
+.container .checkmark {
+	&:after {
+		content: "";
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%) rotate(45deg);
+		width: 5px;
+		height: 10px;
+		border: solid white;
+		border-width: 0 3px 3px 0;
+	}
+}
