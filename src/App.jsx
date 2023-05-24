@@ -15,13 +15,17 @@ function App() {
 	useEffect(() => {
 		function deterMineUserLoggedIn() {
 			try {
-				onAuthStateChanged(auth, (signedUser) => {
+				const unsubscribe = onAuthStateChanged(auth, (signedUser) => {
 					if (signedUser) {
 						return;
 					} else {
 						navigate("/login");
 					}
 				});
+
+				return () => {
+					unsubscribe();
+				};
 			} catch (error) {
 				console.log(error);
 			}

@@ -29,7 +29,7 @@ function UpdateUserProfile() {
 			});
 			toast.success("Username updated successfully");
 
-			setUserProfile((prev) => ({ ...prev, userName }));
+			setUserProfile((prev) => ({ ...prev, displayName: userName }));
 			setUserName("");
 			setUpdate(false);
 		} catch (error) {
@@ -57,7 +57,7 @@ function UpdateUserProfile() {
 					await updateProfile(auth.currentUser, {
 						photoURL: downloadURL,
 					});
-					setUserProfile((prev) => ({ ...prev, photoUrl: downloadURL }));
+					setUserProfile((prev) => ({ ...prev, photoURL: downloadURL }));
 				});
 			});
 			toast.success("Profile updated successfully");
@@ -90,8 +90,8 @@ function UpdateUserProfile() {
 						>
 							<img
 								className="h-full w-full object-cover rounded-full"
-								src={userProfile?.photoUrl || testImg}
-								alt={userProfile?.userName}
+								src={userProfile?.photoURL || testImg}
+								alt={userProfile?.displayName}
 							/>
 							<div className="hover:bg-[#00000067] transiton-all bg-[#0303037e] absolute top-0 left-0 h-full w-full flex items-center justify-center">
 								<MdCameraEnhance
@@ -113,7 +113,7 @@ function UpdateUserProfile() {
 							<div className="flex flex-col gap-2">
 								{!update ? (
 									<h3 className="text-white text-xl md:text-4xl flex items-center font-semibold gap-5">
-										{userProfile.userName?.toLowerCase() || "username"}
+										{userProfile.displayName || "username"}
 										<button type="button">
 											<MdEdit
 												onClick={() => setUpdate(true)}
@@ -136,7 +136,7 @@ function UpdateUserProfile() {
 								)}
 								<span className="text-sm md:text-lg  text-green">
 									@
-									{userProfile?.email.slice(
+									{userProfile?.email?.slice(
 										0,
 										userProfile?.email.indexOf("@")
 									) || "username"}

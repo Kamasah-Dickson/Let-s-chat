@@ -14,6 +14,7 @@ import { BiShowAlt, BiHide } from "react-icons/bi";
 import { onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
 import { AllContext } from "../context/appContext";
+// import { doc, setDoc } from "firebase/firestore";
 
 function Signup() {
 	const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ function Signup() {
 
 	useEffect(() => {
 		function deterMineUserLoggedIn() {
-			onAuthStateChanged(auth, (signedUser) => {
+			const unsubscribe = onAuthStateChanged(auth, (signedUser) => {
 				if (signedUser) {
 					setDisabled(true);
 					toast.dismiss();
@@ -53,6 +54,10 @@ function Signup() {
 					setDisabled(false);
 				}
 			});
+
+			return () => {
+				unsubscribe();
+			};
 		}
 		deterMineUserLoggedIn();
 	}, []);
@@ -66,16 +71,17 @@ function Signup() {
 			const displayName = user.displayName;
 			const email = user.email;
 			const photoURL = user.photoURL;
-			updateProfile(auth, {
+
+			await updateProfile(auth.currentUser, {
 				displayName,
 				email,
 				photoURL,
 			});
 			setUserProfile((prev) => ({
 				...prev,
-				username: displayName,
-				photoUrl: photoURL,
+				displayName,
 				email,
+				photoURL,
 			}));
 		} catch (error) {
 			console.log(error);
@@ -84,19 +90,43 @@ function Signup() {
 
 	const onSubmit = async (data) => {
 		setLoading(true);
+		setDisabled(true);
 		try {
 			const userCredentials = await createUserWithEmailAndPassword(
 				auth,
 				data.email,
 				data.password
 			);
+
 			const user = userCredentials.user;
-			updateProfile(user, {
-				displayName: data.username,
+
+			const displayName = data.username;
+			const email = data.email;
+			const photoURL = "";
+
+			await updateProfile(user, {
+				displayName,
+				email,
+				photoURL,
 			});
+
+			// await setDoc(doc(db, "users", user.uid), {
+			// 	displayName,
+			// 	email,
+			// 	photoURL,
+			// });
+
+			setUserProfile((prev) => ({
+				...prev,
+				displayName,
+				email,
+				photoURL: "",
+			}));
 		} catch (error) {
 			console.log(error);
 			setLoading(false);
+			setDisabled(false);
+
 			switch (error.code) {
 				case "auth/network-request-failed":
 					toast.error("Please check your internet and try again");

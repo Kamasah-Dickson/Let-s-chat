@@ -1,15 +1,14 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import Header_main from "./Header_main";
-import Search from "./Search";
 import attach from "../assets/attach.svg";
 import emoji from "../assets/emoji.svg";
 import record from "../assets/record.svg";
 import { AllContext } from "../context/appContext";
 import Message from "./Message";
 import { BsSendFill } from "react-icons/bs";
+import Search from "../components/Search";
 
 function Main() {
-	const [focus, setFocus] = useState(false);
 	const { setOptions } = useContext(AllContext);
 
 	return (
@@ -39,11 +38,7 @@ function Main() {
 					<Message />
 					<Message />
 				</div>
-				<div
-					className="rounded-md shadow-sm shadow-[#0000004f] bg-[#2E323C] sticky bottom-5 my-full gap-5 p-3 md:p-5 w-full flex items-center"
-					onClick={() => (setFocus(true), setOptions(true))}
-					onBlur={() => setFocus(false)}
-				>
+				<div className="rounded-md max-h- shadow-sm shadow-[#0000004f] bg-[#2E323C] sticky bottom-5 my-full gap-5 p-3 w-full flex items-center">
 					<img src={attach} alt="" className="cursor-pointer" />
 					<Search placeholder="Write a message..." focus={focus} />
 					<img src={emoji} alt="" className="cursor-pointer" />

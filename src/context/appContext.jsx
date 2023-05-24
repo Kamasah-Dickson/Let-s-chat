@@ -8,9 +8,9 @@ function AppContext({ children }) {
 	const [searchFocus, setSearchFocus] = useState(false);
 	const [options, setOptions] = useState(true);
 	const [userProfile, setUserProfile] = useState({
-		photoUrl: "",
-		userName: "",
+		displayName: "",
 		email: "",
+		photoURL: "",
 	});
 	const [showTargetMessage, setShowTargetMessage] = useState(false);
 	const [toggleSettingsCategory, setToggleSettingsCategory] = useState(false);

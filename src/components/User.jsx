@@ -6,20 +6,20 @@ import { AllContext } from "../context/appContext";
 function User() {
 	const { userProfile, setToggleSettingsCategory } = useContext(AllContext);
 
+	const { photoURL, displayName, email } = userProfile;
+
 	return (
 		<div className="flex transition-colors p-2 items-center gap-5 w-full">
 			<div className="cursor-pointer rounded-full w-16 h-16 relative ">
 				<img
 					className="h-full w-full object-cover rounded-full"
-					src={userProfile?.photoUrl || testImage}
-					alt={userProfile?.userName}
+					src={photoURL || testImage}
+					alt={displayName}
 				/>
 			</div>
 			<div className="flex-1 ">
-				<h3 className="name">{userProfile?.userName || "username"}</h3>
-				<span className="message text-green">
-					@{userProfile?.userName.toLowerCase() || "username"}
-				</span>
+				<h3 className="name">{displayName}</h3>
+				<span className="message text-green">@{email.toLowerCase()}</span>
 			</div>
 			<div onClick={() => setToggleSettingsCategory(true)}>
 				<Link
