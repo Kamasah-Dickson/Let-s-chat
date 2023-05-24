@@ -19,7 +19,7 @@ function Sidebar_Singlechat() {
 				<span className="message text-light_white">Check this out</span>
 			</div>
 			<div>
-				<div className="flex flex-col gap-2 text-light_white">
+				<div className="flex items-end flex-col gap-2 text-light_white">
 					<p className="text-sm">3:27PM</p>
 					<span className="text-sm text-white bg-blue rounded-full w-5 h-5 flex items-center justify-center text-center">
 						2

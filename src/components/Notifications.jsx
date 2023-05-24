@@ -1,12 +1,18 @@
-import React, { useState } from "react";
-import { HiOutlineUser, HiOutlineUserGroup } from "react-icons/hi";
+import React, { useContext, useState } from "react";
+import {
+	HiOutlineArrowSmLeft,
+	HiOutlineUser,
+	HiOutlineUserGroup,
+} from "react-icons/hi";
 import { TfiAnnouncement } from "react-icons/tfi";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { nanoid } from "nanoid";
 import Modal from "./Modal";
+import { AllContext } from "../context/appContext";
 
 function Notifications() {
 	const [alert, setAlert] = useState(false);
+	const { setToggleSettingsCategory } = useContext(AllContext);
 
 	const [Allnotifications] = useState([
 		{
@@ -33,6 +39,13 @@ function Notifications() {
 		<div className="main-bg">
 			<div className="gradient h-full flex flex-col justify-center">
 				<div className="pb-44 p-6 flex-[3] px-8 overflow-y-auto">
+					<HiOutlineArrowSmLeft
+						onClick={() => setToggleSettingsCategory(false)}
+						className="md:hidden my-3 flex"
+						color="white"
+						size={25}
+						cursor={"pointer"}
+					/>
 					<h2 className="text-white text-3xl font-medium">Notifications</h2>
 					<div className="flex justify-center mt-5 flex-col gap-1">
 						{Allnotifications.map((notificaions) => {
@@ -61,29 +74,35 @@ function Notifications() {
 						<h2 className="text-lg">In-app notifications</h2>
 						<div className="flex border rounded-md flex-col bg-[#2e323e9d] mt-3 transition-all cursor-pointer border-[#1F232F]">
 							<label
-								className="hover:bg-[#2e323ebe] transition-all border-b cursor-pointer border-[#3f444e9f] p-4 flex gap-5 px-4"
+								className="container hover:bg-[#2e323ebe] transition-all border-b cursor-pointer border-[#3f444e9f] p-4 flex gap-5 px-4"
 								htmlFor="app-sound"
 							>
-								<input
-									className="border-none outline-none  "
-									id="app-sound"
-									type="checkbox"
-									name=""
-									value=""
-								/>
+								<div>
+									<input
+										className="border-none outline-none "
+										id="app-sound"
+										type="checkbox"
+										name=""
+										value=""
+									/>
+									<span className="checkmark"></span>
+								</div>
 								<p>In-app Sound</p>
 							</label>
 							<label
-								className="hover:bg-[#2e323ebe] transition-all px-4 flex cursor-pointer gap-5 p-4"
+								className="container hover:bg-[#2e323ebe] transition-all px-4 flex cursor-pointer gap-5 p-4"
 								htmlFor="app-preview"
 							>
-								<input
-									className="border-none outline-none "
-									id="app-preview"
-									type="checkbox"
-									name=""
-									value=""
-								/>
+								<div>
+									<input
+										className="border-none outline-none "
+										id="app-preview"
+										type="checkbox"
+										name=""
+										value=""
+									/>
+									<span className="checkmark"></span>
+								</div>
 								<p>In-app Preview</p>
 							</label>
 						</div>
@@ -91,16 +110,19 @@ function Notifications() {
 					<div className="text-white mt-10">
 						<h2 className="text-lg">Badge Counter</h2>
 						<label
-							className=" bg-[#2e323e9d] transition-all cursor-pointer hover:bg-[#2e323ebe] border-[#1F232F] border rounded-md p-4 mt-3 flex items-center gap-5"
+							className=" container bg-[#2e323e9d] transition-all cursor-pointer hover:bg-[#2e323ebe] border-[#1F232F] border rounded-md p-4 mt-3 flex items-center gap-5"
 							htmlFor="app-unread"
 						>
-							<input
-								className="border-none outline-none "
-								id="app-unread"
-								type="checkbox"
-								name=""
-								value=""
-							/>
+							<div>
+								<input
+									className="border-none outline-none "
+									id="app-unread"
+									type="checkbox"
+									name=""
+									value=""
+								/>
+								<span className="checkmark"></span>
+							</div>
 							<p>Count Unread Messages</p>
 						</label>
 					</div>

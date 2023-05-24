@@ -5,11 +5,14 @@ import { auth, storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
+import testImg from "../assets/background.svg";
+import { HiOutlineArrowSmLeft } from "react-icons/hi";
 
 function UpdateUserProfile() {
 	const [update, setUpdate] = useState(false);
 	const [userName, setUserName] = useState("");
-	const { userProfile, setUserProfile } = useContext(AllContext);
+	const { userProfile, setUserProfile, setToggleSettingsCategory } =
+		useContext(AllContext);
 	const nameRef = useRef(null);
 
 	useEffect(() => {
@@ -69,7 +72,14 @@ function UpdateUserProfile() {
 		<div className="main-bg">
 			<div className="gradient h-full flex flex-col ">
 				<form className="px-4 md:px-8" onSubmit={handleSubmit}>
-					<h2 className="text-white py-10 text-4xl md:text-5xl font-semibold">
+					<HiOutlineArrowSmLeft
+						onClick={() => setToggleSettingsCategory(false)}
+						className="md:hidden m-3 flex"
+						color="white"
+						size={25}
+						cursor={"pointer"}
+					/>
+					<h2 className="text-white py-7 md:py-10 text-3xl sm:text-4xl md:text-5xl font-semibold">
 						Update Profile
 					</h2>
 
@@ -80,7 +90,7 @@ function UpdateUserProfile() {
 						>
 							<img
 								className="h-full w-full object-cover rounded-full"
-								src={userProfile?.photoUrl}
+								src={userProfile?.photoUrl || testImg}
 								alt={userProfile?.userName}
 							/>
 							<div className="hover:bg-[#00000067] transiton-all bg-[#0303037e] absolute top-0 left-0 h-full w-full flex items-center justify-center">
@@ -103,7 +113,7 @@ function UpdateUserProfile() {
 							<div className="flex flex-col gap-2">
 								{!update ? (
 									<h3 className="text-white text-xl md:text-4xl flex items-center font-semibold gap-5">
-										{userProfile.userName?.toLowerCase()}
+										{userProfile.userName?.toLowerCase() || "username"}
 										<button type="button">
 											<MdEdit
 												onClick={() => setUpdate(true)}
@@ -125,7 +135,11 @@ function UpdateUserProfile() {
 									/>
 								)}
 								<span className="text-sm md:text-lg  text-green">
-									@Kamasahdickson
+									@
+									{userProfile?.email.slice(
+										0,
+										userProfile?.email.indexOf("@")
+									) || "username"}
 								</span>
 							</div>
 						</div>

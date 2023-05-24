@@ -213,19 +213,23 @@ function Signup() {
 								{errors.password?.message}
 							</p>
 						)}
-						<div className="flex items-center gap-2">
-							<input
-								disabled={disabled}
-								className="border placeholder:text-[#95a2b8] border-[#354055] bg-transparent p-3 rounded-full"
-								type="checkbox"
-								{...register("remember")}
-								id="remember"
-							/>
-							<label className="text-base py-2" htmlFor="remember">
-								Remember me
-							</label>
-						</div>
-						<p className="text-white">
+						<label
+							className="flex w-fit items-center gap-4 container text-base py-2"
+							htmlFor="remember"
+						>
+							<div>
+								<input
+									disabled={disabled}
+									className="border placeholder:text-[#95a2b8] border-[#354055] bg-transparent p-3 rounded-full"
+									type="checkbox"
+									{...register("remember")}
+									id="remember"
+								/>
+								<span className="checkmark"></span>
+							</div>
+							<p>Remember me</p>
+						</label>
+						<p className="text-white mt-3">
 							Already having an account ?{" "}
 							<Link to={"/login"} className="font-semibold text-[#e94f11]">
 								Sign in
