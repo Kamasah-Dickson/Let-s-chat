@@ -13,6 +13,7 @@ function AppContext({ children }) {
 		email: "",
 	});
 	const [showTargetMessage, setShowTargetMessage] = useState(false);
+	const [toggleSettingsCategory, setToggleSettingsCategory] = useState(false);
 
 	return (
 		<AllContext.Provider
@@ -27,6 +28,8 @@ function AppContext({ children }) {
 				setUserProfile,
 				showTargetMessage,
 				setShowTargetMessage,
+				toggleSettingsCategory,
+				setToggleSettingsCategory,
 			}}
 		>
 			{children}
