@@ -12,7 +12,7 @@ import { AllContext } from "../context/appContext";
 function Menu_settings({ setsettings }) {
 	const { pathname } = useLocation();
 	const [alert, setAlert] = useState(false);
-	const { setOptions } = useContext(AllContext);
+	const { setOptions, setToggleSettingsCategory } = useContext(AllContext);
 
 	return (
 		<div
@@ -36,6 +36,7 @@ function Menu_settings({ setsettings }) {
 				{settingsData.map((data) => {
 					return (
 						<Link
+							onClick={() => setToggleSettingsCategory(true)}
 							to={`${data.path}`}
 							className={` ${
 								data.path === `${pathname}` &&
