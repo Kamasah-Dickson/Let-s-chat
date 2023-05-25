@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import Header_main from "./Header_main";
 import attach from "../assets/attach.svg";
 import emoji from "../assets/emoji.svg";
@@ -9,6 +9,14 @@ import { BsSendFill } from "react-icons/bs";
 
 function Main() {
 	const { setOptions } = useContext(AllContext);
+
+	const textareaRef = useRef(null);
+
+	const handleInputChange = () => {
+		const textarea = textareaRef.current;
+		textarea.style.height = "auto";
+		textarea.style.height = `${textarea.scrollHeight}px`;
+	};
 
 	return (
 		<div className="main-bg">
@@ -42,12 +50,13 @@ function Main() {
 						bottom-5 md:bottom-10 mt-20 p-3 h-full"
 					>
 						<textarea
-							rows={1}
+							rows="1"
+							ref={textareaRef}
+							onChange={handleInputChange}
 							autoCorrect="true"
 							autoComplete="true"
 							id="message"
-							className="w-full h-[200px] 
-						rounded-md bg-transparent object-cover border-none outline-none resize-none overflow-y-hidden"
+							className="w-full min-h-[30px] rounded-md h-auto bg-transparent object-cover border-none outline-none resize-none overflow-hidden"
 							placeholder="Write a message..."
 						></textarea>
 						<img src={attach} alt="" className="cursor-pointer" />
