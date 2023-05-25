@@ -21,7 +21,7 @@ function Signup() {
 	const navigate = useNavigate();
 	const [showPassword, setShowpassword] = useState(false);
 	const [disabled, setDisabled] = useState(false);
-	const { setUserProfile } = useContext(AllContext);
+	const { updateUserProfile } = useContext(AllContext);
 	const {
 		handleSubmit,
 		register,
@@ -78,7 +78,7 @@ function Signup() {
 				photoURL,
 			});
 
-			setUserProfile((prev) => ({
+			updateUserProfile((prev) => ({
 				...prev,
 				displayName,
 				email,
@@ -86,6 +86,23 @@ function Signup() {
 			}));
 		} catch (error) {
 			console.log(error);
+			switch (error.code) {
+				case "auth/network-request-failed":
+					toast.error("Please check your internet and try again");
+					break;
+				case "auth/email-already-in-use":
+					toast.error("Sorry Email Already In Use Try A New One");
+					break;
+				case "auth/internal-error":
+					toast.error("An error occured");
+					break;
+				case "auth/operation-not-allowed":
+					toast.error("Sorry operation was not allowed");
+					break;
+				default:
+					console.log(error.code);
+					break;
+			}
 		}
 	};
 
@@ -104,7 +121,7 @@ function Signup() {
 				photoURL,
 			});
 
-			setUserProfile((prev) => ({
+			updateUserProfile((prev) => ({
 				...prev,
 				displayName,
 				email,
@@ -121,6 +138,9 @@ function Signup() {
 					break;
 				case "auth/email-already-in-use":
 					toast.error("Sorry Email Already In Use Try A New One");
+					break;
+				case "auth/internal-error":
+					toast.error("An error occured");
 					break;
 				case "auth/operation-not-allowed":
 					toast.error("Sorry operation was not allowed");
