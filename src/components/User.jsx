@@ -18,8 +18,10 @@ function User() {
 				/>
 			</div>
 			<div className="flex-1 ">
-				<h3 className="name">{displayName}</h3>
-				<span className="message text-green">@{email.toLowerCase()}</span>
+				<h3 className="name">{displayName || "username"}</h3>
+				<span className="message text-green">
+					@{email.toLowerCase().slice(0, email.indexOf("@")) || "user"}
+				</span>
 			</div>
 			<div onClick={() => setToggleSettingsCategory(true)}>
 				<Link
