@@ -92,36 +92,32 @@ function Signup() {
 		setLoading(true);
 		setDisabled(true);
 		try {
-			const userCredentials = await createUserWithEmailAndPassword(
-				auth,
-				data.email,
-				data.password
-			);
-
-			const user = userCredentials.user;
+			await createUserWithEmailAndPassword(auth, data.email, data.password);
+			// const user = userCredentials.user;
 
 			const displayName = data.username;
 			const email = data.email;
 			const photoURL = "";
 
-			await updateProfile(user, {
+			await updateProfile(auth.currentUser, {
+				//user or auth??
 				displayName,
 				email,
 				photoURL,
 			});
+
+			setUserProfile((prev) => ({
+				...prev,
+				displayName,
+				email,
+				photoURL,
+			}));
 
 			// await setDoc(doc(db, "users", user.uid), {
 			// 	displayName,
 			// 	email,
 			// 	photoURL,
 			// });
-
-			setUserProfile((prev) => ({
-				...prev,
-				displayName,
-				email,
-				photoURL: "",
-			}));
 		} catch (error) {
 			console.log(error);
 			setLoading(false);
