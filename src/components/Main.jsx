@@ -6,7 +6,6 @@ import record from "../assets/record.svg";
 import { AllContext } from "../context/appContext";
 import Message from "./Message";
 import { BsSendFill } from "react-icons/bs";
-
 function Main() {
 	const { setOptions } = useContext(AllContext);
 
