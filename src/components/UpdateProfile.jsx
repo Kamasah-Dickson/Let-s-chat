@@ -66,7 +66,7 @@ function UpdateUserProfile() {
 			toast.error("Profile update failed");
 		}
 	};
-	const isDisabled = Boolean(!userProfile?.photoURL) && Boolean(!userName);
+	const isDisabled = Boolean(!userProfile?.photoURL) || Boolean(!userName);
 
 	return (
 		<div className="main-bg">
