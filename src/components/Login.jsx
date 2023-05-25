@@ -23,7 +23,7 @@ function Login() {
 	const navigate = useNavigate();
 	const [disabled, setDisabled] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const { setUserProfile } = useContext(AllContext);
+	const { updateUserProfile } = useContext(AllContext);
 
 	const loginWithGoogle = async () => {
 		setLoading(true);
@@ -31,10 +31,10 @@ function Login() {
 		try {
 			const userCredential = await signInWithPopup(auth, provider);
 			const userName = userCredential.user.displayName;
-			const photoUrl = userCredential.user.photoURL;
+			const photoURL = userCredential.user.photoURL;
 			const email = userCredential.email;
 
-			setUserProfile((prev) => ({ ...prev, userName, photoUrl, email }));
+			updateUserProfile((prev) => ({ ...prev, userName, photoURL, email }));
 
 			navigate("/");
 		} catch (error) {
@@ -48,8 +48,8 @@ function Login() {
 				case "auth/invalid-email":
 					toast.error("Invalid Email Address");
 					break;
-				case "auth/user-disabled":
-					toast.error("Sorry user has been disabled");
+				case "auth/internal-error":
+					toast.error("An error occured");
 					break;
 				case "auth/user-not-found":
 					toast.error("User not found you can create a new account");
