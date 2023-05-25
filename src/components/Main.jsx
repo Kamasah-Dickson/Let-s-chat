@@ -6,7 +6,6 @@ import record from "../assets/record.svg";
 import { AllContext } from "../context/appContext";
 import Message from "./Message";
 import { BsSendFill } from "react-icons/bs";
-import Search from "../components/Search";
 
 function Main() {
 	const { setOptions } = useContext(AllContext);
@@ -14,10 +13,10 @@ function Main() {
 	return (
 		<div className="main-bg">
 			<Header_main />
-			<div className="gradient h-full flex flex-col justify-center">
+			<div className="gradient my-height overflow-y-scroll flex flex-col justify-center">
 				<div
 					onClick={() => setOptions(true)}
-					className="flex flex-col gap-5 pb-44 pt-5 flex-[3] px-5 overflow-y-auto"
+					className="flex pt-5 flex-col gap-5   flex-[3] px-5 overflow-y-auto"
 				>
 					<Message />
 					<Message />
@@ -37,17 +36,29 @@ function Main() {
 					<Message />
 					<Message />
 					<Message />
-				</div>
-				<div className="rounded-md max-h- shadow-sm shadow-[#0000004f] bg-[#2E323C] sticky bottom-5 my-full gap-5 p-3 w-full flex items-center">
-					<img src={attach} alt="" className="cursor-pointer" />
-					<Search placeholder="Write a message..." focus={focus} />
-					<img src={emoji} alt="" className="cursor-pointer" />
-					<img src={record} alt="" className="cursor-pointer" />
-					<BsSendFill
-						color="#8A8A8A"
-						size={30}
-						className="ml-5 cursor-pointer"
-					/>
+					<label
+						htmlFor="message"
+						className="rounded-md items-end shadow-sm shadow-[#0000004f] text-white bg-[#2E323C] md:my-full gap-5 w-full flex sticky
+						bottom-5 md:bottom-10 mt-20 p-3 h-full"
+					>
+						<textarea
+							rows={1}
+							autoCorrect="true"
+							autoComplete="true"
+							id="message"
+							className="w-full h-[200px] 
+						rounded-md bg-transparent object-cover border-none outline-none resize-none overflow-y-hidden"
+							placeholder="Write a message..."
+						></textarea>
+						<img src={attach} alt="" className="cursor-pointer" />
+						<img src={emoji} alt="" className="cursor-pointer" />
+						<img src={record} alt="" className=" cursor-pointer" />
+						<BsSendFill
+							color="#8A8A8A"
+							size={25}
+							className="ml-3 md:hidden cursor-pointer h-fit"
+						/>
+					</label>
 				</div>
 			</div>
 		</div>
