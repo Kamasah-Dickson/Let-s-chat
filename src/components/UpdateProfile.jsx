@@ -11,7 +11,7 @@ import { HiOutlineArrowSmLeft } from "react-icons/hi";
 function UpdateUserProfile() {
 	const [update, setUpdate] = useState(false);
 	const [userName, setUserName] = useState("");
-	const { userProfile, setUserProfile, setToggleSettingsCategory } =
+	const { userProfile, updateUserProfile, setToggleSettingsCategory } =
 		useContext(AllContext);
 	const nameRef = useRef(null);
 
@@ -24,18 +24,20 @@ function UpdateUserProfile() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		try {
-			updateProfile(auth.currentUser, {
+			await updateProfile(auth.currentUser, {
 				displayName: userName,
 			});
 			toast.success("Username updated successfully");
 
-			setUserProfile((prev) => ({ ...prev, displayName: userName }));
+			updateUserProfile((prev) => ({ ...prev, displayName: userName }));
 			setUserName("");
 			setUpdate(false);
 		} catch (error) {
 			switch (error.code) {
 				case "auth/network-request-failed":
 					toast.error("Please check your internet and try again");
+					setUpdate(false);
+					setUserName("");
 					break;
 
 				default:
@@ -57,7 +59,7 @@ function UpdateUserProfile() {
 					await updateProfile(auth.currentUser, {
 						photoURL: downloadURL,
 					});
-					setUserProfile((prev) => ({ ...prev, photoURL: downloadURL }));
+					updateUserProfile((prev) => ({ ...prev, photoURL: downloadURL }));
 				});
 			});
 			toast.success("Profile updated successfully");
@@ -66,12 +68,13 @@ function UpdateUserProfile() {
 			toast.error("Profile update failed");
 		}
 	};
+
 	const isDisabled = Boolean(!userProfile?.photoURL) || Boolean(!userName);
 
 	return (
 		<div className="main-bg">
 			<div className="gradient h-full flex flex-col ">
-				<form className="px-4 md:px-8" onSubmit={handleSubmit}>
+				<form className="px-4 h-full md:px-8" onSubmit={handleSubmit}>
 					<HiOutlineArrowSmLeft
 						onClick={() => setToggleSettingsCategory(false)}
 						className="md:hidden m-3 flex"
@@ -105,6 +108,7 @@ function UpdateUserProfile() {
 								type="file"
 								id="profile"
 								name="profile"
+								title="upload"
 								onChange={handleSetProfile}
 							/>
 						</label>
@@ -114,25 +118,36 @@ function UpdateUserProfile() {
 								{!update ? (
 									<h3 className="text-white text-xl md:text-4xl flex items-center font-semibold gap-5">
 										{userProfile.displayName || "username"}
-										<button type="button">
-											<MdEdit
-												onClick={() => setUpdate(true)}
-												className="active:scale-[1.05]"
-												cursor={"pointer"}
-												size={30}
-											/>
-										</button>
+										<MdEdit
+											onClick={() => setUpdate(true)}
+											className="active:scale-[1.05]"
+											cursor={"pointer"}
+											size={30}
+										/>
 									</h3>
 								) : (
-									<input
-										ref={nameRef}
-										className="text-white text-2xl flex items-center font-semibold gap-5 max-w-[250px] bg-transparent border-b outline-none"
-										type="text"
-										name="userName"
-										value={userName}
-										onBlur={() => (setUpdate(false), setUserName(""))}
-										onChange={(e) => setUserName(e.target.value)}
-									/>
+									<div className="flex items-center gap-7">
+										<input
+											ref={nameRef}
+											className="text-white text-2xl flex items-center font-semibold gap-5 max-w-[250px] bg-transparent border-b outline-none"
+											type="text"
+											name="userName"
+											value={userName}
+											onKeyUp={(e) =>
+												e.code === "Escape"
+													? (setUpdate(false), setUserName(""))
+													: null
+											}
+											onChange={(e) => setUserName(e.target.value)}
+										/>
+										<button
+											onClick={() => (setUserName(""), setUpdate(false))}
+											type="button"
+											className="rounded-md p-2 text-sm font-medium active:scale-[1.02] bg-[crimson] text-white w-fit"
+										>
+											Cancel update
+										</button>
+									</div>
 								)}
 								<span className="text-sm md:text-lg  text-green">
 									@
