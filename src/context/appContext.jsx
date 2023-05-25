@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { createContext, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import React, { createContext, useState, useEffect } from "react";
+import { auth } from "../firebase";
 
 export const AllContext = createContext(null);
 
@@ -15,6 +17,34 @@ function AppContext({ children }) {
 	const [showTargetMessage, setShowTargetMessage] = useState(false);
 	const [toggleSettingsCategory, setToggleSettingsCategory] = useState(false);
 
+	useEffect(() => {
+		const getProfile = JSON.parse(localStorage.getItem("userProfile"));
+		if (getProfile) {
+			setUserProfile(getProfile);
+		}
+	}, []);
+
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, (signedUser) => {
+			if (signedUser) {
+				const { displayName, email, photoURL } = signedUser;
+				setUserProfile(signedUser);
+				localStorage.setItem(
+					"userProfile",
+					JSON.stringify({ displayName, email, photoURL })
+				);
+			}
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, [auth.currentUser]);
+
+	const updateUserProfile = (newUserData) => {
+		setUserProfile(newUserData);
+	};
+
 	return (
 		<AllContext.Provider
 			value={{
@@ -24,8 +54,8 @@ function AppContext({ children }) {
 				searchFocus,
 				settings,
 				setsettings,
+				updateUserProfile,
 				userProfile,
-				setUserProfile,
 				showTargetMessage,
 				setShowTargetMessage,
 				toggleSettingsCategory,
