@@ -7,14 +7,14 @@ import {
 	signInWithPopup,
 	updateProfile,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { BiShowAlt, BiHide } from "react-icons/bi";
 import { onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
 import { AllContext } from "../context/appContext";
-// import { doc, setDoc } from "firebase/firestore";
+import { set, ref } from "firebase/database";
 
 function Signup() {
 	const [loading, setLoading] = useState(false);
@@ -109,13 +109,25 @@ function Signup() {
 	const onSubmit = async (data) => {
 		setLoading(true);
 		setDisabled(true);
+
 		try {
-			await createUserWithEmailAndPassword(auth, data.email, data.password);
+			const userCredentials = await createUserWithEmailAndPassword(
+				auth,
+				data.email,
+				data.password
+			);
 			const displayName = data.username;
 			const email = data.email;
 			const photoURL = "";
 
 			await updateProfile(auth.currentUser, {
+				displayName,
+				email,
+				photoURL,
+			});
+
+			const userId = userCredentials.user;
+			await set(ref(db, "users/" + userId.uid), {
 				displayName,
 				email,
 				photoURL,
