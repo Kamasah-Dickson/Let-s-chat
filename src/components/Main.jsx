@@ -8,7 +8,6 @@ import Message from "./Message";
 import { BsSendFill } from "react-icons/bs";
 function Main() {
 	const { setOptions } = useContext(AllContext);
-
 	const textareaRef = useRef(null);
 
 	const handleInputChange = () => {
@@ -45,9 +44,11 @@ function Main() {
 					<Message />
 					<label
 						htmlFor="message"
-						className="rounded-md items-end shadow-sm shadow-[#0000004f] text-white bg-[#2E323C] md:my-full gap-5 w-full flex sticky
+						className="rounded-md items-center shadow-sm shadow-[#0000004f] text-white bg-[#2E323C] md:my-full gap-5 w-full flex sticky
 						bottom-5 md:bottom-10 mt-20 p-3 h-full"
 					>
+						<img src={attach} alt="" className="cursor-pointer" />
+
 						<textarea
 							rows="1"
 							ref={textareaRef}
@@ -58,7 +59,6 @@ function Main() {
 							className="w-full min-h-[30px] rounded-md h-auto bg-transparent object-cover border-none outline-none resize-none overflow-hidden"
 							placeholder="Write a message..."
 						></textarea>
-						<img src={attach} alt="" className="cursor-pointer" />
 						<img src={emoji} alt="" className="cursor-pointer" />
 						<img src={record} alt="" className=" cursor-pointer" />
 						<BsSendFill
