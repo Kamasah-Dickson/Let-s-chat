@@ -1,25 +1,26 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { MdCameraEnhance, MdEdit } from "react-icons/md";
 import { AllContext } from "../context/appContext";
-import { auth, storage } from "../firebase";
+import { auth, db, storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
 import testImg from "../assets/background.svg";
 import { HiOutlineArrowSmLeft } from "react-icons/hi";
+import { update, ref as databaseRef } from "firebase/database";
 
 function UpdateUserProfile() {
-	const [update, setUpdate] = useState(false);
+	const [updates, setUpdates] = useState(false);
 	const [userName, setUserName] = useState("");
 	const { userProfile, updateUserProfile, setToggleSettingsCategory } =
 		useContext(AllContext);
 	const nameRef = useRef(null);
 
 	useEffect(() => {
-		if (update) {
+		if (updates) {
 			nameRef.current.focus();
 		}
-	}, [update]);
+	}, [updates]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -31,12 +32,12 @@ function UpdateUserProfile() {
 
 			updateUserProfile((prev) => ({ ...prev, displayName: userName }));
 			setUserName("");
-			setUpdate(false);
+			setUpdates(false);
 		} catch (error) {
 			switch (error.code) {
 				case "auth/network-request-failed":
 					toast.error("Please check your internet and try again");
-					setUpdate(false);
+					setUpdates(false);
 					setUserName("");
 					break;
 
@@ -60,12 +61,22 @@ function UpdateUserProfile() {
 						photoURL: downloadURL,
 					});
 					updateUserProfile((prev) => ({ ...prev, photoURL: downloadURL }));
+
+					const userId = auth.currentUser.uid;
+					const userRef = databaseRef(db, `users/${userId}`);
+					const updatedData = {
+						photoURL: downloadURL,
+					};
+					await update(userRef, updatedData);
 				});
 			});
 			toast.success("Profile updated successfully");
 		} catch (error) {
 			console.log(error);
 			toast.error("Profile update failed");
+			if (error.code === "auth/network-request-failed") {
+				toast.error("Please check your internet and try again");
+			}
 		}
 	};
 
@@ -115,11 +126,11 @@ function UpdateUserProfile() {
 
 						<div className="flex-1 ">
 							<div className="flex flex-col gap-2">
-								{!update ? (
+								{!updates ? (
 									<h3 className="text-white text-xl md:text-4xl flex items-center font-semibold gap-5">
 										{userProfile.displayName || "username"}
 										<MdEdit
-											onClick={() => setUpdate(true)}
+											onClick={() => setUpdates(true)}
 											className="active:scale-[1.05]"
 											cursor={"pointer"}
 											size={30}
@@ -135,13 +146,13 @@ function UpdateUserProfile() {
 											value={userName}
 											onKeyUp={(e) =>
 												e.code === "Escape"
-													? (setUpdate(false), setUserName(""))
+													? (setUpdates(false), setUserName(""))
 													: null
 											}
 											onChange={(e) => setUserName(e.target.value)}
 										/>
 										<button
-											onClick={() => (setUserName(""), setUpdate(false))}
+											onClick={() => (setUserName(""), setUpdates(false))}
 											type="button"
 											className="rounded-md p-2 text-sm font-medium active:scale-[1.02] bg-[crimson] text-white w-fit"
 										>
