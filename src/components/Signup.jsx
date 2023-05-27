@@ -78,6 +78,13 @@ function Signup() {
 				photoURL,
 			});
 
+			await set(ref(db, "users/" + result.user.uid), {
+				uid: result.user.uid,
+				displayName,
+				email,
+				photoURL,
+			});
+
 			updateUserProfile((prev) => ({
 				...prev,
 				displayName,
@@ -125,13 +132,16 @@ function Signup() {
 				email,
 				photoURL,
 			});
-
 			const userId = userCredentials.user;
+			//save userCredentials to database
 			await set(ref(db, "users/" + userId.uid), {
+				uid: userId.uid,
 				displayName,
 				email,
 				photoURL,
 			});
+			//create a userChat in database
+			await set(ref(db, "usersChats/" + userId.uid), {});
 
 			updateUserProfile((prev) => ({
 				...prev,
