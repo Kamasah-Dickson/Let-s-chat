@@ -16,6 +16,8 @@ function AppContext({ children }) {
 	});
 	const [showTargetMessage, setShowTargetMessage] = useState(false);
 	const [toggleSettingsCategory, setToggleSettingsCategory] = useState(false);
+	const [searchedUsers, setSearchedUsers] = useState([]);
+	const [userError, setUserError] = useState(false);
 
 	useEffect(() => {
 		const getProfile = JSON.parse(localStorage.getItem("userProfile"));
@@ -60,6 +62,10 @@ function AppContext({ children }) {
 				setShowTargetMessage,
 				toggleSettingsCategory,
 				setToggleSettingsCategory,
+				searchedUsers,
+				setSearchedUsers,
+				userError,
+				setUserError,
 			}}
 		>
 			{children}
