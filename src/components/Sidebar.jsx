@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useContext } from "react";
-import { MdSearch, MdOutlineSettingsSuggest } from "react-icons/md";
+import { MdOutlineSettingsSuggest } from "react-icons/md";
 import Search from "./Search";
 import Sidebar_Singlechat from "./Sidebar_Singlechat";
 import Menu_settings from "./Menu_settings";
@@ -13,7 +13,6 @@ function Sidebar() {
 		setsettings,
 		setOptions,
 		searchFocus,
-		setSearchFocus,
 		setShowTargetMessage,
 	} = useContext(AllContext);
 
@@ -30,14 +29,8 @@ function Sidebar() {
 				size={25}
 				cursor={"pointer"}
 			/>
-			<div
-				onClick={() => setSearchFocus(true)}
-				onBlur={() => setSearchFocus(false)}
-				className="sticky mt-4 -top-2 overflow-hidden z-10 shadow shadow-[#00000049] bg-light_brown py-[10px] px-2 rounded-md flex items-center justify-between"
-			>
-				<Search searchFocus={searchFocus} placeholder="Search..." />
-				<MdSearch cursor={"pointer"} color="white" size={20} />
-			</div>
+
+			<Search searchFocus={searchFocus} />
 			<div className="overflow-y-auto scrollbar flex flex-col gap-2 my-3">
 				<Link onClick={() => setShowTargetMessage(true)} to="/">
 					<Sidebar_Singlechat />
