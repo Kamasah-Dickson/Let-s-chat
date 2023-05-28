@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import testImage from "../assets/background.svg";
 import { MdSearch } from "react-icons/md";
 import { HiOutlineArrowSmLeft, HiOutlineDotsVertical } from "react-icons/hi";
@@ -8,24 +8,10 @@ import Modal from "./Modal";
 import { ChatContext } from "../context/chatContext";
 
 function Header_main() {
-	const {
-		setSearchFocus,
-		options,
-		setOptions,
-		setShowTargetMessage,
-		setUserProfile,
-	} = useContext(AllContext);
+	const { setSearchFocus, options, setOptions, setShowTargetMessage } =
+		useContext(AllContext);
 	const [alert, setAlert] = useState(false);
-
 	const { data } = useContext(ChatContext);
-
-	// useEffect(() => {
-	// 	setUserProfile((prev) => ({
-	// 		...prev,
-	// 		displayName: data.user.displayName,
-	// 		photoURL: data.user.displayName,
-	// 	}));
-	// }, []);
 
 	return (
 		<div className="bg-[#232733] border-b-[1px] border-[rgba(255,255,255,0.10)] px-5 flex transition-colors p-2 items-center gap-5 w-full">
