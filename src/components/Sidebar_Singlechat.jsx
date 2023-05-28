@@ -6,40 +6,70 @@ import { ChatContext } from "../context/chatContext";
 
 function Sidebar_Singlechat() {
 	const [chat, setChat] = useState([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState("");
 
 	const { dispatch } = useContext(ChatContext);
 
 	useEffect(() => {
-		const currentUserID = auth?.currentUser?.uid;
-		const dataRef = ref(db, "userChats", currentUserID);
-		const onData = (snapshot) => {
-			if (snapshot.exists()) {
-				const retrievedData = snapshot.val();
-				if (retrievedData) {
-					setLoading(false);
-					setChat(retrievedData);
-				}
-			} else {
-				return;
+		let dataRef;
+		let onData;
+
+		function fetchContacts() {
+			setLoading(true);
+			try {
+				const currentUserID = auth?.currentUser?.uid;
+				dataRef = ref(db, "userChats", currentUserID);
+				onData = (snapshot) => {
+					if (snapshot.exists()) {
+						const retrievedData = snapshot.val();
+						if (retrievedData) {
+							setLoading(false);
+							setChat(retrievedData);
+						}
+					}
+				};
+
+				// Register the onData listener
+				onValue(dataRef, onData);
+
+				// Set up onDisconnect event
+				const connectedRef = ref(db, ".info/connected");
+				onValue(connectedRef, (snapshot) => {
+					const isConnected = snapshot.val();
+					if (!isConnected) {
+						setError("Internet connection lost. Please check your network.");
+						setLoading(false);
+					} else {
+						setError(null);
+					}
+				});
+			} catch (error) {
+				console.log(error);
+				setLoading(false);
+				setError("An error occurred while fetching data.");
 			}
-		};
+		}
 
-		onValue(dataRef, onData);
+		fetchContacts();
 
+		// Cleanup function
 		return () => {
 			off(dataRef, "value", onData);
+			// Handle the case when the component unmounts or the effect is re-run
+			setLoading(false);
+			setError(null);
 		};
 	}, []);
 
 	const handleSelect = (user) => {
 		dispatch({ type: "CHANGE_USER", payload: user });
-		// console.log(user);
 	};
 
 	return (
 		<div className="flex flex-col justify-center gap-3 w-full">
-			{loading && <p>Loading...</p>}
+			{loading && <p className="text-white">Loading...</p>}
+			{error && <p className="text-[crimson]">{error}</p>}
 			{Object.entries(chat)?.map((chat) => {
 				const userInfo = Object.values(chat[1])[0]?.userInfo;
 				if (!userInfo) return null;
