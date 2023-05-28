@@ -10,7 +10,6 @@ import {
 	get,
 	ref,
 	serverTimestamp,
-	set,
 	onValue,
 	update,
 } from "firebase/database";
@@ -74,10 +73,9 @@ function Search({ searchFocus }) {
 			const chatSnapshot = await get(child(chatCollectionRef, combinedId));
 
 			if (!chatSnapshot.exists()) {
-				const newChatData = {
+				await update(child(chatCollectionRef, combinedId), {
 					messages: [],
-				};
-				await set(child(chatCollectionRef, combinedId), newChatData);
+				});
 
 				const userChatsRef = ref(db, "userChats");
 				const currentUserChatRef = child(userChatsRef, currentUserId);
