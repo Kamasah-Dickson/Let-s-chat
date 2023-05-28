@@ -1,10 +1,15 @@
-import React from "react";
+/* eslint-disable react/prop-types */
+import React, { useContext } from "react";
 import testing from "../assets/background.svg";
+import { auth } from "../firebase";
+import { ChatContext } from "../context/chatContext";
 
-function Message() {
+function Message({ message }) {
+	const currentUser = auth?.currentUser;
+	const { chat } = useContext(ChatContext);
 	return (
 		<div className=" flex justify-start coming-parent  flex-[2] gap-5">
-			<div>
+			{/* <div>
 				<div className=" w-[45px] h-[45px] rounded-full">
 					<img
 						src={testing}
@@ -21,7 +26,7 @@ function Message() {
 				<div className="w-1/2">
 					<img className="w-full h-auto" src={testing} alt="" />
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 }
