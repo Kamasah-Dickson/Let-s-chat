@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useCallback, useRef, useState } from "react";
 import Header_main from "./Header_main";
 import attach from "../assets/attach.svg";
 import emoji from "../assets/emoji.svg";
@@ -7,16 +7,16 @@ import { AllContext } from "../context/appContext";
 import Message from "./Message";
 import { BsSendFill } from "react-icons/bs";
 import { ChatContext } from "../context/chatContext";
-import { auth, db } from "../firebase";
-import { off, onValue, ref } from "firebase/database";
+import { auth, db, storage } from "../firebase";
+import { off, onValue, ref, serverTimestamp, update } from "firebase/database";
+import { v4 as uuid } from "uuid";
+import { uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 function Main() {
-	const { setOptions } = useContext(AllContext);
+	const { setOptions, combinedID } = useContext(AllContext);
 	const textareaRef = useRef(null);
 	const [messages, setMessages] = useState([]);
 	const { data } = useContext(ChatContext);
-
-	const currentUser = auth?.currentUser;
 
 	const [text, setText] = useState("");
 	const [img, setImg] = useState("");
@@ -27,33 +27,74 @@ function Main() {
 		textarea.style.height = `${textarea.scrollHeight}px`;
 	};
 
-	useEffect(() => {
-		const dataRef = ref(db, "chats", data.chatId);
-		const onData = (snapshot) => {
-			if (snapshot.exists()) {
-				const retrievedData = snapshot.val();
-				if (retrievedData) {
-					console.log(retrievedData);
-					setMessages(retrievedData);
-				}
-			} else {
-				return;
-			}
-		};
+	const currentUserId = auth?.currentUser?.uid;
 
-		onValue(dataRef, onData);
+	const messagesRef = ref(db, "chats/" + combinedID + "/messages");
+	useCallback(() => {
+		const messagesListener = onValue(messagesRef, (snapshot) => {
+			const data = snapshot.val();
+			// Convert the object of messages into an array
+			const messageArray = Object.keys(data || {}).map((key) => ({
+				id: key,
+				...data[key],
+			}));
 
+			setMessages(messageArray);
+		});
+
+		// Clean up the listener when the component unmounts
 		return () => {
-			off(dataRef, "value", onData);
+			// Detach the listener
+			off(messagesRef, messagesListener);
 		};
-	}, [data.chatId]);
+	}, [combinedID]);
 
-	const handleSend = () => {
+	const handleSend = async () => {
 		//here
-		// if (img) {
-		// } else {
-		// }
+		if (img) {
+			const storageRef = ref(storage, uuid);
+			const uploadTask = uploadBytesResumable(storageRef, img);
+
+			uploadTask.on("state_changed", () => {
+				getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+					const message = {
+						id: uuid(),
+						text,
+						senderId: currentUserId,
+						img: downloadURL,
+						date: serverTimestamp(),
+					};
+					const userRef = ref(db, `chats/${data.chatId}`);
+					await update(userRef, {
+						[`messages/${uuid()}`]: message,
+					});
+				});
+			});
+		} else {
+			const message = {
+				id: uuid(),
+				text,
+				senderId: currentUserId,
+				date: serverTimestamp(),
+			};
+
+			const userRef = ref(db, `chats/${data.chatId}`);
+			await update(userRef, {
+				[`messages/${uuid()}`]: message,
+			});
+		}
 	};
+
+	// const addToArray = (documentId, element) => {
+	// 	const userRef = ref(db, "users", documentId);
+	// 	update(userRef, { arrayField: { [newKey]: element } });
+	// };
+
+	// Remove an element from the array
+	//   const removeFromArray = (documentId, element) => {
+	// 	const userRef = ref(db, "users", documentId);
+	// 	update(userRef, { arrayField: { [element]: null } });
+	//   };
 
 	return (
 		<div className="main-bg">
@@ -89,7 +130,7 @@ function Main() {
 						<textarea
 							rows="1"
 							ref={textareaRef}
-							onChange={(e) => (handleInputChange, setText(e.target.value))}
+							onChange={(e) => (handleInputChange(), setText(e.target.value))}
 							autoCorrect="true"
 							autoComplete="true"
 							id="message"
