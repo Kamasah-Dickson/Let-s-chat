@@ -8,7 +8,14 @@ import Message from "./Message";
 import { BsSendFill } from "react-icons/bs";
 import { ChatContext } from "../context/chatContext";
 import { auth, db, storage } from "../firebase";
-import { off, onValue, ref, serverTimestamp, update } from "firebase/database";
+import {
+	off,
+	onValue,
+	ref,
+	serverTimestamp,
+	update,
+	set,
+} from "firebase/database";
 import { v4 as uuid } from "uuid";
 import { uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
@@ -82,6 +89,33 @@ function Main() {
 			await update(userRef, {
 				[`messages/${uuid()}`]: message,
 			});
+			const otherUserChatRef = ref(db, "userChats", data.user.uid);
+			const userChatRef = ref(db, "userChats", currentUserId);
+
+			await set(
+				userChatRef,
+				{
+					[data.chatId]: {
+						lastMessage: {
+							text,
+						},
+						date: serverTimestamp(),
+					},
+				},
+				{ merge: true }
+			);
+			await set(
+				otherUserChatRef,
+				{
+					[data.chatId]: {
+						lastMessage: {
+							text,
+						},
+						date: serverTimestamp(),
+					},
+				},
+				{ merge: true }
+			);
 		}
 	};
 
