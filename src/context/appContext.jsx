@@ -18,6 +18,7 @@ function AppContext({ children }) {
 	const [toggleSettingsCategory, setToggleSettingsCategory] = useState(false);
 	const [searchedUsers, setSearchedUsers] = useState([]);
 	const [userError, setUserError] = useState(false);
+	const [combinedID, setCombinedId] = useState("");
 
 	useEffect(() => {
 		const getProfile = JSON.parse(localStorage.getItem("userProfile"));
@@ -66,6 +67,8 @@ function AppContext({ children }) {
 				setSearchedUsers,
 				userError,
 				setUserError,
+				setCombinedId,
+				combinedID,
 			}}
 		>
 			{children}
