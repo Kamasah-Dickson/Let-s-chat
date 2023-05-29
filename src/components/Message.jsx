@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useContext } from "react";
+import React, { useContext, memo } from "react";
 import testing from "../assets/background.svg";
 import { auth } from "../firebase";
 import { ChatContext } from "../context/chatContext";
@@ -7,6 +7,18 @@ import { ChatContext } from "../context/chatContext";
 function Message({ message }) {
 	const currentUser = auth?.currentUser;
 	const { chat } = useContext(ChatContext);
+
+	console.log(message);
+	///pushing a message
+	// 	const messagesRef = ref(db, "chats/" + combinedId + "/messages");
+
+	// on(child(messagesRef), "value", (snapshot) => {
+	//   const messages = [];
+
+	//   snapshot.forEach((childSnapshot) => {
+	//     const message = childSnapshot.val();
+	//     messages.push(message);
+	//   });
 	return (
 		<div className=" flex justify-start coming-parent  flex-[2] gap-5">
 			{/* <div>
@@ -31,4 +43,4 @@ function Message({ message }) {
 	);
 }
 
-export default Message;
+export default memo(Message);
