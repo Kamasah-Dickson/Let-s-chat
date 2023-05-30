@@ -24,7 +24,7 @@ function Main() {
 	const { setOptions, combinedID } = useContext(AllContext);
 	const textareaRef = useRef(null);
 	const [messages, setMessages] = useState([]);
-	const { data } = useContext(ChatContext);
+	const { data, setNewMessage } = useContext(ChatContext);
 
 	const [text, setText] = useState("");
 	const [img, setImg] = useState("");
@@ -115,10 +115,9 @@ function Main() {
 				onValue(chatRef, (snapshot) => {
 					const data = snapshot.val();
 					if (data) {
-						const nestedKey = Object.keys(data)[0]; // Get the key of the nested object
-						console.log(nestedKey);
+						const nestedKey = Object.entries(data); // Get the key of the nested object
 						// const newMessage = data[nestedKey]; // Access the message value
-						// console.log(newMessage);
+						setNewMessage(nestedKey);
 						////here
 					}
 				});
