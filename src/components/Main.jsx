@@ -13,8 +13,9 @@ import {
 	onValue,
 	ref,
 	serverTimestamp,
+	get,
 	update,
-	set,
+	child,
 } from "firebase/database";
 import { v4 as uuid } from "uuid";
 import { uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -35,8 +36,8 @@ function Main() {
 	};
 
 	const currentUserId = auth?.currentUser?.uid;
-
 	const messagesRef = ref(db, "chats/" + combinedID + "/messages");
+
 	useCallback(() => {
 		const messagesListener = onValue(messagesRef, (snapshot) => {
 			const data = snapshot.val();
@@ -49,12 +50,11 @@ function Main() {
 			setMessages(messageArray);
 		});
 
-		// Clean up the listener when the component unmounts
 		return () => {
 			// Detach the listener
 			off(messagesRef, messagesListener);
 		};
-	}, [combinedID]);
+	}, [combinedID, messagesRef]);
 
 	const handleSend = async () => {
 		//here
@@ -89,46 +89,42 @@ function Main() {
 			await update(userRef, {
 				[`messages/${uuid()}`]: message,
 			});
-			const otherUserChatRef = ref(db, "userChats", data.user.uid);
-			const userChatRef = ref(db, "userChats", currentUserId);
 
-			await set(
-				userChatRef,
-				{
-					[data.chatId]: {
-						lastMessage: {
-							text,
-						},
+			// ============================= herer
+
+			const chatRef = ref(db, "newMessages/" + combinedID + "/message");
+			const chatSnapshot = await get(chatRef);
+
+			if (!chatSnapshot.exists()) {
+				const chatRef = ref(db, "newMessages");
+				const currentUserChatRef = child(chatRef, currentUserId);
+				const otherUserChatRef = child(chatRef, data.user.uid);
+
+				await update(currentUserChatRef, {
+					[combinedID]: {
+						newMessage: text,
 						date: serverTimestamp(),
 					},
-				},
-				{ merge: true }
-			);
-			await set(
-				otherUserChatRef,
-				{
-					[data.chatId]: {
-						lastMessage: {
-							text,
-						},
+				});
+				await update(otherUserChatRef, {
+					[combinedID]: {
+						newMessage: text,
 						date: serverTimestamp(),
 					},
-				},
-				{ merge: true }
-			);
+				});
+				onValue(chatRef, (snapshot) => {
+					const data = snapshot.val();
+					if (data) {
+						const nestedKey = Object.keys(data)[0]; // Get the key of the nested object
+						console.log(nestedKey);
+						// const newMessage = data[nestedKey]; // Access the message value
+						// console.log(newMessage);
+						////here
+					}
+				});
+			}
 		}
 	};
-
-	// const addToArray = (documentId, element) => {
-	// 	const userRef = ref(db, "users", documentId);
-	// 	update(userRef, { arrayField: { [newKey]: element } });
-	// };
-
-	// Remove an element from the array
-	//   const removeFromArray = (documentId, element) => {
-	// 	const userRef = ref(db, "users", documentId);
-	// 	update(userRef, { arrayField: { [element]: null } });
-	//   };
 
 	return (
 		<div className="main-bg">
