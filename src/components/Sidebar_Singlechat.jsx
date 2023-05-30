@@ -20,7 +20,7 @@ function Sidebar_Singlechat() {
 
 	const { setCombinedId } = useContext(AllContext);
 
-	const { dispatch } = useContext(ChatContext);
+	const { dispatch, newMessage } = useContext(ChatContext);
 
 	useEffect(() => {
 		let dataRef;
@@ -120,6 +120,16 @@ function Sidebar_Singlechat() {
 		}
 	};
 
+	const myNewMessage = newMessage.map((data) => {
+		const getCOmbinedId = Object.entries(data[1]);
+		const combinedID = getCOmbinedId[0][0];
+		//check if user.id ==== data[0]
+		//if true get into the combined id and display the message
+		console.log(data);
+	});
+
+	//here
+
 	return (
 		<div className="flex flex-col justify-center gap-3 w-full">
 			{loading && <p className="text-white">Loading...</p>}
@@ -127,6 +137,10 @@ function Sidebar_Singlechat() {
 			{Object.entries(chat)?.map((chat) => {
 				const userInfo = Object.values(chat[1])[0]?.userInfo;
 				if (!userInfo) return null;
+
+				// function getNewMessage(user) {
+				// 	console.log(myNewMessage);
+				// }
 
 				return (
 					<div
@@ -146,7 +160,9 @@ function Sidebar_Singlechat() {
 						</div>
 						<div className="flex-1">
 							<h3 className="name">{userInfo.displayName}</h3>
-							{/* <span className="message text-light_white">{lastMessage}</span> */}
+							<span className="message text-light_white">
+								{/* {[...newMessage].map((message) => console.log(message))} */}
+							</span>
 						</div>
 						<div>
 							<div className="flex items-end flex-col gap-2 text-light_white">
