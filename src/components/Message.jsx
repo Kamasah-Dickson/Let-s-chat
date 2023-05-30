@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
 import React, { memo, useContext } from "react";
 import testing from "../assets/background.svg";
-import { auth } from "../firebase";
+// import { auth } from "../firebase";
 import { ChatContext } from "../context/chatContext";
 
 function Message({ message }) {
-	const currentUser = auth?.currentUser;
-	const { chat, newMessage } = useContext(ChatContext);
+	// const currentUser = auth?.currentUser;
 
 	// console.log(message);
 	///pushing a message
@@ -19,7 +18,7 @@ function Message({ message }) {
 	//     const message = childSnapshot.val();
 	//     messages.push(message);
 	//   });
-	console.log(newMessage);
+	console.log(message);
 	return (
 		<div className=" flex justify-start coming-parent  flex-[2] gap-5">
 			<div>
