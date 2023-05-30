@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useReducer, useState } from "react";
 import { auth } from "../firebase";
 
 export const ChatContext = createContext();
@@ -29,8 +29,12 @@ function ChatContextProvider({ children }) {
 
 	const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE);
 
+	const [newMessage, setNewMessage] = useState([]);
+
 	return (
-		<ChatContext.Provider value={{ data: state, dispatch }}>
+		<ChatContext.Provider
+			value={{ data: state, newMessage, setNewMessage, dispatch }}
+		>
 			{children}
 		</ChatContext.Provider>
 	);
