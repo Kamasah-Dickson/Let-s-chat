@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
-import React, { useContext, memo } from "react";
+import React, { memo, useContext } from "react";
 import testing from "../assets/background.svg";
 import { auth } from "../firebase";
 import { ChatContext } from "../context/chatContext";
 
 function Message({ message }) {
 	const currentUser = auth?.currentUser;
-	const { chat } = useContext(ChatContext);
+	const { chat, newMessage } = useContext(ChatContext);
 
-	console.log(message);
+	// console.log(message);
 	///pushing a message
 	// 	const messagesRef = ref(db, "chats/" + combinedId + "/messages");
 
@@ -19,15 +19,17 @@ function Message({ message }) {
 	//     const message = childSnapshot.val();
 	//     messages.push(message);
 	//   });
+	console.log(newMessage);
 	return (
 		<div className=" flex justify-start coming-parent  flex-[2] gap-5">
-			{/* <div>
+			<div>
 				<div className=" w-[45px] h-[45px] rounded-full">
 					<img
 						src={testing}
 						alt=""
 						className="object-cover w-full h-full rounded-full"
 					/>
+					{/* {newMessage} */}
 				</div>
 				<span className="font-normal text-gray-400 text-xs">Just now</span>
 			</div>
@@ -38,7 +40,7 @@ function Message({ message }) {
 				<div className="w-1/2">
 					<img className="w-full h-auto" src={testing} alt="" />
 				</div>
-			</div> */}
+			</div>
 		</div>
 	);
 }
