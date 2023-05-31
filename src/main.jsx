@@ -14,27 +14,31 @@ import Signup from "./components/Signup.jsx";
 import Login from "./components/Login.jsx";
 import UpdateProfilePage from "./pages/UpdateProfilePage.jsx";
 import ChatContextProvider from "./context/chatContext.jsx";
+import { store } from "./store/store.js";
+import { Provider } from "react-redux";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<React.StrictMode>
 		<AppContext>
 			<ChatContextProvider>
-				<Router>
-					<Routes>
-						<Route path="/" element={<App />} />
-						<Route path="/signup" element={<Signup />} />
-						<Route path="/login" element={<Login />} />
-						<Route path="/profileupdate" element={<UpdateProfilePage />} />
-						<Route path="/notifications" element={<NotificationPage />} />
-						<Route path="/chat-settings" element={<ChatSettingsPage />} />
-						<Route
-							path="/advanced-settings"
-							element={<AdvancedSettingsPage />}
-						/>
-						<Route path="/language" element={<LanguagePage />} />
-						<Route path="/ask-a-question" element={<AskQuestionsPage />} />
-					</Routes>
-				</Router>
+				<Provider store={store}>
+					<Router>
+						<Routes>
+							<Route path="/" element={<App />} />
+							<Route path="/signup" element={<Signup />} />
+							<Route path="/login" element={<Login />} />
+							<Route path="/profileupdate" element={<UpdateProfilePage />} />
+							<Route path="/notifications" element={<NotificationPage />} />
+							<Route path="/chat-settings" element={<ChatSettingsPage />} />
+							<Route
+								path="/advanced-settings"
+								element={<AdvancedSettingsPage />}
+							/>
+							<Route path="/language" element={<LanguagePage />} />
+							<Route path="/ask-a-question" element={<AskQuestionsPage />} />
+						</Routes>
+					</Router>
+				</Provider>
 			</ChatContextProvider>
 		</AppContext>
 	</React.StrictMode>
