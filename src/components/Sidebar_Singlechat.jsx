@@ -120,15 +120,26 @@ function Sidebar_Singlechat() {
 		}
 	};
 
-	const myNewMessage = newMessage.map((data) => {
-		const getCOmbinedId = Object.entries(data[1]);
-		const combinedID = getCOmbinedId[0][0];
-		//check if user.id ==== data[0]
-		//if true get into the combined id and display the message
-		console.log(data);
-	});
-
-	//here
+	const myNewMessage = (user) => {
+		const matchedArray = newMessage.find((arr) => arr[0] === user.uid);
+		if (matchedArray) {
+			const targetMessage = matchedArray[1];
+			return targetMessage.newMessage;
+		}
+	};
+	// const myNewMessage = (user) => {
+	// 	return newMessage.map((data) => {
+	// 		const getCOmbinedId = Object.entries(data[1]);
+	// 		const combinedID = getCOmbinedId[0][0];
+	// 		//check if user.id ==== data[0]
+	// 		//if true get into the combined id and display the message
+	// 		if (user.uid === data[0]) {
+	// 			const contactData = data[1][combinedID];
+	// 			console.log(contactData);
+	// 			return contactData.newMessage;
+	// 		}
+	// 	});
+	// };
 
 	return (
 		<div className="flex flex-col justify-center gap-3 w-full">
@@ -161,7 +172,7 @@ function Sidebar_Singlechat() {
 						<div className="flex-1">
 							<h3 className="name">{userInfo.displayName}</h3>
 							<span className="message text-light_white">
-								{/* {[...newMessage].map((message) => console.log(message))} */}
+								{myNewMessage(userInfo)}
 							</span>
 						</div>
 						<div>
