@@ -31,6 +31,7 @@ function ChatContextProvider({ children }) {
 
 	const [newMessage, setNewMessage] = useState([]);
 	const [selectedUserID, setSelectedUserID] = useState("");
+	const [messages, setMessages] = useState([]);
 
 	return (
 		<ChatContext.Provider
@@ -41,6 +42,8 @@ function ChatContextProvider({ children }) {
 				dispatch,
 				selectedUserID,
 				setSelectedUserID,
+				setMessages,
+				messages,
 			}}
 		>
 			{children}
