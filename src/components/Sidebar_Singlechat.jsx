@@ -124,7 +124,6 @@ function Sidebar_Singlechat() {
 		const matchedArray = newMessage.find((arr) => arr[0] === user.uid);
 		if (matchedArray) {
 			const targetMessage = matchedArray[1];
-			console.log(targetMessage.date);
 			return {
 				newMessage: targetMessage.newMessage,
 				date: targetMessage.date,
