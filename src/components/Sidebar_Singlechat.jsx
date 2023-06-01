@@ -124,7 +124,11 @@ function Sidebar_Singlechat() {
 		const matchedArray = newMessage.find((arr) => arr[0] === user.uid);
 		if (matchedArray) {
 			const targetMessage = matchedArray[1];
-			return targetMessage.newMessage;
+			console.log(targetMessage.date);
+			return {
+				newMessage: targetMessage.newMessage,
+				date: targetMessage.date,
+			};
 		}
 	};
 
@@ -132,43 +136,60 @@ function Sidebar_Singlechat() {
 		<div className="flex flex-col justify-center gap-3 w-full">
 			{loading && <p className="text-white">Loading...</p>}
 			{error && <p className="text-[crimson]">{error}</p>}
-			{Object.entries(chat)?.map((chat) => {
-				const userInfo = Object.values(chat[1])[0]?.userInfo;
-				if (!userInfo) return null;
+			{Object.values(chat)
+				?.flatMap((chatResult) => Object.values(chatResult))
 
-				return (
-					<div
-						onClick={() => handleSelect(userInfo)}
-						key={chat[0]}
-						className="flex items-center gap-5 justify-center transition-colors hover:bg-[rgba(255,255,255,0.06)] cursor-pointer rounded-md p-2"
-					>
-						<div className="rounded-full w-10 md:w-14 md:h-14 h-10 relative">
-							<img
-								className="h-full w-full object-cover rounded-full"
-								src={userInfo.photoURL || testImage}
-								alt={userInfo.displayName}
-							/>
-							<div className="bg-sidebar_color p-[2px]  bottom-0 right-1 rounded-full absolute">
-								<div className="bg-green rounded-full h-3 w-3"></div>
+				.sort((a, b) => {
+					const aTargetMessage = myNewMessage(a.userInfo);
+					const bTargetMessage = myNewMessage(b.userInfo);
+					return bTargetMessage?.date - aTargetMessage?.date;
+				})
+				.reduce((uniqueUsers, userInfo) => {
+					const existingUser = uniqueUsers.find(
+						(user) => user.userInfo.uid === userInfo.userInfo.uid
+					);
+					if (!existingUser) {
+						uniqueUsers.push(userInfo);
+					}
+					return uniqueUsers;
+				}, [])
+				.map((userInfo) => {
+					const { displayName, photoURL, uid } = userInfo.userInfo;
+					return (
+						<div
+							onClick={() => handleSelect(userInfo.userInfo)}
+							key={uid}
+							className="flex items-center gap-5 justify-center transition-colors hover:bg-[rgba(255,255,255,0.06)] cursor-pointer rounded-md p-2"
+						>
+							<div className="rounded-full w-10 md:w-14 md:h-14 h-10 relative">
+								<img
+									className="h-full w-full object-cover rounded-full"
+									src={photoURL || testImage}
+									alt={displayName}
+								/>
+								<div className="bg-sidebar_color p-[2px]  bottom-0 right-1 rounded-full absolute">
+									<div className="bg-green rounded-full h-3 w-3"></div>
+								</div>
 							</div>
-						</div>
-						<div className="flex-1">
-							<h3 className="name">{userInfo.displayName}</h3>
-							<span className="message text-light_white">
-								{myNewMessage(userInfo)}
-							</span>
-						</div>
-						<div>
-							<div className="flex items-end flex-col gap-2 text-light_white">
-								<p className="text-sm">3:27PM</p>
-								<span className="text-sm text-white bg-blue rounded-full w-5 h-5 flex items-center justify-center text-center">
-									2
+							<div className="flex-1">
+								<h3 className="name">{displayName}</h3>
+								<span className="message text-light_white">
+									{myNewMessage(userInfo.userInfo)?.newMessage}
 								</span>
 							</div>
+							<div>
+								<div className="flex items-end flex-col gap-2 text-light_white">
+									<p className="text-sm">
+										{/* {myNewMessage(userInfo.userInfo)?.date} */}
+									</p>
+									<span className="text-sm text-white bg-blue rounded-full w-5 h-5 flex items-center justify-center text-center">
+										2
+									</span>
+								</div>
+							</div>
 						</div>
-					</div>
-				);
-			})}
+					);
+				})}
 		</div>
 	);
 }
