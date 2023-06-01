@@ -25,13 +25,13 @@ function Message({ message }) {
 			<div>
 				<div className=" w-[45px] h-[45px] rounded-full">
 					<img
+						className="rounded-full h-full w-full object-cover"
 						src={
 							message.senderId === currentUserID.uid
 								? currentUserID.photoURL
 								: data.user.photoURL ?? testing
 						}
 						alt=""
-						className="object-cover w-full h-full rounded-full"
 					/>
 				</div>
 				<span className="font-normal text-gray-400 text-xs">Just now</span>
@@ -41,7 +41,7 @@ function Message({ message }) {
 					message.senderId === currentUserID.uid ? "owner" : "coming"
 				} flex max-w-[80%] flex-[2] gap-5 text-white`}
 			>
-				<p className=" border border-[#00000044] text-white w-max p-2">
+				<p className=" border border-[#00000044] text-white w-max text-sm p-2">
 					{message.text}
 				</p>
 				<div className="w-1/2">
