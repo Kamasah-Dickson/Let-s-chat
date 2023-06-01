@@ -48,32 +48,28 @@ function AppContext({ children }) {
 		setUserProfile(newUserData);
 	};
 
-	return (
-		<AllContext.Provider
-			value={{
-				setSearchFocus,
-				options,
-				setOptions,
-				searchFocus,
-				settings,
-				setsettings,
-				updateUserProfile,
-				userProfile,
-				showTargetMessage,
-				setShowTargetMessage,
-				toggleSettingsCategory,
-				setToggleSettingsCategory,
-				searchedUsers,
-				setSearchedUsers,
-				userError,
-				setUserError,
-				setCombinedId,
-				combinedID,
-			}}
-		>
-			{children}
-		</AllContext.Provider>
-	);
+	const values = {
+		setSearchFocus,
+		options,
+		setOptions,
+		searchFocus,
+		settings,
+		setsettings,
+		updateUserProfile,
+		userProfile,
+		showTargetMessage,
+		setShowTargetMessage,
+		toggleSettingsCategory,
+		setToggleSettingsCategory,
+		searchedUsers,
+		setSearchedUsers,
+		userError,
+		setUserError,
+		setCombinedId,
+		combinedID,
+	};
+
+	return <AllContext.Provider value={values}>{children}</AllContext.Provider>;
 }
 
 export default AppContext;
