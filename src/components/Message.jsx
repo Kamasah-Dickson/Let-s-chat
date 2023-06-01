@@ -1,43 +1,57 @@
 /* eslint-disable react/prop-types */
-import React, { memo, useContext } from "react";
+import React, { memo, useContext, useRef, useEffect } from "react";
 import testing from "../assets/background.svg";
-// import { auth } from "../firebase";
+import { auth } from "../firebase";
 import { ChatContext } from "../context/chatContext";
 
 function Message({ message }) {
-	// const currentUser = auth?.currentUser;
+	const currentUserID = auth?.currentUser;
+	const { data } = useContext(ChatContext);
+	const ref = useRef();
 
-	// console.log(message);
-	///pushing a message
-	// 	const messagesRef = ref(db, "chats/" + combinedId + "/messages");
+	useEffect(() => {
+		ref.current.scrollIntoView({ behaviour: "smooth" });
+	}, [message]);
 
-	// on(child(messagesRef), "value", (snapshot) => {
-	//   const messages = [];
-
-	//   snapshot.forEach((childSnapshot) => {
-	//     const message = childSnapshot.val();
-	//     messages.push(message);
-	//   });
-	console.log(message);
 	return (
-		<div className=" flex justify-start coming-parent  flex-[2] gap-5">
+		<div
+			ref={ref}
+			className={` flex justify-start ${
+				message.senderId === currentUserID.uid
+					? "owner-parent"
+					: "coming-parent"
+			} gap-5`}
+		>
 			<div>
 				<div className=" w-[45px] h-[45px] rounded-full">
 					<img
-						src={testing}
+						src={
+							message.senderId === currentUserID.uid
+								? currentUserID.photoURL
+								: data.user.photoURL ?? testing
+						}
 						alt=""
 						className="object-cover w-full h-full rounded-full"
 					/>
-					{/* {newMessage} */}
 				</div>
 				<span className="font-normal text-gray-400 text-xs">Just now</span>
 			</div>
-			<div className="coming flex coming max-w-[80%] flex-[2] gap-5 text-white">
+			<div
+				className={` ${
+					message.senderId === currentUserID.uid ? "owner" : "coming"
+				} flex max-w-[80%] flex-[2] gap-5 text-white`}
+			>
 				<p className=" border border-[#00000044] text-white w-max p-2">
-					Hello there
+					{message.text}
 				</p>
 				<div className="w-1/2">
-					<img className="w-full h-auto" src={testing} alt="" />
+					{message.img && (
+						<img
+							className="w-full h-auto"
+							src={message.img && message.img}
+							alt=""
+						/>
+					)}
 				</div>
 			</div>
 		</div>
