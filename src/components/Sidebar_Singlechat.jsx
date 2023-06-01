@@ -20,7 +20,29 @@ function Sidebar_Singlechat() {
 
 	const { setCombinedId } = useContext(AllContext);
 
-	const { dispatch, newMessage, setSelectedUserID } = useContext(ChatContext);
+	const { dispatch, newMessage, setSelectedUserID, setNewMessage } =
+		useContext(ChatContext);
+
+	//do it at the sidebar
+	// ========================
+	useEffect(() => {
+		const chatRef = ref(db, "newMessages");
+		const chatsListener = onValue(chatRef, (snapshot) => {
+			const data = snapshot.val();
+			// Convert the object of chats into an array
+			const chatArray = Object.keys(data || {}).map((key) => ({
+				chatId: key,
+				...data[key],
+			}));
+			setNewMessage(chatArray);
+		});
+
+		return () => {
+			// Detach the listener
+			off(chatRef, chatsListener);
+		};
+	}, []);
+	// =========================
 
 	useEffect(() => {
 		let dataRef;
@@ -152,6 +174,7 @@ function Sidebar_Singlechat() {
 					}
 					return uniqueUsers;
 				}, [])
+				.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
 				.map((userInfo) => {
 					const { displayName, photoURL, uid } = userInfo.userInfo;
 					return (
@@ -173,7 +196,10 @@ function Sidebar_Singlechat() {
 							<div className="flex-1">
 								<h3 className="name">{displayName}</h3>
 								<span className="message text-light_white">
-									{myNewMessage(userInfo.userInfo)?.newMessage}
+									{
+										newMessage.find((message) => message.chatId === uid)
+											.newMessage
+									}
 								</span>
 							</div>
 							<div>
