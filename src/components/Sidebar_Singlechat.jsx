@@ -20,7 +20,7 @@ function Sidebar_Singlechat() {
 
 	const { setCombinedId } = useContext(AllContext);
 
-	const { dispatch, newMessage } = useContext(ChatContext);
+	const { dispatch, newMessage, setSelectedUserID } = useContext(ChatContext);
 
 	useEffect(() => {
 		let dataRef;
@@ -37,7 +37,6 @@ function Sidebar_Singlechat() {
 						if (retrievedData) {
 							setLoading(false);
 							setError("");
-							// console.log(retrievedData);
 							setChat(retrievedData);
 						}
 						setError("");
@@ -84,6 +83,7 @@ function Sidebar_Singlechat() {
 				: user.uid + currentUserId;
 
 		setCombinedId(combinedId);
+		setSelectedUserID(user.uid);
 
 		try {
 			const chatRef = ref(db, "chats/" + combinedId + "/messages");
@@ -127,19 +127,6 @@ function Sidebar_Singlechat() {
 			return targetMessage.newMessage;
 		}
 	};
-	// const myNewMessage = (user) => {
-	// 	return newMessage.map((data) => {
-	// 		const getCOmbinedId = Object.entries(data[1]);
-	// 		const combinedID = getCOmbinedId[0][0];
-	// 		//check if user.id ==== data[0]
-	// 		//if true get into the combined id and display the message
-	// 		if (user.uid === data[0]) {
-	// 			const contactData = data[1][combinedID];
-	// 			console.log(contactData);
-	// 			return contactData.newMessage;
-	// 		}
-	// 	});
-	// };
 
 	return (
 		<div className="flex flex-col justify-center gap-3 w-full">
@@ -148,10 +135,6 @@ function Sidebar_Singlechat() {
 			{Object.entries(chat)?.map((chat) => {
 				const userInfo = Object.values(chat[1])[0]?.userInfo;
 				if (!userInfo) return null;
-
-				// function getNewMessage(user) {
-				// 	console.log(myNewMessage);
-				// }
 
 				return (
 					<div
