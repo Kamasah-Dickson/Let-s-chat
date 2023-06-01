@@ -1,4 +1,4 @@
-import React, { useContext, useCallback, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Header_main from "./Header_main";
 import attach from "../assets/attach.svg";
 import emoji from "../assets/emoji.svg";
@@ -37,9 +37,29 @@ function Main() {
 	};
 
 	const currentUserId = auth?.currentUser?.uid;
-	const messagesRef = ref(db, "chats/" + combinedID + "/messages");
 
-	useCallback(() => {
+	//do it at the sidebar
+
+	// useEffect(() => {
+	// 	const chatRef = ref(db, "newMessages");
+	// 	const chatsListener = onValue(chatRef, (snapshot) => {
+	// 		const data = snapshot.val();
+	// 		// Convert the object of chats into an array
+	// 		const chatArray = Object.keys(data || {}).map((key) => ({
+	// 			chatId: key,
+	// 			...data[key],
+	// 		}));
+	// 		setNewMessage(chatArray);
+	// 	});
+
+	// 	return () => {
+	// 		// Detach the listener
+	// 		off(chatRef, chatsListener);
+	// 	};
+	// }, []);
+
+	useEffect(() => {
+		const messagesRef = ref(db, "chats/" + combinedID + "/messages");
 		const messagesListener = onValue(messagesRef, (snapshot) => {
 			const data = snapshot.val();
 			// Convert the object of messages into an array
@@ -49,16 +69,16 @@ function Main() {
 			}));
 
 			setMessages(messageArray);
+			setText("");
 		});
 
 		return () => {
 			// Detach the listener
 			off(messagesRef, messagesListener);
 		};
-	}, [combinedID, messagesRef]);
+	}, [combinedID, text]);
 
 	const handleSend = async () => {
-		//here
 		if (img) {
 			const storageRef = ref(storage, uuid);
 			const uploadTask = uploadBytesResumable(storageRef, img);
@@ -95,6 +115,7 @@ function Main() {
 			const currentUserChatRef = child(chatRef, selectedUserID);
 			const currentUserChatSnapshot = await get(currentUserChatRef);
 
+			/////////////////////
 			if (currentUserChatSnapshot.exists()) {
 				await update(currentUserChatRef, {
 					newMessage: text,
@@ -106,6 +127,7 @@ function Main() {
 					date: serverTimestamp(),
 				});
 			}
+			////////========
 
 			onValue(chatRef, (snapshot) => {
 				const data = snapshot.val();
@@ -156,6 +178,7 @@ function Main() {
 							autoCorrect="true"
 							autoComplete="true"
 							id="message"
+							value={text}
 							className="w-full min-h-[30px] rounded-md h-auto bg-transparent object-cover border-none outline-none resize-none overflow-hidden"
 							placeholder="Write a message..."
 						></textarea>
