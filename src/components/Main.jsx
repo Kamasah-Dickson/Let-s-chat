@@ -15,6 +15,7 @@ import {
 	serverTimestamp,
 	get,
 	update,
+	set,
 	child,
 } from "firebase/database";
 import { v4 as uuid } from "uuid";
@@ -24,7 +25,7 @@ function Main() {
 	const { setOptions, combinedID } = useContext(AllContext);
 	const textareaRef = useRef(null);
 	const [messages, setMessages] = useState([]);
-	const { data, setNewMessage } = useContext(ChatContext);
+	const { data, setNewMessage, selectedUserID } = useContext(ChatContext);
 
 	const [text, setText] = useState("");
 	const [img, setImg] = useState("");
@@ -90,38 +91,30 @@ function Main() {
 				[`messages/${uuid()}`]: message,
 			});
 
-			// ============================= herer
+			const chatRef = ref(db, "newMessages");
+			const currentUserChatRef = child(chatRef, selectedUserID);
+			const currentUserChatSnapshot = await get(currentUserChatRef);
 
-			const chatRef = ref(db, "newMessages/" + combinedID + "/message");
-			const chatSnapshot = await get(chatRef);
-
-			if (!chatSnapshot.exists()) {
-				const chatRef = ref(db, "newMessages");
-				const currentUserChatRef = child(chatRef, currentUserId);
-				const otherUserChatRef = child(chatRef, data.user.uid);
-
+			if (currentUserChatSnapshot.exists()) {
 				await update(currentUserChatRef, {
-					[combinedID]: {
-						newMessage: text,
-						date: serverTimestamp(),
-					},
+					newMessage: text,
+					date: serverTimestamp(),
 				});
-				await update(otherUserChatRef, {
-					[combinedID]: {
-						newMessage: text,
-						date: serverTimestamp(),
-					},
-				});
-				onValue(chatRef, (snapshot) => {
-					const data = snapshot.val();
-					if (data) {
-						const nestedKey = Object.entries(data); // Get the key of the nested object
-						// const newMessage = data[nestedKey]; // Access the message value
-						setNewMessage(nestedKey);
-						////here
-					}
+			} else {
+				await set(currentUserChatRef, {
+					newMessage: text,
+					date: serverTimestamp(),
 				});
 			}
+
+			onValue(chatRef, (snapshot) => {
+				const data = snapshot.val();
+				if (data) {
+					const nestedKey = Object.entries(data); // Get the key of the nested object
+					// const newMessage = data[nestedKey]; // Access the message value
+					setNewMessage(nestedKey);
+				}
+			});
 		}
 	};
 
