@@ -24,7 +24,7 @@ function Search({ searchFocus }) {
 		setCombinedId,
 	} = useContext(AllContext);
 
-	const { dispatch } = useContext(ChatContext);
+	const { dispatch, newMessage } = useContext(ChatContext);
 
 	const inputFocus = useRef(null);
 	const [search, setSearch] = useState("");
@@ -111,6 +111,14 @@ function Search({ searchFocus }) {
 		}
 	};
 
+	const myNewMessage = (user) => {
+		const matchedArray = newMessage.find((arr) => arr[0] === user.uid);
+		if (matchedArray) {
+			const targetMessage = matchedArray[1];
+			return targetMessage.newMessage;
+		}
+	};
+
 	return (
 		<>
 			<div
@@ -153,7 +161,9 @@ function Search({ searchFocus }) {
 							</div>
 							<div className="flex-1 ">
 								<h3 className="name">{user.displayName}</h3>
-								<span className="message text-light_white">Check this out</span>
+								<span className="message text-light_white">
+									{myNewMessage(user)}
+								</span>
 							</div>
 							<div>
 								<div className="flex items-end flex-col gap-2 text-light_white">
