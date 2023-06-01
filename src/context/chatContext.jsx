@@ -30,10 +30,18 @@ function ChatContextProvider({ children }) {
 	const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE);
 
 	const [newMessage, setNewMessage] = useState([]);
+	const [selectedUserID, setSelectedUserID] = useState("");
 
 	return (
 		<ChatContext.Provider
-			value={{ data: state, newMessage, setNewMessage, dispatch }}
+			value={{
+				data: state,
+				newMessage,
+				setNewMessage,
+				dispatch,
+				selectedUserID,
+				setSelectedUserID,
+			}}
 		>
 			{children}
 		</ChatContext.Provider>
