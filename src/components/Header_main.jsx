@@ -11,7 +11,7 @@ function Header_main() {
 	const { setSearchFocus, options, setOptions, setShowTargetMessage } =
 		useContext(AllContext);
 	const [alert, setAlert] = useState(false);
-	const { data } = useContext(ChatContext);
+	const { data, isOnline } = useContext(ChatContext);
 
 	return (
 		<div className="bg-[#232733] border-b-[1px] border-[rgba(255,255,255,0.10)] px-5 flex transition-colors p-2 items-center gap-5 w-full">
@@ -36,8 +36,10 @@ function Header_main() {
 					)}
 				</h3>
 				<div className="flex items-center gap-2">
-					<span className="message text-light_white">Online</span>
-					<div className="bg-green rounded-full h-2 w-2  "></div>
+					<span className="message text-light_white">{isOnline?.lastSeen}</span>
+					{isOnline?.online && (
+						<div className="bg-green rounded-full h-2 w-2  "></div>
+					)}
 				</div>
 			</div>
 			<div>
