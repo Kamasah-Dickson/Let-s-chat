@@ -12,16 +12,23 @@ import {
 import testImage from "../assets/background.svg";
 import { ChatContext } from "../context/chatContext";
 import { AllContext } from "../context/appContext";
+import getTimeDifference from "../utils/timeStamp";
 
 function Sidebar_Singlechat() {
 	const [chat, setChat] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
-
+	const [onlineStatus, setOnlineStatus] = useState([]);
 	const { setCombinedId } = useContext(AllContext);
 
-	const { dispatch, newMessage, setSelectedUserID, setNewMessage } =
-		useContext(ChatContext);
+	const {
+		dispatch,
+		newMessage,
+		setSelectedUserID,
+		setNewMessage,
+		setIsOnline,
+		data,
+	} = useContext(ChatContext);
 
 	//do it at the sidebar
 	// ========================
@@ -42,7 +49,115 @@ function Sidebar_Singlechat() {
 			off(chatRef, chatsListener);
 		};
 	}, []);
-	// =========================
+
+	// ==============last-seen==============
+
+	useEffect(() => {
+		const allUserIds = Object.values(chat)
+			?.flatMap((chatResult) => Object.values(chatResult))
+
+			.sort((a, b) => {
+				const aTargetMessage = myNewMessage(a.userInfo);
+				const bTargetMessage = myNewMessage(b.userInfo);
+				return bTargetMessage?.date - aTargetMessage?.date;
+			})
+			.reduce((uniqueUsers, userInfo) => {
+				const existingUser = uniqueUsers.find(
+					(user) => user.userInfo.uid === userInfo.userInfo.uid
+				);
+				if (!existingUser) {
+					uniqueUsers.push(userInfo);
+				}
+				return uniqueUsers;
+			}, [])
+			.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
+			.map((users) => users.userInfo.uid);
+
+		const getUserStatus = async (userId) => {
+			const userStatusRef = ref(db, `/userStatus/${userId}`);
+			const snapshot = await get(userStatusRef);
+			return snapshot.val();
+		};
+
+		const fetchUserStatuses = async () => {
+			if (auth.currentUser) {
+				const userIds = allUserIds.filter(
+					(uid) => uid !== auth.currentUser.uid
+				);
+				const userStatuses = await Promise.all(userIds.map(getUserStatus));
+
+				const formattedStatuses = userStatuses.map((status, index) => {
+					const userId = userIds[index];
+
+					return { userId, status };
+				});
+				// Do something with the formattedStatuses, such as updating component state
+				setOnlineStatus(formattedStatuses);
+			}
+		};
+
+		fetchUserStatuses();
+	}, []);
+
+	useEffect(() => {
+		function onlineStatusOrLastSeen(contactID) {
+			const userIsOnline = onlineStatus.find(
+				(online) => online?.userId === contactID
+			);
+			if (userIsOnline) {
+				if (!userIsOnline?.status?.online) {
+					const foundUser = [userIsOnline].find(
+						(user) => user.userId === data?.user?.uid
+					);
+
+					if (foundUser) {
+						setIsOnline({
+							lastSeen:
+								"Last seen " + getTimeDifference(foundUser?.status?.lastSeen),
+							userId: userIsOnline?.userId,
+							online: false,
+						});
+					}
+				} else {
+					const foundUser = [userIsOnline].filter(
+						(user) => user.userId === data?.user?.uid
+					);
+					if (foundUser) {
+						setIsOnline({
+							lastSeen: "Online",
+							userId: foundUser.userId,
+							online: true,
+						});
+					}
+				}
+			}
+		}
+
+		// Update online status or last seen when onlineStatus changes
+		if ([chat].length > 0) {
+			Object.values(chat)
+				?.flatMap((chatResult) => Object.values(chatResult))
+
+				.sort((a, b) => {
+					const aTargetMessage = myNewMessage(a.userInfo);
+					const bTargetMessage = myNewMessage(b.userInfo);
+					return bTargetMessage?.date - aTargetMessage?.date;
+				})
+				.reduce((uniqueUsers, userInfo) => {
+					const existingUser = uniqueUsers.find(
+						(user) => user.userInfo.uid === userInfo.userInfo.uid
+					);
+					if (!existingUser) {
+						uniqueUsers.push(userInfo);
+					}
+					return uniqueUsers;
+				}, [])
+				.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
+				.map((users) => onlineStatusOrLastSeen(users.userInfo.uid));
+		}
+	}, [onlineStatus, chat, data.user]);
+
+	// ===========end userStatus===========
 
 	useEffect(() => {
 		let dataRef;
@@ -142,16 +257,25 @@ function Sidebar_Singlechat() {
 		}
 	};
 
-	const myNewMessage = (user) => {
+	function myNewMessage(user) {
 		const matchedArray = newMessage.find((arr) => arr[0] === user.uid);
 		if (matchedArray) {
 			const targetMessage = matchedArray[1];
 			return {
-				newMessage: targetMessage.newMessage,
+				newMessage: targetMessage?.newMessage,
 				date: targetMessage.date,
 			};
 		}
-	};
+	}
+
+	function getTime(uid) {
+		const timestamp = Number(
+			newMessage.find((message) => message?.chatId === uid)?.date
+		);
+		const messageTime = isNaN(timestamp) ? 0 : timestamp;
+
+		return getTimeDifference(messageTime);
+	}
 
 	return (
 		<div className="flex flex-col justify-center gap-3 w-full">
@@ -177,6 +301,7 @@ function Sidebar_Singlechat() {
 				.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
 				.map((userInfo) => {
 					const { displayName, photoURL, uid } = userInfo.userInfo;
+
 					return (
 						<div
 							onClick={() => handleSelect(userInfo.userInfo)}
@@ -189,27 +314,28 @@ function Sidebar_Singlechat() {
 									src={photoURL || testImage}
 									alt={displayName}
 								/>
-								<div className="bg-sidebar_color p-[2px]  bottom-0 right-1 rounded-full absolute">
-									<div className="bg-green rounded-full h-3 w-3"></div>
-								</div>
+								{onlineStatus.find(
+									(online) => online?.userId === userInfo?.userInfo?.uid
+								)?.userIsOnline?.status?.online && (
+									<div className="bg-sidebar_color p-[2px]  bottom-0 right-1 rounded-full absolute">
+										<div className="bg-green rounded-full h-3 w-3"></div>
+									</div>
+								)}
 							</div>
 							<div className="flex-1">
 								<h3 className="name">{displayName}</h3>
 								<span className="message text-light_white">
-									{
-										newMessage.find((message) => message.chatId === uid)
-											.newMessage
-									}
+									{newMessage
+										.find((message) => message.chatId === uid)
+										?.newMessage.slice(0, 15) + "..."}
 								</span>
 							</div>
 							<div>
 								<div className="flex items-end flex-col gap-2 text-light_white">
-									<p className="text-sm">
-										{/* {myNewMessage(userInfo.userInfo)?.date} */}
-									</p>
 									<span className="text-sm text-white bg-blue rounded-full w-5 h-5 flex items-center justify-center text-center">
 										2
 									</span>
+									<p className="text-xs">{getTime(uid)}</p>
 								</div>
 							</div>
 						</div>
