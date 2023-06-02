@@ -3,6 +3,7 @@ import React, { memo, useContext, useRef, useEffect } from "react";
 import testing from "../assets/background.svg";
 import { auth } from "../firebase";
 import { ChatContext } from "../context/chatContext";
+import getTimeDifference from "../utils/timeStamp";
 
 function Message({ message }) {
 	const currentUserID = auth?.currentUser;
@@ -34,7 +35,9 @@ function Message({ message }) {
 						alt=""
 					/>
 				</div>
-				<span className="font-normal text-gray-400 text-xs">Just now</span>
+				<span className="font-normal text-gray-400 text-xs">
+					{getTimeDifference(Number(message?.date))}
+				</span>
 			</div>
 			<div
 				className={` ${
