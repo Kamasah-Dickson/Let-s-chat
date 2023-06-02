@@ -30,6 +30,7 @@ function Main() {
 
 	const [text, setText] = useState("");
 	const [img, setImg] = useState("");
+	const currentUserId = auth?.currentUser?.uid;
 
 	const handleInputChange = (e) => {
 		const textarea = textareaRef.current;
@@ -37,8 +38,6 @@ function Main() {
 		textarea.style.height = `${textarea.scrollHeight}px`;
 		setText(e.target.value);
 	};
-
-	const currentUserId = auth?.currentUser?.uid;
 
 	useEffect(() => {
 		const messagesRef = ref(db, "chats/" + combinedID + "/messages");
@@ -98,7 +97,6 @@ function Main() {
 			const currentUserChatRef = child(chatRef, selectedUserID);
 			const currentUserChatSnapshot = await get(currentUserChatRef);
 
-			/////////////////////
 			if (currentUserChatSnapshot.exists()) {
 				await update(currentUserChatRef, {
 					newMessage: text,
@@ -110,7 +108,6 @@ function Main() {
 					date: serverTimestamp(),
 				});
 			}
-			////////========
 
 			onValue(chatRef, (snapshot) => {
 				const data = snapshot.val();
