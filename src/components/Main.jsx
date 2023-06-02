@@ -19,6 +19,7 @@ import {
 	set,
 	child,
 } from "firebase/database";
+import { ref as storageRef } from "firebase/storage";
 import { v4 as uuid } from "uuid";
 import { uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
@@ -29,7 +30,7 @@ function Main() {
 		useContext(ChatContext);
 
 	const [text, setText] = useState("");
-	const [img, setImg] = useState("");
+	const [img, setImg] = useState({});
 	const currentUserId = auth?.currentUser?.uid;
 
 	const handleInputChange = (e) => {
@@ -53,15 +54,46 @@ function Main() {
 		});
 
 		return () => {
-			// Detach the listener
 			off(messagesRef, messagesListener);
 		};
 	}, [combinedID]);
 
+	const handleKeyDown = (event) => {
+		const { key, shiftKey } = event;
+
+		if (key === "Enter") {
+			if (shiftKey) {
+				// Shift + Enter: Insert a new line
+				event.preventDefault();
+				const textarea = textareaRef.current;
+				const start = textarea.selectionStart;
+				const end = textarea.selectionEnd;
+				const value = textarea.value;
+				const newValue = `${value.substring(0, start)}\n${value?.substring(
+					end
+				)}`;
+				setText(newValue);
+				textarea.selectionStart = textarea.selectionEnd = start + 1;
+				setTimeout(() => {
+					const textarea = textareaRef.current;
+					textarea.style.height = "auto";
+					textarea.style.height = `${textarea.scrollHeight}px`;
+				}, 0);
+			} else {
+				event.preventDefault();
+				handleSend();
+				setTimeout(() => {
+					const textarea = textareaRef.current;
+					textarea.style.height = "auto";
+				}, 0);
+			}
+		}
+	};
+
 	const handleSend = async () => {
 		if (img) {
-			const storageRef = ref(storage, uuid);
-			const uploadTask = uploadBytesResumable(storageRef, img);
+			const sentImgRef = storageRef(storage, "sentImages/" + uuid());
+			const uploadTask = uploadBytesResumable(sentImgRef, img);
 
 			uploadTask.on("state_changed", () => {
 				getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
@@ -76,10 +108,10 @@ function Main() {
 					const userRef = ref(db, `chats/${data.chatId}/messages`);
 					const newMessageRef = push(userRef);
 					await set(newMessageRef, message);
-					setText("");
 				});
 			});
 			setText("");
+			setImg(null);
 		} else {
 			const message = {
 				id: uuid(),
@@ -112,7 +144,7 @@ function Main() {
 			onValue(chatRef, (snapshot) => {
 				const data = snapshot.val();
 				if (data) {
-					const nestedKey = Object.entries(data).reverse(); // Get the key of the nested object
+					const nestedKey = Object.entries(data); // Get the key of the nested object
 					setNewMessage(nestedKey);
 				}
 			});
@@ -135,14 +167,14 @@ function Main() {
 						htmlFor="message"
 						className={`${
 							messages.length > 6 ? "mt-[5rem] " : "mt-auto "
-						}rounded-md h-[50px] items-center shadow-sm shadow-[#0000004f] text-white bg-[#2E323C] md:my-full gap-5 w-full flex sticky
+						}rounded-md h-auto items-center shadow-sm shadow-[#0000004f] text-white bg-[#2E323C] md:my-full gap-5 w-full flex sticky
 						bottom-5 md:bottom-10 p-3`}
 					>
 						<input
 							type="file"
 							className="hidden"
 							id="file"
-							value={img}
+							// value={img}
 							onChange={(e) => setImg(e.target.files[0])}
 						/>
 						<label htmlFor="file">
@@ -154,9 +186,10 @@ function Main() {
 						</label>
 
 						<textarea
-							rows="1"
 							ref={textareaRef}
+							rows="1"
 							onChange={(e) => handleInputChange(e)}
+							onKeyDown={handleKeyDown}
 							autoCorrect="true"
 							autoComplete="true"
 							id="message"
