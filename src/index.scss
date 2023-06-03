@@ -132,6 +132,10 @@
 	.my-height {
 		height: calc(100vh - 70px);
 	}
+
+	.my-trans {
+		transition: all 0.4s ease-in-out;
+	}
 }
 
 // ==========================
