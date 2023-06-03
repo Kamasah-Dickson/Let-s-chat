@@ -13,10 +13,11 @@ import testImage from "../assets/background.svg";
 import { ChatContext } from "../context/chatContext";
 import { AllContext } from "../context/appContext";
 import getTimeDifference from "../utils/timeStamp";
+import { BeatLoader } from "react-spinners";
 
 function Sidebar_Singlechat() {
 	const [chat, setChat] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 	const [onlineStatus, setOnlineStatus] = useState([]);
 	const { setCombinedId } = useContext(AllContext);
@@ -45,7 +46,6 @@ function Sidebar_Singlechat() {
 		});
 
 		return () => {
-			// Detach the listener
 			off(chatRef, chatsListener);
 		};
 	}, []);
@@ -76,7 +76,16 @@ function Sidebar_Singlechat() {
 		const getUserStatus = async (userId) => {
 			const userStatusRef = ref(db, `/userStatus/${userId}`);
 			const snapshot = await get(userStatusRef);
-			return snapshot.val();
+			if (snapshot.exists()) {
+				return snapshot.val();
+			} else {
+				const userStatus = {
+					online: false,
+					lastSeen: serverTimestamp(),
+				};
+				await update(userStatusRef, userStatus);
+				return userStatus;
+			}
 		};
 
 		const fetchUserStatuses = async () => {
@@ -86,12 +95,10 @@ function Sidebar_Singlechat() {
 				);
 				const userStatuses = await Promise.all(userIds.map(getUserStatus));
 
-				const formattedStatuses = userStatuses.map((status, index) => {
-					const userId = userIds[index];
-
-					return { userId, status };
-				});
-				// Do something with the formattedStatuses, such as updating component state
+				const formattedStatuses = userStatuses.map((status, index) => ({
+					userId: userIds[index],
+					status,
+				}));
 				setOnlineStatus(formattedStatuses);
 			}
 		};
@@ -113,13 +120,14 @@ function Sidebar_Singlechat() {
 					if (foundUser) {
 						setIsOnline({
 							lastSeen:
+								foundUser?.status?.lastSeen &&
 								"Last seen " + getTimeDifference(foundUser?.status?.lastSeen),
 							userId: userIsOnline?.userId,
 							online: false,
 						});
 					}
 				} else {
-					const foundUser = [userIsOnline].filter(
+					const foundUser = [userIsOnline].find(
 						(user) => user.userId === data?.user?.uid
 					);
 					if (foundUser) {
@@ -133,8 +141,7 @@ function Sidebar_Singlechat() {
 			}
 		}
 
-		// Update online status or last seen when onlineStatus changes
-		if ([chat].length > 0) {
+		if (chat) {
 			Object.values(chat)
 				?.flatMap((chatResult) => Object.values(chatResult))
 
@@ -155,7 +162,7 @@ function Sidebar_Singlechat() {
 				.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
 				.map((users) => onlineStatusOrLastSeen(users.userInfo.uid));
 		}
-	}, [onlineStatus, chat, data.user]);
+	}, [onlineStatus, chat, data?.user]);
 
 	// ===========end userStatus===========
 
@@ -164,7 +171,6 @@ function Sidebar_Singlechat() {
 		let onData;
 
 		function fetchContacts() {
-			setLoading(true);
 			try {
 				const currentUserID = auth?.currentUser?.uid;
 				dataRef = ref(db, "userChats", currentUserID);
@@ -180,18 +186,17 @@ function Sidebar_Singlechat() {
 					}
 				};
 
-				// Register the onData listener
 				onValue(dataRef, onData);
 
-				// Set up onDisconnect event
 				const connectedRef = ref(db, ".info/connected");
 				onValue(connectedRef, (snapshot) => {
 					const isConnected = snapshot.val();
 					if (!isConnected) {
-						setError("Internet connection lost. Please check your network.");
+						setError("Connection lost reconnecting...");
 						setLoading(false);
 					} else {
 						setError(null);
+						setLoading(false);
 					}
 				});
 			} catch (error) {
@@ -203,7 +208,6 @@ function Sidebar_Singlechat() {
 
 		fetchContacts();
 
-		// Cleanup function
 		return () => {
 			off(dataRef, "value", onData);
 			setLoading(false);
@@ -278,9 +282,17 @@ function Sidebar_Singlechat() {
 	}
 
 	return (
-		<div className="flex flex-col justify-center gap-3 w-full">
-			{loading && <p className="text-white">Loading...</p>}
-			{error && <p className="text-[crimson]">{error}</p>}
+		<div className="flex flex-col h-full justify-center gap-3 w-full">
+			{loading ? (
+				<div className="flex h-full flex-col items-center justify-center">
+					<BeatLoader color="#ffffff" loading={loading} size={15} />
+				</div>
+			) : (
+				<div className="flex h-full flex-col items-center justify-center">
+					<p className="text-[crimson] mb-3">{error}</p>
+					<BeatLoader color="#ffffff" loading={error} size={15} />
+				</div>
+			)}
 			{Object.values(chat)
 				?.flatMap((chatResult) => Object.values(chatResult))
 
