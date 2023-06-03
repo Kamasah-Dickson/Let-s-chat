@@ -8,7 +8,7 @@ function ChatContextProvider({ children }) {
 	const currentUserId = auth?.currentUser?.uid;
 
 	const INITIAL_STATE = {
-		chatId: "null",
+		chatId: null,
 		user: {},
 	};
 	const chatReducer = (state, action) => {
