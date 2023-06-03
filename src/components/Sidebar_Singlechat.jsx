@@ -232,7 +232,7 @@ function Sidebar_Singlechat() {
 				const userInfo = {
 					uid: user.uid,
 					displayName: user.displayName,
-					photoURL: user.photoURL,
+					photoURL: user?.photoURL,
 				};
 
 				await update(currentUserChatRef, {
@@ -274,7 +274,7 @@ function Sidebar_Singlechat() {
 		);
 		const messageTime = isNaN(timestamp) ? 0 : timestamp;
 
-		return getTimeDifference(messageTime);
+		return getTimeDifference(messageTime) || "";
 	}
 
 	return (
@@ -326,8 +326,8 @@ function Sidebar_Singlechat() {
 								<h3 className="name">{displayName}</h3>
 								<span className="message text-light_white">
 									{newMessage
-										.find((message) => message.chatId === uid)
-										?.newMessage.slice(0, 15) + "..."}
+										.find((message) => message?.chatId === uid)
+										?.newMessage.slice(0, 15) + "..." ?? ""}
 								</span>
 							</div>
 							<div>

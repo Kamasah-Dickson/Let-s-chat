@@ -10,21 +10,21 @@ import { AllContext } from "../context/appContext";
 function Sidebar() {
 	const {
 		settings,
-		setsettings,
+		setSettings,
 		setOptions,
 		searchFocus,
 		setShowTargetMessage,
 	} = useContext(AllContext);
 
 	return settings ? (
-		<Menu_settings setsettings={setsettings} />
+		<Menu_settings setSettings={setSettings} />
 	) : (
 		<div
 			onClick={() => setOptions(true)}
 			className="p-3 border-[#191D24] border-r-2 h-screen overflow-y-auto bg-sidebar_color sticky top-20 left-0"
 		>
 			<MdOutlineSettingsSuggest
-				onClick={() => setsettings(true)}
+				onClick={() => setSettings(true)}
 				color="white"
 				size={25}
 				cursor={"pointer"}

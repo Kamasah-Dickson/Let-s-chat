@@ -9,10 +9,19 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { nanoid } from "nanoid";
 import Modal from "./Modal";
 import { AllContext } from "../context/appContext";
+import { allNotifications } from "../Features/notificationSlice";
+import {
+	resetSettings,
+	updateNotification,
+} from "../Features/notificationSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 function Notifications() {
 	const [alert, setAlert] = useState(false);
 	const { setToggleSettingsCategory } = useContext(AllContext);
+	const dispatch = useDispatch();
+
+	const allNotificationState = useSelector(allNotifications);
 
 	const [Allnotifications] = useState([
 		{
@@ -34,6 +43,13 @@ function Notifications() {
 			span: "On,0 exceptions",
 		},
 	]);
+
+	const findSettings = (settingsName) => {
+		const { name, value } = allNotificationState.find(
+			(settings) => settings.name === settingsName
+		);
+		return { name, value };
+	};
 
 	return (
 		<div className="main-bg">
@@ -82,8 +98,9 @@ function Notifications() {
 										className="border-none outline-none "
 										id="app-sound"
 										type="checkbox"
-										name=""
-										value=""
+										name={findSettings("inAppSound").name}
+										value={findSettings("inAppSound").value}
+										onChange={() => dispatch(updateNotification("inAppSound"))}
 									/>
 									<span className="checkmark"></span>
 								</div>
@@ -98,8 +115,8 @@ function Notifications() {
 										className="border-none outline-none "
 										id="app-preview"
 										type="checkbox"
-										name=""
-										value=""
+										name={findSettings("inAppPreview").name}
+										value={findSettings("inAppPreview").value}
 									/>
 									<span className="checkmark"></span>
 								</div>
@@ -118,8 +135,8 @@ function Notifications() {
 									className="border-none outline-none "
 									id="app-unread"
 									type="checkbox"
-									name=""
-									value=""
+									name={findSettings("countUnreadMessages").name}
+									value={findSettings("countUnreadMessages").value}
 								/>
 								<span className="checkmark"></span>
 							</div>
