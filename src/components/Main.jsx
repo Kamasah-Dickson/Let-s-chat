@@ -8,6 +8,8 @@ import Message from "./Message";
 import { BsSendFill } from "react-icons/bs";
 import { ChatContext } from "../context/chatContext";
 import { auth, db, storage } from "../firebase";
+import toast, { Toaster } from "react-hot-toast";
+import { BsArrowDownCircleFill } from "react-icons/bs";
 import {
 	off,
 	onValue,
@@ -22,34 +24,31 @@ import {
 import { ref as storageRef } from "firebase/storage";
 import { v4 as uuid } from "uuid";
 import { uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { MdClose } from "react-icons/md";
 
 function Main() {
-	const { setOptions, combinedID } = useContext(AllContext);
+	const { setOptions, combinedID, settings, setSettings } =
+		useContext(AllContext);
 	const textareaRef = useRef(null);
+	const scrollRef = useRef(null);
+	const scrolltoBottomRef = useRef(null);
+	const mainRef = useRef(null);
 	const { data, setNewMessage, selectedUserID, messages, setMessages } =
 		useContext(ChatContext);
-
 	const [text, setText] = useState("");
-	const [img, setImg] = useState({});
+	const [img, setImg] = useState(null);
+	const [scroller, setScroller] = useState(false);
 	const currentUserId = auth?.currentUser?.uid;
 
-	const handleInputChange = (e) => {
-		const textarea = textareaRef.current;
-		textarea.style.height = "auto";
-		textarea.style.height = `${textarea.scrollHeight}px`;
-		setText(e.target.value);
-	};
-
 	useEffect(() => {
+		textareaRef?.current?.focus();
 		const messagesRef = ref(db, "chats/" + combinedID + "/messages");
 		const messagesListener = onValue(messagesRef, (snapshot) => {
 			const data = snapshot.val();
-			// Convert the object of messages into an array
 			const messageArray = Object.keys(data || {}).map((key) => ({
 				id: key,
 				...data[key],
 			}));
-
 			setMessages(messageArray);
 		});
 
@@ -58,12 +57,39 @@ function Main() {
 		};
 	}, [combinedID]);
 
+	useEffect(() => {
+		mainRef?.current?.addEventListener("scroll", handleScroll);
+		function handleScroll() {
+			const scrollBottom =
+				mainRef?.current?.scrollHeight -
+				(mainRef?.current?.scrollTop + mainRef?.current?.clientHeight);
+			if (scrollBottom > 50) {
+				setScroller(true);
+			} else {
+				setScroller(false);
+			}
+		}
+		return () => {
+			mainRef?.current?.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
+
+	const scrollToBottom = () => {
+		scrollRef?.current.scrollIntoView({ behavior: "smooth" });
+	};
+
+	const handleInputChange = (e) => {
+		const textarea = textareaRef.current;
+		textarea.style.height = "auto";
+		textarea.style.height = `${textarea.scrollHeight}px`;
+		setText(e.target.value);
+	};
+
 	const handleKeyDown = (event) => {
 		const { key, shiftKey } = event;
 
 		if (key === "Enter") {
 			if (shiftKey) {
-				// Shift + Enter: Insert a new line
 				event.preventDefault();
 				const textarea = textareaRef.current;
 				const start = textarea.selectionStart;
@@ -81,11 +107,13 @@ function Main() {
 				}, 0);
 			} else {
 				event.preventDefault();
-				handleSend();
-				setTimeout(() => {
-					const textarea = textareaRef.current;
-					textarea.style.height = "auto";
-				}, 0);
+				if (text || img) {
+					handleSend();
+					setTimeout(() => {
+						const textarea = textareaRef.current;
+						textarea.style.height = "auto";
+					}, 0);
+				}
 			}
 		}
 	};
@@ -95,24 +123,39 @@ function Main() {
 			const sentImgRef = storageRef(storage, "sentImages/" + uuid());
 			const uploadTask = uploadBytesResumable(sentImgRef, img);
 
-			uploadTask.on("state_changed", () => {
-				getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-					const message = {
-						id: uuid(),
-						text,
-						senderId: currentUserId,
-						img: downloadURL,
-						date: serverTimestamp(),
-					};
-
-					const userRef = ref(db, `chats/${data.chatId}/messages`);
-					const newMessageRef = push(userRef);
-					await set(newMessageRef, message);
-				});
-			});
-			setText("");
+			uploadTask.on(
+				"state_changed",
+				() => {
+					// handle Progress or other snapshot updates
+				},
+				(error) => {
+					console.log("Upload error:", error);
+					toast.error("Error uploading file");
+				},
+				() => {
+					getDownloadURL(uploadTask.snapshot.ref)
+						.then(async (downloadURL) => {
+							const message = {
+								id: uuid(),
+								text,
+								senderId: currentUserId,
+								img: downloadURL,
+								date: serverTimestamp(),
+							};
+							console.log(downloadURL);
+							const userRef = ref(db, `chats/${data.chatId}/messages`);
+							const newMessageRef = push(userRef);
+							await set(newMessageRef, message);
+							setText("");
+							console.log(downloadURL);
+						})
+						.catch((error) => {
+							console.log("Download URL error:", error);
+						});
+				}
+			);
 			setImg(null);
-		} else {
+		} else if (text) {
 			const message = {
 				id: uuid(),
 				text,
@@ -144,70 +187,178 @@ function Main() {
 			onValue(chatRef, (snapshot) => {
 				const data = snapshot.val();
 				if (data) {
-					const nestedKey = Object.entries(data); // Get the key of the nested object
+					const nestedKey = Object.entries(data);
 					setNewMessage(nestedKey);
 				}
 			});
+		} else {
+			return;
+		}
+	};
+
+	const handleFileUpload = (e) => {
+		const file = e.target.files[0];
+		const isImageFile = (fileType) => {
+			return (
+				fileType.startsWith("image/jpeg") ||
+				fileType.startsWith("image/png") ||
+				fileType.startsWith("image/svg+xml") ||
+				fileType.startsWith("image/gif") ||
+				fileType.startsWith("image/webp")
+			);
+		};
+
+		const fileType = file.type || "application/octet-stream";
+		if (file && isImageFile(fileType)) {
+			setImg(file);
+		} else {
+			toast.error("Sorry you can only upload an image file for now");
+		}
+	};
+
+	const getLocalUpload = (img) => {
+		textareaRef?.current?.focus();
+		const file = img;
+		const isImageFile = (fileType) => {
+			return (
+				fileType.startsWith("image/jpeg") ||
+				fileType.startsWith("image/png") ||
+				fileType.startsWith("image/svg+xml") ||
+				fileType.startsWith("image/gif") ||
+				fileType.startsWith("image/webp")
+			);
+		};
+
+		const fileType = file.type || "application/octet-stream";
+		if (file && isImageFile(fileType)) {
+			return URL.createObjectURL(file);
+		} else {
+			// Not an image file
+			toast.error("Sorry you can only upload an image file for now");
 		}
 	};
 
 	return (
 		<div className="main-bg">
-			<Header_main />
-			<div className="gradient my-height overflow-y-scroll flex flex-col justify-center">
-				<div
-					onClick={() => setOptions(true)}
-					className="flex pt-5 flex-col gap-3 flex-[3] px-5 overflow-y-auto"
-				>
-					{messages.map((message) => (
-						<Message key={message.id} message={message} />
-					))}
+			{data.chatId ? (
+				<>
+					<Toaster />
+					<Header_main />
+					<div className="gradient my-height overflow-y-scroll flex flex-col justify-center">
+						<div
+							ref={mainRef}
+							onClick={() => setOptions(true)}
+							className="flex pt-5 flex-col gap-7 flex-[3] px-5 overflow-y-auto"
+						>
+							{messages.map((message) => (
+								<Message key={message.id} message={message} />
+							))}
 
-					<label
-						htmlFor="message"
-						className={`${
-							messages.length > 6 ? "mt-[5rem] " : "mt-auto "
-						}rounded-md h-auto items-center shadow-sm shadow-[#0000004f] text-white bg-[#2E323C] md:my-full gap-5 w-full flex sticky
-						bottom-5 md:bottom-10 p-3`}
-					>
-						<input
-							type="file"
-							className="hidden"
-							id="file"
-							// value={img}
-							onChange={(e) => setImg(e.target.files[0])}
-						/>
-						<label htmlFor="file">
-							<img
-								src={attach}
-								alt=""
-								className="cursor-pointer h-full w-full"
-							/>
-						</label>
+							<div className="opacity-0 w-0 h-0" ref={scrollRef}>
+								{/* scroll to here */}
+							</div>
 
-						<textarea
-							ref={textareaRef}
-							rows="1"
-							onChange={(e) => handleInputChange(e)}
-							onKeyDown={handleKeyDown}
-							autoCorrect="true"
-							autoComplete="true"
-							id="message"
-							value={text}
-							className="w-full min-h-[30px] rounded-md h-auto bg-transparent object-cover border-none outline-none resize-none overflow-hidden"
-							placeholder="Write a message..."
-						></textarea>
-						<img src={emoji} alt="" className="cursor-pointer" />
-						<img src={record} alt="" className=" cursor-pointer" />
-						<BsSendFill
-							onClick={handleSend}
-							color="#8A8A8A"
-							size={25}
-							className=" active:scale-[1.02] cursor-pointer h-fit"
-						/>
-					</label>
-				</div>
-			</div>
+							<div
+								className={`${messages.length > 6 ? "mt-[5rem] " : "mt-auto "}${
+									img
+										? "flex gap-5 p-3 w-full rounded-md flex-col justify-center shadow shadow-[#0000004f] bg-[#2E323C]"
+										: ""
+								} sticky
+						bottom-5 md:bottom-10`}
+							>
+								{img && (
+									<div className="h-auto w-[250px] rounded-md relative">
+										<MdClose
+											color="white"
+											className="absolute top-3 right-3"
+											size={20}
+											cursor={"pointer"}
+											onClick={() => setImg(null)}
+										/>
+										<img
+											src={getLocalUpload(img)}
+											className="h-full w-full rounded-md object-cover"
+											alt={img.name}
+										/>
+									</div>
+								)}
+
+								<label
+									htmlFor="message"
+									className={`rounded-md h-auto items-end gap-5 shadow-sm ${
+										!img && "shadow-[#0000004f]"
+									} text-white bg-[#2E323C] flex  p-3`}
+								>
+									<input
+										type="file"
+										className="hidden"
+										id="file"
+										onChange={(e) => handleFileUpload(e)}
+									/>
+									<label htmlFor="file">
+										<img
+											src={attach}
+											alt=""
+											className="cursor-pointer h-[25px] w-[25px]"
+										/>
+									</label>
+
+									<textarea
+										ref={textareaRef}
+										rows="1"
+										onChange={(e) => handleInputChange(e)}
+										onKeyDown={handleKeyDown}
+										autoCorrect="true"
+										autoComplete="true"
+										id="message"
+										value={text}
+										className="w-full rounded-md h-auto bg-transparent object-cover border-none outline-none resize-none overflow-hidden"
+										placeholder="Write a message..."
+									></textarea>
+									<img src={emoji} alt="" className="cursor-pointer" />
+									<img src={record} alt="" className=" cursor-pointer" />
+									<BsSendFill
+										onClick={handleSend}
+										color="#8A8A8A"
+										size={25}
+										className=" active:scale-[1.02] cursor-pointer h-fit"
+									/>
+								</label>
+							</div>
+						</div>
+						{/* scrolls to the bottom of the page */}
+
+						{scroller && (
+							<button
+								ref={scrolltoBottomRef}
+								type="button"
+								onClick={scrollToBottom}
+								className="fixed bottom-32 right-10 z-50"
+							>
+								<BsArrowDownCircleFill
+									size={25}
+									className="text-[#ffffff80] hover:text-white"
+								/>
+							</button>
+						)}
+					</div>
+				</>
+			) : (
+				<>
+					{settings && (
+						<div
+							onClick={() => setSettings(false)}
+							className=" bg-[#00000073] h-full w-full absolute "
+						></div>
+					)}
+					<div className="flex h-full items-center justify-center">
+						<h1 className="flex items-center  justify-center bg-[#0000003b] py-1 px-4 rounded-3xl text-white">
+							Select a chat to start messaging{" "}
+							<span className="text-2xl">💬</span>
+						</h1>
+					</div>
+				</>
+			)}
 		</div>
 	);
 }
