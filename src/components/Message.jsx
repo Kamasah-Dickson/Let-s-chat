@@ -44,18 +44,20 @@ function Message({ message }) {
 					message.senderId === currentUserID.uid ? "owner" : "coming"
 				} flex max-w-[80%] flex-[2] gap-5 text-white`}
 			>
-				<p className=" border border-[#00000044] text-white w-max text-sm p-2">
-					{message.text}
-				</p>
-				<div className="w-1/2">
-					{message.img && (
+				{message.text && (
+					<p className=" border shadow-xl shadow-[#00000021] border-[#00000044] text-white w-max text-sm p-2">
+						{message.text}
+					</p>
+				)}
+				{message.img && (
+					<div className="w-1/2 min-h-auto rounded-lg shadow-2xl shadow-[#00000062]">
 						<img
-							className="w-full h-auto"
+							className="w-full h-auto rounded-lg"
 							src={message.img && message.img}
 							alt={data?.user?.displayName}
 						/>
-					)}
-				</div>
+					</div>
+				)}
 			</div>
 		</div>
 	);
