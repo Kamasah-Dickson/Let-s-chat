@@ -42,18 +42,18 @@ function Message({ message }) {
 			<div
 				className={` ${
 					message.senderId === currentUserID.uid ? "owner" : "coming"
-				} flex flex-[2] max-w-[400px] gap-5 text-white`}
+				} flex flex-[2] gap-5 text-white`}
 			>
 				{message.text && (
 					<p
 						style={{ overflowWrap: "anywhere" }}
-						className=" max-w-fit border shadow-xl shadow-[#00000021] border-[#00000044] text-white text-sm p-2"
+						className=" max-w-[500px] w-fit border shadow-xl shadow-[#00000021] border-[#00000044] text-white text-sm md:text-base p-2"
 					>
 						{message.text}
 					</p>
 				)}
 				{message.img && (
-					<div className="w-1/2 min-h-auto rounded-lg shadow-2xl shadow-[#00000062]">
+					<div className="w-1/2 max-w-[80%] min-h-auto rounded-lg shadow-2xl shadow-[#00000062]">
 						<img
 							className="w-full h-auto rounded-lg"
 							src={message.img && message.img}
