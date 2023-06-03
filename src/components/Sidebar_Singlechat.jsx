@@ -272,7 +272,7 @@ function Sidebar_Singlechat() {
 		const timestamp = Number(
 			newMessage.find((message) => message?.chatId === uid)?.date
 		);
-		const messageTime = isNaN(timestamp) ? 0 : timestamp;
+		const messageTime = isNaN(timestamp) ? "" : timestamp;
 
 		return getTimeDifference(messageTime) || "";
 	}
@@ -324,10 +324,13 @@ function Sidebar_Singlechat() {
 							</div>
 							<div className="flex-1">
 								<h3 className="name">{displayName}</h3>
+
 								<span className="message text-light_white">
-									{newMessage
-										.find((message) => message?.chatId === uid)
-										?.newMessage.slice(0, 15) + "..." ?? ""}
+									{`${
+										newMessage
+											.find((message) => message?.chatId === uid)
+											?.newMessage?.slice(0, 15) ?? ""
+									}...`}
 								</span>
 							</div>
 							<div>
