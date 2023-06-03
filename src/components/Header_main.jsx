@@ -36,7 +36,9 @@ function Header_main() {
 					)}
 				</h3>
 				<div className="flex items-center gap-2">
-					<span className="message text-light_white">{isOnline?.lastSeen}</span>
+					<span className="message text-light_white">
+						{isOnline?.lastSeen || ""}
+					</span>
 					{isOnline?.online && (
 						<div className="bg-green rounded-full h-2 w-2  "></div>
 					)}
