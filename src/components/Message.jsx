@@ -21,7 +21,7 @@ function Message({ message }) {
 				message.senderId === currentUserID.uid
 					? "owner-parent"
 					: "coming-parent"
-			} gap-5`}
+			} gap-3`}
 		>
 			<div>
 				<div className=" w-[45px] h-[45px] rounded-full">
@@ -42,10 +42,13 @@ function Message({ message }) {
 			<div
 				className={` ${
 					message.senderId === currentUserID.uid ? "owner" : "coming"
-				} flex max-w-[80%] flex-[2] gap-5 text-white`}
+				} flex flex-[2] max-w-[400px] gap-5 text-white`}
 			>
 				{message.text && (
-					<p className=" border shadow-xl shadow-[#00000021] border-[#00000044] text-white w-max text-sm p-2">
+					<p
+						style={{ overflowWrap: "anywhere" }}
+						className=" max-w-fit border shadow-xl shadow-[#00000021] border-[#00000044] text-white text-sm p-2"
+					>
 						{message.text}
 					</p>
 				)}
