@@ -14,7 +14,7 @@ import { BiShowAlt, BiHide } from "react-icons/bi";
 import { onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
 import { AllContext } from "../context/appContext";
-import { set, ref } from "firebase/database";
+import { set, ref, serverTimestamp, update, get } from "firebase/database";
 
 function Signup() {
 	const [loading, setLoading] = useState(false);
@@ -27,6 +27,21 @@ function Signup() {
 		register,
 		formState: { errors },
 	} = useForm();
+
+	const getUserStatus = async (userId) => {
+		const userStatusRef = ref(db, `/userStatus/${userId}`);
+		const snapshot = await get(userStatusRef);
+		if (snapshot.exists()) {
+			return snapshot.val();
+		} else {
+			const userStatus = {
+				online: false,
+				lastSeen: serverTimestamp(),
+			};
+			await update(userStatusRef, userStatus);
+			return userStatus;
+		}
+	};
 
 	useEffect(() => {
 		function deterMineUserLoggedIn() {
@@ -45,7 +60,8 @@ function Signup() {
 						}
 					);
 
-					const time = setTimeout(() => {
+					const time = setTimeout(async () => {
+						await getUserStatus(signedUser.uid);
 						navigate("/");
 					}, 4500);
 
