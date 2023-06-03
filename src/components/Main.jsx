@@ -38,6 +38,7 @@ function Main() {
 	const [text, setText] = useState("");
 	const [img, setImg] = useState(null);
 	const [scroller, setScroller] = useState(false);
+	const [isSending, setIsSending] = useState(false);
 	const currentUserId = auth?.currentUser?.uid;
 
 	useEffect(() => {
@@ -119,6 +120,13 @@ function Main() {
 	};
 
 	const handleSend = async () => {
+		if (isSending) {
+			// Return if a message is already being sent
+			setText("");
+			return;
+		}
+		setIsSending(true);
+
 		if (img) {
 			const sentImgRef = storageRef(storage, "sentImages/" + uuid());
 			const uploadTask = uploadBytesResumable(sentImgRef, img);
@@ -191,6 +199,7 @@ function Main() {
 					setNewMessage(nestedKey);
 				}
 			});
+			setIsSending(false);
 		} else {
 			return;
 		}
@@ -312,6 +321,7 @@ function Main() {
 										autoComplete="true"
 										id="message"
 										value={text}
+										disabled={isSending}
 										className="w-full rounded-md h-auto bg-transparent object-cover border-none outline-none resize-none overflow-hidden"
 										placeholder="Write a message..."
 									></textarea>
