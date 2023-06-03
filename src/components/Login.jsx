@@ -10,8 +10,9 @@ import {
 	GoogleAuthProvider,
 	signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import { AllContext } from "../context/appContext";
+import { get, ref, serverTimestamp, update } from "firebase/database";
 
 function Login() {
 	const {
@@ -25,6 +26,21 @@ function Login() {
 	const [loading, setLoading] = useState(false);
 	const { updateUserProfile } = useContext(AllContext);
 
+	const getUserStatus = async (userId) => {
+		const userStatusRef = ref(db, `/userStatus/${userId}`);
+		const snapshot = await get(userStatusRef);
+		if (snapshot.exists()) {
+			return snapshot.val();
+		} else {
+			const userStatus = {
+				online: false,
+				lastSeen: serverTimestamp(),
+			};
+			await update(userStatusRef, userStatus);
+			return userStatus;
+		}
+	};
+
 	const loginWithGoogle = async () => {
 		setLoading(true);
 		setDisabled(true);
@@ -35,6 +51,7 @@ function Login() {
 			const email = userCredential.email;
 
 			updateUserProfile((prev) => ({ ...prev, userName, photoURL, email }));
+			await getUserStatus(userCredential?.user?.uid);
 
 			navigate("/");
 		} catch (error) {
