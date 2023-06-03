@@ -6,7 +6,7 @@ import { auth } from "../firebase";
 export const AllContext = createContext(null);
 
 function AppContext({ children }) {
-	const [settings, setsettings] = useState(false);
+	const [settings, setSettings] = useState(false);
 	const [searchFocus, setSearchFocus] = useState(false);
 	const [options, setOptions] = useState(true);
 	const [userProfile, setUserProfile] = useState({
@@ -54,7 +54,7 @@ function AppContext({ children }) {
 		setOptions,
 		searchFocus,
 		settings,
-		setsettings,
+		setSettings,
 		updateUserProfile,
 		userProfile,
 		showTargetMessage,
