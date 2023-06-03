@@ -29,14 +29,14 @@ function Message({ message }) {
 						className="rounded-full h-full w-full object-cover"
 						src={
 							message.senderId === currentUserID.uid
-								? currentUserID.photoURL
-								: data.user.photoURL ?? testing
+								? currentUserID.photoURL || testing
+								: data.user.photoURL || testing
 						}
-						alt=""
+						alt={data?.user?.displayName}
 					/>
 				</div>
 				<span className="font-normal text-gray-400 text-xs">
-					{getTimeDifference(Number(message?.date))}
+					{getTimeDifference(Number(message?.date)) || ""}
 				</span>
 			</div>
 			<div
@@ -52,7 +52,7 @@ function Message({ message }) {
 						<img
 							className="w-full h-auto"
 							src={message.img && message.img}
-							alt=""
+							alt={data?.user?.displayName}
 						/>
 					)}
 				</div>
