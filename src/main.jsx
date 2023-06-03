@@ -16,6 +16,7 @@ import UpdateProfilePage from "./pages/UpdateProfilePage.jsx";
 import ChatContextProvider from "./context/chatContext.jsx";
 import { store } from "./store/store.js";
 import { Provider } from "react-redux";
+import PageNotFound from "./components/PageNotFound.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<React.StrictMode>
@@ -36,6 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 							/>
 							<Route path="/language" element={<LanguagePage />} />
 							<Route path="/ask-a-question" element={<AskQuestionsPage />} />
+							<Route path="*" element={<PageNotFound />} />
 						</Routes>
 					</Router>
 				</Provider>
