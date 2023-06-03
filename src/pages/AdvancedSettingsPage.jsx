@@ -5,11 +5,11 @@ import { AllContext } from "../context/appContext";
 import useMediaQuery from "../Hooks/useMediaQuery";
 
 function AdvancedSettingsPage() {
-	const { setsettings, toggleSettingsCategory } = useContext(AllContext);
+	const { setSettings, toggleSettingsCategory } = useContext(AllContext);
 	const { matches } = useMediaQuery("max-width:768px");
 
 	useLayoutEffect(() => {
-		setsettings(true);
+		setSettings(true);
 	}, []);
 
 	return (
