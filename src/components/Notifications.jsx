@@ -10,10 +10,7 @@ import { nanoid } from "nanoid";
 import Modal from "./Modal";
 import { AllContext } from "../context/appContext";
 import { allNotifications } from "../Features/notificationSlice";
-import {
-	resetSettings,
-	updateNotification,
-} from "../Features/notificationSlice";
+import { updateNotification } from "../Features/notificationSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 function Notifications() {
