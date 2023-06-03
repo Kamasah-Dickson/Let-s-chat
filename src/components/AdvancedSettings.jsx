@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { AllContext } from "../context/appContext";
 import { HiOutlineArrowSmLeft } from "react-icons/hi";
+import ComingSoon from "./ComingSoon";
 
 function AdvancedSettings() {
 	const { setToggleSettingsCategory } = useContext(AllContext);
@@ -15,8 +16,7 @@ function AdvancedSettings() {
 					cursor={"pointer"}
 				/>
 				<div className="pb-44 pt-3 flex-[3] px-2 overflow-y-auto">
-					<p>dfsdfdfds</p>
-					<p>dfsdfdfds</p>
+					<ComingSoon />
 				</div>
 			</div>
 		</div>

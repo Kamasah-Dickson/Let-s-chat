@@ -9,7 +9,7 @@ import { TbLogout } from "react-icons/tb";
 import Modal from "./Modal";
 import { AllContext } from "../context/appContext";
 
-function Menu_settings({ setsettings }) {
+function Menu_settings({ setSettings }) {
 	const { pathname } = useLocation();
 	const [alert, setAlert] = useState(false);
 	const { setOptions, setToggleSettingsCategory } = useContext(AllContext);
@@ -22,7 +22,7 @@ function Menu_settings({ setsettings }) {
 			<div className="flex items-center py-3 gap-5">
 				<Link to={"/"}>
 					<HiOutlineArrowSmLeft
-						onClick={() => setsettings(false)}
+						onClick={() => setSettings(false)}
 						color="white"
 						size={25}
 						cursor={"pointer"}
