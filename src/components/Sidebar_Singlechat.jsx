@@ -21,6 +21,7 @@ function Sidebar_Singlechat() {
 	const [error, setError] = useState("");
 	const [onlineStatus, setOnlineStatus] = useState([]);
 	const { setCombinedId } = useContext(AllContext);
+	const [newMessageCounter, setNewMessageCounter] = useState([]);
 
 	const {
 		dispatch,
@@ -31,7 +32,6 @@ function Sidebar_Singlechat() {
 		data,
 	} = useContext(ChatContext);
 
-	//do it at the sidebar
 	// ========================
 	useEffect(() => {
 		const chatRef = ref(db, "newMessages");
@@ -262,13 +262,20 @@ function Sidebar_Singlechat() {
 	};
 
 	function myNewMessage(user) {
-		const matchedArray = newMessage.find((arr) => arr[0] === user.uid);
-		if (matchedArray) {
-			const targetMessage = matchedArray[1];
-			return {
-				newMessage: targetMessage?.newMessage,
-				date: targetMessage.date,
-			};
+		const matchedMessages = newMessage.find((arr) => arr[0] === user.uid);
+		if (matchedMessages?.length > 0) {
+			const allNewMessages = matchedMessages.map((matchedArray) => {
+				const targetMessage = matchedArray[1]; //am accessing the newMessage which is at an index of 1 in the matched array
+				return {
+					id: matchedArray[0],
+					date: targetMessage?.date,
+					newMessage: targetMessage?.message,
+					seen: false,
+				};
+			});
+
+			setNewMessageCounter(allNewMessages);
+			return allNewMessages;
 		}
 	}
 
@@ -280,6 +287,17 @@ function Sidebar_Singlechat() {
 
 		return getTimeDifference(messageTime) || "";
 	}
+
+	//change from here
+	const countNewMessage = () => {
+		return newMessageCounter?.reduce((count, message) => {
+			if (!message?.seen) {
+				return count + 1;
+			} else {
+				return count;
+			}
+		}, 0);
+	};
 
 	return (
 		<div className="flex flex-col h-full justify-center gap-3 w-full">
@@ -347,9 +365,11 @@ function Sidebar_Singlechat() {
 							</div>
 							<div>
 								<div className="flex items-end flex-col gap-2 text-light_white">
-									<span className="text-sm text-white bg-blue rounded-full w-5 h-5 flex items-center justify-center text-center">
-										2
-									</span>
+									{countNewMessage() > 0 && (
+										<span className="text-sm text-white bg-blue rounded-full w-5 h-5 flex items-center justify-center text-center">
+											{Number(countNewMessage())}
+										</span>
+									)}
 									<p className="text-xs">{getTime(uid)}</p>
 								</div>
 							</div>
