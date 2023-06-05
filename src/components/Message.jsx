@@ -29,7 +29,7 @@ function Message({ message }) {
 						className="rounded-full h-full w-full object-cover"
 						src={
 							message?.senderId === currentUserID?.uid
-								? currentUserID?.photoURL
+								? currentUserID?.photoURL || testImage
 								: data?.user?.photoURL || testImage
 						}
 						alt={data?.user?.displayName}
