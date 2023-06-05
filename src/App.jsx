@@ -1,17 +1,16 @@
-import React, { useContext, useEffect, lazy, Suspense } from "react";
+import React, { useContext, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
 import { useNavigate } from "react-router-dom";
 import useMediaQuery from "./Hooks/useMediaQuery";
 import { AllContext } from "./context/appContext";
-import { BeatLoader } from "react-spinners";
+import Main from "./components/Main";
 
 function App() {
 	const navigate = useNavigate();
 	const { matches } = useMediaQuery("max-width:768px");
 	const { showTargetMessage } = useContext(AllContext);
-	const Main = lazy(() => import("./components/Main"));
 
 	useEffect(() => {
 		function deterMineUserLoggedIn() {
@@ -47,35 +46,14 @@ function App() {
 							<Sidebar />
 						</div>
 						<div className="flex-[8] ">
-							<Suspense
-								fallback={
-									<div className="h-screen flex items-center justify-center">
-										<BeatLoader
-											className="h-screen w-full flex items-center justify-center"
-											color="#ffffff"
-											loading={true}
-											size={15}
-										/>
-									</div>
-								}
-							>
-								<Main />
-							</Suspense>
+							<Main />
 						</div>
 					</>
 				)
 			)}
 			{showTargetMessage && matches && (
 				<div className="flex-[8] ">
-					<Suspense
-						fallback={
-							<div className="h-screen flex items-center justify-center">
-								<BeatLoader color="#ffffff" loading={true} size={15} />
-							</div>
-						}
-					>
-						<Main />
-					</Suspense>
+					<Main />
 				</div>
 			)}
 		</div>
