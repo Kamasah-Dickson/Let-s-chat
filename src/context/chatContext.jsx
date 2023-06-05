@@ -33,6 +33,9 @@ function ChatContextProvider({ children }) {
 	const [selectedUserID, setSelectedUserID] = useState("");
 	const [messages, setMessages] = useState([]);
 	const [isOnline, setIsOnline] = useState([]);
+	const [onlineStatus, setOnlineStatus] = useState([]);
+	const [chat, setChat] = useState([]);
+
 	return (
 		<ChatContext.Provider
 			value={{
@@ -46,6 +49,10 @@ function ChatContextProvider({ children }) {
 				messages,
 				isOnline,
 				setIsOnline,
+				onlineStatus,
+				setOnlineStatus,
+				chat,
+				setChat,
 			}}
 		>
 			{children}
