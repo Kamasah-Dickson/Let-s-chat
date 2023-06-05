@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useCallback, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import {
 	get,
@@ -19,7 +19,7 @@ function Sidebar_Singlechat() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 	const { setCombinedId } = useContext(AllContext);
-	const [newMessageCounter, setNewMessageCounter] = useState([]);
+	// const [newMessageCounter, setNewMessageCounter] = useState([]);
 
 	const {
 		dispatch,
@@ -36,19 +36,19 @@ function Sidebar_Singlechat() {
 
 	// ==============CountNewMessage===========
 
-	useEffect(() => {
-		//change from here
-		const countNewMessage = () => {
-			return newMessageCounter?.reduce((count, message) => {
-				if (!message?.seen) {
-					console.log(count + 1);
-				} else {
-					console.log(count);
-				}
-			}, 0);
-		};
-		countNewMessage();
-	}, []);
+	// useEffect(() => {
+	// 	//change from here
+	// 	const countNewMessage = () => {
+	// 		return newMessageCounter?.reduce((count, message) => {
+	// 			if (!message?.seen) {
+	// 				console.log(count + 1);
+	// 			} else {
+	// 				console.log(count);
+	// 			}
+	// 		}, 0);
+	// 	};
+	// 	countNewMessage();
+	// }, []);
 	// =========================
 
 	// ========================
@@ -280,33 +280,40 @@ function Sidebar_Singlechat() {
 		}
 	};
 
-	const myNewMessage = useCallback(
-		(user) => {
-			const matchedMessages = newMessage.find((arr) => arr[0] === user.uid);
-			if (matchedMessages?.length > 0) {
-				const allNewMessages = matchedMessages.map((matchedArray) => {
-					const targetMessage = matchedArray[1]; //am accessing the newMessage which is at an index of 1 in the matched array
-					return {
-						id: matchedArray[0],
-						date: targetMessage?.date,
-						newMessage: targetMessage?.message,
-						seen: false,
-					};
-				});
+	// const myNewMessage = (user) => {
+	// 	const matchedMessages = newMessage.find((arr) => arr[0] === user.uid);
+	// 	if (matchedMessages) {
+	// 		const allNewMessages = matchedMessages.map((matchedArray) => {
+	// 			const targetMessage = matchedArray[1]; //am accessing the newMessage which is at an index of 1 in the matched array
+	// 			return {
+	// 				id: matchedArray[0],
+	// 				date: targetMessage?.date,
+	// 				newMessage: targetMessage?.message,
+	// 				seen: false,
+	// 			};
+	// 		});
 
-				setNewMessageCounter(allNewMessages);
-				return allNewMessages;
-			}
-		},
-		[newMessage]
-	);
+	// 		// setNewMessageCounter(allNewMessages);
+	// 		return allNewMessages;
+	// 	}
+	// };
+
+	function myNewMessage(user) {
+		const matchedArray = newMessage.find((arr) => arr[0] === user.uid);
+		if (matchedArray) {
+			const targetMessage = matchedArray[1];
+			return {
+				newMessage: targetMessage?.newMessage,
+				date: targetMessage.date,
+			};
+		}
+	}
 
 	function getTime(uid) {
 		const timestamp = Number(
 			newMessage.find((message) => message?.chatId === uid)?.date
 		);
 		const messageTime = isNaN(timestamp) ? "" : timestamp;
-
 		return getTimeDifference(messageTime) || "";
 	}
 
