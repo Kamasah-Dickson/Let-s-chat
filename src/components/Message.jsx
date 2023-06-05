@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React, { memo, useContext, useRef, useEffect } from "react";
-import testing from "../assets/background.svg";
 import { auth } from "../firebase";
 import { ChatContext } from "../context/chatContext";
 import getTimeDifference from "../utils/timeStamp";
@@ -29,8 +28,8 @@ function Message({ message }) {
 						className="rounded-full h-full w-full object-cover"
 						src={
 							message.senderId === currentUserID.uid
-								? currentUserID.photoURL || testing
-								: data.user.photoURL || testing
+								? currentUserID.photoURL
+								: data.user.photoURL
 						}
 						alt={data?.user?.displayName}
 					/>
@@ -56,7 +55,7 @@ function Message({ message }) {
 					<div className="w-1/2 max-w-[80%] min-h-auto rounded-lg shadow-2xl shadow-[#00000062]">
 						<img
 							className="w-full h-auto rounded-lg"
-							src={message.img && message.img}
+							src={message?.img}
 							alt={data?.user?.displayName}
 						/>
 					</div>
