@@ -19,7 +19,7 @@ function Sidebar_Singlechat() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 	const { setCombinedId } = useContext(AllContext);
-	// const [newMessageCounter, setNewMessageCounter] = useState([]);
+	const [newMessageCounter, setNewMessageCounter] = useState([]);
 
 	const {
 		dispatch,
@@ -280,28 +280,11 @@ function Sidebar_Singlechat() {
 		}
 	};
 
-	// const myNewMessage = (user) => {
-	// 	const matchedMessages = newMessage.find((arr) => arr[0] === user.uid);
-	// 	if (matchedMessages) {
-	// 		const allNewMessages = matchedMessages.map((matchedArray) => {
-	// 			const targetMessage = matchedArray[1]; //am accessing the newMessage which is at an index of 1 in the matched array
-	// 			return {
-	// 				id: matchedArray[0],
-	// 				date: targetMessage?.date,
-	// 				newMessage: targetMessage?.message,
-	// 				seen: false,
-	// 			};
-	// 		});
-
-	// 		// setNewMessageCounter(allNewMessages);
-	// 		return allNewMessages;
-	// 	}
-	// };
-
 	function myNewMessage(user) {
 		const matchedArray = newMessage.find((arr) => arr[0] === user.uid);
 		if (matchedArray) {
 			const targetMessage = matchedArray[1];
+
 			return {
 				newMessage: targetMessage?.newMessage,
 				date: targetMessage.date,
