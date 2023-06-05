@@ -99,9 +99,14 @@ function Search({ searchFocus }) {
 			onValue(starCountRef, (snapshot) => {
 				const data = snapshot.val();
 				if (data) {
-					let filtered = Object.values(data).filter((data) =>
-						data.displayName.toLowerCase().includes(search.toLocaleLowerCase())
-					);
+					let filtered = Object.values(data)
+						.filter((data) => data.uid !== auth?.currentUser?.uid)
+						.map((data) => data)
+						.filter((data) =>
+							data.displayName
+								.toLowerCase()
+								.includes(search.toLocaleLowerCase())
+						);
 					setSearchedUsers(filtered);
 					setSearch("");
 				}
@@ -168,16 +173,16 @@ function Search({ searchFocus }) {
 	};
 
 	const myNewMessage = (user) => {
-		const matchedArray = newMessage.find((arr) => arr[0] === user.uid);
+		const matchedArray = newMessage?.find((arr) => arr[0] === user.uid);
 		if (matchedArray) {
 			const targetMessage = matchedArray[1];
-			return targetMessage.newMessage;
+			return targetMessage?.newMessage;
 		}
 	};
 
 	function getTime(uid) {
 		const timestamp = Number(
-			newMessage.find((message) => message?.uid === uid)?.date
+			newMessage?.find((message) => message?.uid === uid)?.date
 		);
 		const messageTime = isNaN(timestamp) ? "" : timestamp;
 
