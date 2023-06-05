@@ -3,6 +3,7 @@ import React, { memo, useContext, useRef, useEffect } from "react";
 import { auth } from "../firebase";
 import { ChatContext } from "../context/chatContext";
 import getTimeDifference from "../utils/timeStamp";
+import testImage from "../assets/background.svg";
 
 function Message({ message }) {
 	const currentUserID = auth?.currentUser;
@@ -55,8 +56,8 @@ function Message({ message }) {
 					<div className="w-1/2 max-w-[80%] min-h-auto rounded-lg shadow-2xl shadow-[#00000062]">
 						<img
 							className="w-full h-auto rounded-lg"
-							src={message?.img}
-							alt={data?.user?.displayName}
+							src={message?.img || testImage}
+							alt={data?.user?.displayName || data?.user?.displayName}
 						/>
 					</div>
 				)}
