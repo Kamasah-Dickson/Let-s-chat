@@ -14,6 +14,7 @@ import {
 	get,
 } from "firebase/database";
 import { ChatContext } from "../context/chatContext";
+import getTimeDifference from "../utils/timeStamp";
 
 function Search({ searchFocus }) {
 	const {
@@ -24,7 +25,8 @@ function Search({ searchFocus }) {
 		setCombinedId,
 	} = useContext(AllContext);
 
-	const { dispatch, newMessage } = useContext(ChatContext);
+	const { dispatch, newMessage, onlineStatus, chat, setOnlineStatus } =
+		useContext(ChatContext);
 
 	const inputFocus = useRef(null);
 	const [search, setSearch] = useState("");
@@ -35,6 +37,60 @@ function Search({ searchFocus }) {
 			setOptions(true);
 		}
 	}, [searchFocus]);
+
+	useEffect(() => {
+		const allUserIds = Object.values(chat)
+			?.flatMap((chatResult) => Object.values(chatResult))
+
+			.sort((a, b) => {
+				const aTargetMessage = myNewMessage(a.userInfo);
+				const bTargetMessage = myNewMessage(b.userInfo);
+				return bTargetMessage?.date - aTargetMessage?.date;
+			})
+			.reduce((uniqueUsers, userInfo) => {
+				const existingUser = uniqueUsers.find(
+					(user) => user.userInfo.uid === userInfo.userInfo.uid
+				);
+				if (!existingUser) {
+					uniqueUsers.push(userInfo);
+				}
+				return uniqueUsers;
+			}, [])
+			.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
+			.map((users) => users.userInfo.uid);
+
+		const getUserStatus = async (userId) => {
+			const userStatusRef = ref(db, `/userStatus/${userId}`);
+			const snapshot = await get(userStatusRef);
+			if (snapshot.exists()) {
+				return snapshot.val();
+			} else {
+				const userStatus = {
+					online: false,
+					lastSeen: serverTimestamp(),
+				};
+				await update(userStatusRef, userStatus);
+				return userStatus;
+			}
+		};
+
+		const fetchUserStatuses = async () => {
+			if (auth.currentUser) {
+				const userIds = allUserIds.filter(
+					(uid) => uid !== auth.currentUser.uid
+				);
+				const userStatuses = await Promise.all(userIds.map(getUserStatus));
+
+				const formattedStatuses = userStatuses.map((status, index) => ({
+					userId: userIds[index],
+					status,
+				}));
+				setOnlineStatus(formattedStatuses);
+			}
+		};
+
+		fetchUserStatuses();
+	}, []);
 
 	const handleSearch = async () => {
 		try {
@@ -119,6 +175,15 @@ function Search({ searchFocus }) {
 		}
 	};
 
+	function getTime(uid) {
+		const timestamp = Number(
+			newMessage.find((message) => message?.uid === uid)?.date
+		);
+		const messageTime = isNaN(timestamp) ? "" : timestamp;
+
+		return getTimeDifference(messageTime) || "";
+	}
+
 	return (
 		<>
 			<div
@@ -155,19 +220,22 @@ function Search({ searchFocus }) {
 									src={user.photoURL || testImage}
 									alt=""
 								/>
-								<div className="bg-sidebar_color p-[2px]  bottom-0 right-1 rounded-full absolute">
-									<div className="bg-green rounded-full h-3 w-3  "></div>
-								</div>
+								{onlineStatus.find((online) => online?.userId === user?.uid)
+									?.userIsOnline?.status?.online && (
+									<div className="bg-sidebar_color p-[2px]  bottom-0 right-1 rounded-full absolute">
+										<div className="bg-green rounded-full h-3 w-3"></div>
+									</div>
+								)}
 							</div>
 							<div className="flex-1 ">
 								<h3 className="name">{user.displayName}</h3>
 								<span className="message text-light_white">
-									{myNewMessage(user)}
+									{myNewMessage(user)?.slice(0, 15) ?? ""}
 								</span>
 							</div>
 							<div>
 								<div className="flex items-end flex-col gap-2 text-light_white">
-									<p className="text-sm">3:27PM</p>
+									<p className="text-sm">{getTime(user?.uid) || ""}</p>
 									<span className="text-sm text-white bg-blue rounded-full w-5 h-5 flex items-center justify-center text-center">
 										2
 									</span>
