@@ -19,7 +19,7 @@ function Sidebar_Singlechat() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 	const { setCombinedId } = useContext(AllContext);
-	const [newMessageCounter, setNewMessageCounter] = useState([]);
+	// const [newMessageCounter, setNewMessageCounter] = useState([]);
 
 	const {
 		dispatch,
@@ -52,16 +52,36 @@ function Sidebar_Singlechat() {
 	// =========================
 
 	// ========================
+
 	useEffect(() => {
 		const chatRef = ref(db, "newMessages");
 		const chatsListener = onValue(chatRef, (snapshot) => {
 			const data = snapshot.val();
 			// Convert the object of chats into an array
 			const chatArray = Object.keys(data || {}).map((key) => ({
-				chatId: key,
+				uid: key,
 				...data[key],
 			}));
 			setNewMessage(chatArray);
+			const getMyNewMessage = {
+				...chatArray,
+				uid: chatArray.chatId,
+				isSeen: false,
+			};
+
+			const user = auth?.currentUser;
+			const matchedMessage = [getMyNewMessage]?.find(
+				(messages) => messages.uid === user?.uid
+			);
+			if (matchedMessage) {
+				console.log(matchedMessage);
+
+				// return {
+				// 	newMessage: targetMessage?.newMessage,
+				// 	date: targetMessage?.date,
+				// };
+			}
+			// setNewMessageCounter({ ...chatArray, uid: chatArray.chatId,isSeen:false });
 		});
 
 		return () => {
@@ -281,13 +301,13 @@ function Sidebar_Singlechat() {
 	};
 
 	function myNewMessage(user) {
-		const matchedArray = newMessage.find((arr) => arr[0] === user.uid);
+		const matchedArray = newMessage.find((arr) => arr[0] === user?.uid);
 		if (matchedArray) {
 			const targetMessage = matchedArray[1];
 
 			return {
 				newMessage: targetMessage?.newMessage,
-				date: targetMessage.date,
+				date: targetMessage?.date,
 			};
 		}
 	}
