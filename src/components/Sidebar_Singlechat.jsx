@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useCallback, useState } from "react";
 import { auth, db } from "../firebase";
 import {
 	get,
@@ -16,10 +16,8 @@ import getTimeDifference from "../utils/timeStamp";
 import { BeatLoader } from "react-spinners";
 
 function Sidebar_Singlechat() {
-	const [chat, setChat] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
-	const [onlineStatus, setOnlineStatus] = useState([]);
 	const { setCombinedId } = useContext(AllContext);
 	const [newMessageCounter, setNewMessageCounter] = useState([]);
 
@@ -30,7 +28,28 @@ function Sidebar_Singlechat() {
 		setNewMessage,
 		setIsOnline,
 		data,
+		onlineStatus,
+		setOnlineStatus,
+		chat,
+		setChat,
 	} = useContext(ChatContext);
+
+	// ==============CountNewMessage===========
+
+	useEffect(() => {
+		//change from here
+		const countNewMessage = () => {
+			return newMessageCounter?.reduce((count, message) => {
+				if (!message?.seen) {
+					console.log(count + 1);
+				} else {
+					console.log(count);
+				}
+			}, 0);
+		};
+		countNewMessage();
+	}, []);
+	// =========================
 
 	// ========================
 	useEffect(() => {
@@ -261,7 +280,7 @@ function Sidebar_Singlechat() {
 		}
 	};
 
-	function myNewMessage(user) {
+	const myNewMessage = useCallback((user) => {
 		const matchedMessages = newMessage.find((arr) => arr[0] === user.uid);
 		if (matchedMessages?.length > 0) {
 			const allNewMessages = matchedMessages.map((matchedArray) => {
@@ -277,7 +296,7 @@ function Sidebar_Singlechat() {
 			setNewMessageCounter(allNewMessages);
 			return allNewMessages;
 		}
-	}
+	}, []);
 
 	function getTime(uid) {
 		const timestamp = Number(
@@ -287,17 +306,6 @@ function Sidebar_Singlechat() {
 
 		return getTimeDifference(messageTime) || "";
 	}
-
-	//change from here
-	const countNewMessage = () => {
-		return newMessageCounter?.reduce((count, message) => {
-			if (!message?.seen) {
-				return count + 1;
-			} else {
-				return count;
-			}
-		}, 0);
-	};
 
 	return (
 		<div className="flex flex-col h-full justify-center gap-3 w-full">
@@ -365,11 +373,11 @@ function Sidebar_Singlechat() {
 							</div>
 							<div>
 								<div className="flex items-end flex-col gap-2 text-light_white">
-									{countNewMessage() > 0 && (
+									{/* {countNewMessage() > 0 && (
 										<span className="text-sm text-white bg-blue rounded-full w-5 h-5 flex items-center justify-center text-center">
 											{Number(countNewMessage())}
 										</span>
-									)}
+									)} */}
 									<p className="text-xs">{getTime(uid)}</p>
 								</div>
 							</div>
