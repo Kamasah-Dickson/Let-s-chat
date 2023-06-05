@@ -280,23 +280,26 @@ function Sidebar_Singlechat() {
 		}
 	};
 
-	const myNewMessage = useCallback((user) => {
-		const matchedMessages = newMessage.find((arr) => arr[0] === user.uid);
-		if (matchedMessages?.length > 0) {
-			const allNewMessages = matchedMessages.map((matchedArray) => {
-				const targetMessage = matchedArray[1]; //am accessing the newMessage which is at an index of 1 in the matched array
-				return {
-					id: matchedArray[0],
-					date: targetMessage?.date,
-					newMessage: targetMessage?.message,
-					seen: false,
-				};
-			});
+	const myNewMessage = useCallback(
+		(user) => {
+			const matchedMessages = newMessage.find((arr) => arr[0] === user.uid);
+			if (matchedMessages?.length > 0) {
+				const allNewMessages = matchedMessages.map((matchedArray) => {
+					const targetMessage = matchedArray[1]; //am accessing the newMessage which is at an index of 1 in the matched array
+					return {
+						id: matchedArray[0],
+						date: targetMessage?.date,
+						newMessage: targetMessage?.message,
+						seen: false,
+					};
+				});
 
-			setNewMessageCounter(allNewMessages);
-			return allNewMessages;
-		}
-	}, []);
+				setNewMessageCounter(allNewMessages);
+				return allNewMessages;
+			}
+		},
+		[newMessage]
+	);
 
 	function getTime(uid) {
 		const timestamp = Number(
