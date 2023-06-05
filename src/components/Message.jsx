@@ -28,9 +28,9 @@ function Message({ message }) {
 					<img
 						className="rounded-full h-full w-full object-cover"
 						src={
-							message.senderId === currentUserID.uid
-								? currentUserID.photoURL
-								: data.user.photoURL
+							message?.senderId === currentUserID?.uid
+								? currentUserID?.photoURL
+								: data?.user?.photoURL || testImage
 						}
 						alt={data?.user?.displayName}
 					/>
