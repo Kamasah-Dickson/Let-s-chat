@@ -331,7 +331,6 @@ function Sidebar_Singlechat() {
 		const matchedArray = newMessage.find((arr) => arr[0] === user?.uid);
 		if (matchedArray) {
 			const targetMessage = matchedArray[1];
-
 			return {
 				newMessage: targetMessage?.newMessage,
 				date: targetMessage?.date,
@@ -389,17 +388,16 @@ function Sidebar_Singlechat() {
 					}
 					return uniqueUsers;
 				}, [])
-				.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
+				?.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
 				?.map((userInfo) => {
 					const { displayName, photoURL, uid } = userInfo.userInfo;
-
 					return (
 						<div
 							onClick={() => handleSelect(userInfo.userInfo)}
 							key={uid}
 							className="flex items-center gap-5 justify-center transition-colors hover:bg-[rgba(255,255,255,0.06)] cursor-pointer rounded-md p-2"
 						>
-							<div className="rounded-full w-10 md:w-14 md:h-14 h-10 relative">
+							<div className="rounded-full w-14 h-14 relative">
 								<img
 									className="h-full w-full object-cover rounded-full"
 									src={photoURL || testImage}
@@ -419,7 +417,7 @@ function Sidebar_Singlechat() {
 								<span className="message text-light_white">
 									{`${
 										newMessage
-											.find((message) => message?.chatId === uid)
+											?.find((message) => message?.uid === uid)
 											?.newMessage?.slice(0, 15) ?? ""
 									}...`}
 								</span>
