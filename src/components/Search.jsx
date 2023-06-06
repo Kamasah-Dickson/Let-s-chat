@@ -112,7 +112,6 @@ function Search({ searchFocus }) {
 						setSearchedUsers(filtered);
 						setSearch("");
 					} else {
-						console.log(filtered.length);
 						toast.error(`${search?.toLocaleLowerCase()} was not found`);
 					}
 				}
