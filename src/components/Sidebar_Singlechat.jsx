@@ -276,7 +276,7 @@ function Sidebar_Singlechat() {
 
 		return () => {
 			off(dataRef, "value", onData);
-			// setLoading(false);
+			setLoading(false);
 			setError(null);
 		};
 	}, []);
@@ -367,6 +367,7 @@ function Sidebar_Singlechat() {
 			) : (
 				<>
 					<div className="flex h-full flex-col items-center justify-center">
+						<p className="text-[crimson] text-md mb-3">{error}</p>
 						<BeatLoader color="#ffffff" loading={error} size={15} />
 					</div>
 				</>
