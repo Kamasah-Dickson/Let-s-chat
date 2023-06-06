@@ -14,7 +14,7 @@ function Header_main() {
 	const { data, isOnline } = useContext(ChatContext);
 
 	return (
-		<div className="bg-[#232733] border-b-[1px] border-[rgba(255,255,255,0.10)] px-5 flex transition-colors p-2 items-center gap-5 w-full">
+		<div className=" bg-[#232733] border-b-[1px] border-[rgba(255,255,255,0.10)] px-5 flex transition-colors p-3 sm:p-2 items-center gap-5 w-full">
 			<HiOutlineArrowSmLeft
 				onClick={() => setShowTargetMessage(false)}
 				className="md:hidden flex"
@@ -22,7 +22,7 @@ function Header_main() {
 				size={25}
 				cursor={"pointer"}
 			/>
-			<div className=" cursor-pointer rounded-full w-10 md:w-14 md:h-14 h-10  ">
+			<div className=" cursor-pointer rounded-full w-14  h-14  ">
 				<img
 					className="h-full w-full object-cover rounded-full"
 					src={data.user?.photoURL || testImage}
