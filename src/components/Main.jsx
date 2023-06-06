@@ -41,21 +41,31 @@ function Main() {
 	const [isSending, setIsSending] = useState(false);
 	const currentUserId = auth?.currentUser?.uid;
 
-	useEffect(() => {
-		textareaRef?.current?.focus();
-		const messagesRef = ref(db, "chats/" + combinedID + "/messages");
-		const messagesListener = onValue(messagesRef, (snapshot) => {
-			const data = snapshot.val();
-			const messageArray = Object.keys(data || {}).map((key) => ({
-				id: key,
-				...data[key],
-			}));
-			setMessages(messageArray);
-		});
+	const focusTextarea = () => {
+		setTimeout(() => {
+			textareaRef?.current?.focus();
+		}, 0);
+	};
 
-		return () => {
-			off(messagesRef, messagesListener);
-		};
+	useEffect(() => {
+		try {
+			focusTextarea();
+			const messagesRef = ref(db, "chats/" + combinedID + "/messages");
+			const messagesListener = onValue(messagesRef, (snapshot) => {
+				const data = snapshot.val();
+				const messageArray = Object.keys(data || {}).map((key) => ({
+					id: key,
+					...data[key],
+				}));
+				setMessages(messageArray);
+			});
+
+			return () => {
+				off(messagesRef, messagesListener);
+			};
+		} catch (error) {
+			console.log(error);
+		}
 	}, [combinedID]);
 
 	useEffect(() => {
@@ -70,10 +80,11 @@ function Main() {
 				setScroller(false);
 			}
 		}
+
 		return () => {
 			mainRef?.current?.removeEventListener("scroll", handleScroll);
 		};
-	}, []);
+	}, [messages]);
 
 	const scrollToBottom = () => {
 		scrollRef?.current.scrollIntoView({ behavior: "smooth" });
@@ -106,6 +117,7 @@ function Main() {
 					textarea.style.height = "auto";
 					textarea.style.height = `${textarea.scrollHeight}px`;
 				}, 0);
+				!isSending && textareaRef?.current?.focus();
 			} else {
 				event.preventDefault();
 				if (text || img) {
@@ -114,6 +126,7 @@ function Main() {
 						const textarea = textareaRef.current;
 						textarea.style.height = "auto";
 					}, 0);
+					!isSending && textareaRef?.current?.focus();
 				}
 			}
 		}
@@ -124,8 +137,9 @@ function Main() {
 			// Return if a message is already being sent
 			setText("");
 			return;
+		} else {
+			setIsSending(true);
 		}
-		setIsSending(true);
 
 		if (img) {
 			const sentImgRef = storageRef(storage, "sentImages/" + uuid());
@@ -149,13 +163,15 @@ function Main() {
 								senderId: currentUserId,
 								img: downloadURL,
 								date: serverTimestamp(),
+								seen: false,
 							};
 							console.log(downloadURL);
 							const userRef = ref(db, `chats/${data.chatId}/messages`);
 							const newMessageRef = push(userRef);
 							await set(newMessageRef, message);
 							setText("");
-							console.log(downloadURL);
+
+							// console.log(downloadURL);
 						})
 						.catch((error) => {
 							console.log("Download URL error:", error);
@@ -169,6 +185,7 @@ function Main() {
 				text,
 				senderId: currentUserId,
 				date: serverTimestamp(),
+				seen: false,
 			};
 
 			const userRef = ref(db, `chats/${data.chatId}/messages`);
@@ -321,7 +338,6 @@ function Main() {
 										autoComplete="true"
 										id="message"
 										value={text}
-										disabled={isSending}
 										className="w-full rounded-md h-auto bg-transparent object-cover border-none outline-none resize-none overflow-hidden"
 										placeholder="Write a message..."
 									></textarea>
