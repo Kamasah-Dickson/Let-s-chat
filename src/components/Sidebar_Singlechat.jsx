@@ -18,8 +18,7 @@ import { BeatLoader } from "react-spinners";
 function Sidebar_Singlechat() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
-	const { setCombinedId } = useContext(AllContext);
-	// const [newMessageCounter, setNewMessageCounter] = useState([]);
+	const { setCombinedId, searchedUsers } = useContext(AllContext);
 
 	const {
 		dispatch,
@@ -32,27 +31,75 @@ function Sidebar_Singlechat() {
 		setOnlineStatus,
 		chat,
 		setChat,
+		newMessageCounter,
 	} = useContext(ChatContext);
 
-	// ==============CountNewMessage===========
+	//============fetch all top 10 new signedUp contacts========
+	useEffect(() => {
+		const currentUserID = auth?.currentUser?.uid;
+		const dataRef = ref(db, "userChats", currentUserID);
 
+		const contactListener = onValue(dataRef, (snapshot) => {
+			const data = snapshot.val();
+			if (data) {
+				let allContacts = Object.values(data)
+					?.map((data) => data)
+					?.splice(0, 10);
+				setChat(allContacts);
+			}
+		});
+
+		return () => {
+			off(dataRef, contactListener);
+		};
+	}, []);
+	//====================
+
+	// ==============CountNewMessage===========
 	// useEffect(() => {
-	// 	//change from here
-	// 	const countNewMessage = () => {
-	// 		return newMessageCounter?.reduce((count, message) => {
-	// 			if (!message?.seen) {
-	// 				console.log(count + 1);
-	// 			} else {
-	// 				console.log(count);
-	// 			}
-	// 		}, 0);
+	// 	const messagesRef = ref(db, "chats/");
+	// 	const messagesListener = onValue(messagesRef, (snapshot) => {
+	// 		const data = snapshot.val();
+	// 		const messageArray = Object.keys(data || {})?.map((key) => ({
+	// 			id: key,
+	// 			...data[key],
+	// 		}));
+	// 		const messagesFromContacts = Object.values(...messageArray)[1];
+	// 		console.log(Object.values(messagesFromContacts));
+	// 	});
+
+	// 	return () => {
+	// 		off(messagesRef, messagesListener);
 	// 	};
-	// 	countNewMessage();
 	// }, []);
-	// =========================
+	// const getMessagesToCount = messageArray.map((messages) => ({
+	// 	...messages,
+	// 	seen: false,
+	// }));
+	// setNewMessageCounter(getMessagesToCount);
+
+	// const getMessagesToCount = messageArray.map((messages) => ({
+	// 	...messages,
+	// 	seen: false,
+	// }));
+	// setNewMessageCounter(getMessagesToCount);
+
+	//change from here
+	const countNewMessage = (contactId) => {
+		return newMessageCounter
+			?.filter((message) => message.senderId === contactId)
+			.reduce((count, message) => {
+				if (!message?.seen) {
+					return count + 1;
+				} else {
+					return count;
+				}
+			}, 0);
+	};
 
 	// ========================
 
+	// ==============last-seen==============
 	useEffect(() => {
 		const chatRef = ref(db, "newMessages");
 		const chatsListener = onValue(chatRef, (snapshot) => {
@@ -63,33 +110,12 @@ function Sidebar_Singlechat() {
 				...data[key],
 			}));
 			setNewMessage(chatArray);
-			const getMyNewMessage = {
-				...chatArray,
-				uid: chatArray.chatId,
-				isSeen: false,
-			};
-
-			const user = auth?.currentUser;
-			const matchedMessage = [getMyNewMessage]?.find(
-				(messages) => messages.uid === user?.uid
-			);
-			if (matchedMessage) {
-				console.log(matchedMessage);
-
-				// return {
-				// 	newMessage: targetMessage?.newMessage,
-				// 	date: targetMessage?.date,
-				// };
-			}
-			// setNewMessageCounter({ ...chatArray, uid: chatArray.chatId,isSeen:false });
 		});
 
 		return () => {
 			off(chatRef, chatsListener);
 		};
 	}, []);
-
-	// ==============last-seen==============
 
 	useEffect(() => {
 		const allUserIds = Object.values(chat)
@@ -98,6 +124,7 @@ function Sidebar_Singlechat() {
 			.sort((a, b) => {
 				const aTargetMessage = myNewMessage(a.userInfo);
 				const bTargetMessage = myNewMessage(b.userInfo);
+
 				return bTargetMessage?.date - aTargetMessage?.date;
 			})
 			.reduce((uniqueUsers, userInfo) => {
@@ -249,7 +276,7 @@ function Sidebar_Singlechat() {
 
 		return () => {
 			off(dataRef, "value", onData);
-			setLoading(false);
+			// setLoading(false);
 			setError(null);
 		};
 	}, []);
@@ -317,20 +344,32 @@ function Sidebar_Singlechat() {
 			newMessage.find((message) => message?.chatId === uid)?.date
 		);
 		const messageTime = isNaN(timestamp) ? "" : timestamp;
-		return getTimeDifference(messageTime) || "";
+		if (messageTime) {
+			return getTimeDifference(messageTime) || "";
+		}
 	}
 
 	return (
 		<div className="flex flex-col h-full justify-center gap-3 w-full">
+			{loading === false &&
+				!error &&
+				chat.length == 0 &&
+				searchedUsers.length == 0 && (
+					<p className="text-white text-md">
+						You currently have no contacts please search for friends e.g
+						<span className="text-[#6044db] font-medium"> Kamasah Dickson</span>
+					</p>
+				)}
 			{loading ? (
 				<div className="flex h-full flex-col items-center justify-center">
 					<BeatLoader color="#ffffff" loading={loading} size={15} />
 				</div>
 			) : (
-				<div className="flex h-full flex-col items-center justify-center">
-					<p className="text-[crimson] mb-3">{error}</p>
-					<BeatLoader color="#ffffff" loading={error} size={15} />
-				</div>
+				<>
+					<div className="flex h-full flex-col items-center justify-center">
+						<BeatLoader color="#ffffff" loading={error} size={15} />
+					</div>
+				</>
 			)}
 			{Object.values(chat)
 				?.flatMap((chatResult) => Object.values(chatResult))
@@ -350,7 +389,7 @@ function Sidebar_Singlechat() {
 					return uniqueUsers;
 				}, [])
 				.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
-				.map((userInfo) => {
+				?.map((userInfo) => {
 					const { displayName, photoURL, uid } = userInfo.userInfo;
 
 					return (
@@ -386,11 +425,11 @@ function Sidebar_Singlechat() {
 							</div>
 							<div>
 								<div className="flex items-end flex-col gap-2 text-light_white">
-									{/* {countNewMessage() > 0 && (
+									{countNewMessage(uid) > 0 && (
 										<span className="text-sm text-white bg-blue rounded-full w-5 h-5 flex items-center justify-center text-center">
-											{Number(countNewMessage())}
+											{Number(countNewMessage(uid))}
 										</span>
-									)} */}
+									)}
 									<p className="text-xs">{getTime(uid)}</p>
 								</div>
 							</div>
