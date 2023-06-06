@@ -15,6 +15,7 @@ import {
 } from "firebase/database";
 import { ChatContext } from "../context/chatContext";
 import getTimeDifference from "../utils/timeStamp";
+import toast, { Toaster } from "react-hot-toast";
 
 function Search({ searchFocus }) {
 	const {
@@ -107,8 +108,13 @@ function Search({ searchFocus }) {
 								.toLowerCase()
 								.includes(search.toLocaleLowerCase())
 						);
-					setSearchedUsers(filtered);
-					setSearch("");
+					if (filtered.length > 0) {
+						setSearchedUsers(filtered);
+						setSearch("");
+					} else {
+						console.log(filtered.length);
+						toast.error(`${search?.toLocaleLowerCase()} was not found`);
+					}
 				}
 			});
 		} catch (error) {
@@ -189,6 +195,28 @@ function Search({ searchFocus }) {
 		return getTimeDifference(messageTime) || "";
 	}
 
+	//get all exitingCOntactsId
+	const existingContacts = Object.values(chat)
+		?.flatMap((chatResult) => Object.values(chatResult))
+
+		.sort((a, b) => {
+			const aTargetMessage = myNewMessage(a.userInfo);
+			const bTargetMessage = myNewMessage(b.userInfo);
+
+			return bTargetMessage?.date - aTargetMessage?.date;
+		})
+		.reduce((uniqueUsers, userInfo) => {
+			const existingUser = uniqueUsers.find(
+				(user) => user.userInfo.uid === userInfo.userInfo.uid
+			);
+			if (!existingUser) {
+				uniqueUsers.push(userInfo);
+			}
+			return uniqueUsers;
+		}, [])
+		.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
+		.map((users) => users.userInfo.uid);
+
 	return (
 		<>
 			<div
@@ -211,8 +239,11 @@ function Search({ searchFocus }) {
 			</div>
 
 			{userError && <span>No users was found</span>}
-			{searchedUsers &&
-				searchedUsers.map((user) => {
+			<Toaster />
+
+			{searchedUsers
+				?.filter((contact) => !existingContacts.includes(contact.uid))
+				?.map((user) => {
 					return (
 						<div
 							onClick={() => handleSelect(user)}
