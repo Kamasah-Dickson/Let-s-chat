@@ -235,7 +235,12 @@ function Search({ searchFocus }) {
 					spellCheck
 					placeholder="Search..."
 				/>
-				<MdSearch cursor={"pointer"} color="white" size={20} />
+				<MdSearch
+					cursor={"pointer"}
+					color="white"
+					size={20}
+					onClick={handleSearch}
+				/>
 			</div>
 
 			{userError && <span>No users was found</span>}
