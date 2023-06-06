@@ -165,13 +165,10 @@ function Main() {
 								date: serverTimestamp(),
 								seen: false,
 							};
-							console.log(downloadURL);
 							const userRef = ref(db, `chats/${data.chatId}/messages`);
 							const newMessageRef = push(userRef);
 							await set(newMessageRef, message);
 							setText("");
-
-							// console.log(downloadURL);
 						})
 						.catch((error) => {
 							console.log("Download URL error:", error);
