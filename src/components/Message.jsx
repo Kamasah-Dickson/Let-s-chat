@@ -11,7 +11,7 @@ function Message({ message }) {
 	const ref = useRef();
 
 	useEffect(() => {
-		ref.current.scrollIntoView({ behaviour: "smooth" });
+		ref?.current?.scrollIntoView({ behavior: "smooth" });
 	}, [message]);
 
 	return (
