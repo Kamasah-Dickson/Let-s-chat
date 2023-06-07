@@ -328,7 +328,7 @@ function Sidebar_Singlechat() {
 	};
 
 	function myNewMessage(user) {
-		const matchedArray = newMessage.find((arr) => arr[0] === user?.uid);
+		const matchedArray = newMessage?.find((arr) => arr[0] === user?.uid);
 		if (matchedArray) {
 			const targetMessage = matchedArray[1];
 			return {
@@ -339,6 +339,7 @@ function Sidebar_Singlechat() {
 	}
 
 	function getTime(uid) {
+		//wrong
 		const timestamp = Number(
 			newMessage.find((message) => message?.chatId === uid)?.date
 		);
@@ -346,6 +347,30 @@ function Sidebar_Singlechat() {
 		if (messageTime) {
 			return getTimeDifference(messageTime) || "";
 		}
+	}
+
+	function contactNewMessage() {
+		const contactIds = Object.values(chat)
+			?.flatMap((chatResult) => Object.values(chatResult))
+
+			.sort((a, b) => b?.date - a?.date)
+			.reduce((uniqueUsers, userInfo) => {
+				const existingUser = uniqueUsers.find(
+					(user) => user.userInfo.uid === userInfo.userInfo.uid
+				);
+				if (!existingUser) {
+					uniqueUsers.push(userInfo);
+				}
+				return uniqueUsers;
+			}, [])
+			?.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
+			?.map((userInfo) => userInfo.userInfo.uid);
+
+		return (
+			newMessage
+				?.find((message) => message?.uid === contactIds)
+				?.newMessage?.slice(0, 15) ?? "" + "..."
+		);
 	}
 
 	return (
@@ -374,11 +399,7 @@ function Sidebar_Singlechat() {
 			{Object.values(chat)
 				?.flatMap((chatResult) => Object.values(chatResult))
 
-				.sort((a, b) => {
-					const aTargetMessage = myNewMessage(a.userInfo);
-					const bTargetMessage = myNewMessage(b.userInfo);
-					return bTargetMessage?.date - aTargetMessage?.date;
-				})
+				.sort((a, b) => b?.date - a?.date)
 				.reduce((uniqueUsers, userInfo) => {
 					const existingUser = uniqueUsers.find(
 						(user) => user.userInfo.uid === userInfo.userInfo.uid
@@ -415,11 +436,7 @@ function Sidebar_Singlechat() {
 								<h3 className="name">{displayName}</h3>
 
 								<span className="message text-light_white">
-									{`${
-										newMessage
-											?.find((message) => message?.uid === uid)
-											?.newMessage?.slice(0, 15) ?? ""
-									}...`}
+									{contactNewMessage()}
 								</span>
 							</div>
 							<div>
