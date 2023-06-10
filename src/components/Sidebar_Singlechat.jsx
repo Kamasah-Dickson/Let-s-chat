@@ -97,26 +97,6 @@ function Sidebar_Singlechat() {
 			}, 0);
 	};
 
-	// ========================
-
-	// ==============last-seen==============
-	useEffect(() => {
-		const chatRef = ref(db, "newMessages");
-		const chatsListener = onValue(chatRef, (snapshot) => {
-			const data = snapshot.val();
-			// Convert the object of chats into an array
-			const chatArray = Object.keys(data || {}).map((key) => ({
-				uid: key,
-				...data[key],
-			}));
-			setNewMessage(chatArray);
-		});
-
-		return () => {
-			off(chatRef, chatsListener);
-		};
-	}, []);
-
 	useEffect(() => {
 		const allUserIds = Object.values(chat)
 			?.flatMap((chatResult) => Object.values(chatResult))
@@ -349,26 +329,26 @@ function Sidebar_Singlechat() {
 		}
 	}
 
-	function contactNewMessage() {
-		const contactIds = Object.values(chat)
-			?.flatMap((chatResult) => Object.values(chatResult))
-
-			.sort((a, b) => b?.date - a?.date)
-			.reduce((uniqueUsers, userInfo) => {
-				const existingUser = uniqueUsers.find(
-					(user) => user.userInfo.uid === userInfo.userInfo.uid
-				);
-				if (!existingUser) {
-					uniqueUsers.push(userInfo);
+	useEffect(() => {
+		const chatRef = ref(db, "newMessages");
+		const fetchData = async () => {
+			onValue(chatRef, (snapshot) => {
+				const fetchedData = snapshot.val();
+				if (fetchedData) {
+					setNewMessage(Object.values(fetchedData));
 				}
-				return uniqueUsers;
-			}, [])
-			?.filter((user) => user.userInfo.uid !== auth?.currentUser?.uid)
-			?.map((userInfo) => userInfo.userInfo.uid);
+			});
+		};
+		fetchData();
+		return () => {
+			off(chatRef);
+		};
+	}, []);
 
+	function contactNewMessage(uid) {
 		return (
 			newMessage
-				?.find((message) => message?.uid === contactIds)
+				?.find((message) => message?.id === uid)
 				?.newMessage?.slice(0, 15) ?? "" + "..."
 		);
 	}
@@ -436,7 +416,7 @@ function Sidebar_Singlechat() {
 								<h3 className="name">{displayName}</h3>
 
 								<span className="message text-light_white">
-									{contactNewMessage()}
+									{contactNewMessage(uid)}
 								</span>
 							</div>
 							<div>
