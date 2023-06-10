@@ -198,19 +198,21 @@ function Main() {
 				await update(currentUserChatRef, {
 					newMessage: text,
 					date: serverTimestamp(),
+					id: selectedUserID,
 				});
 			} else {
 				await set(currentUserChatRef, {
 					newMessage: text,
 					date: serverTimestamp(),
+					id: selectedUserID,
 				});
 			}
 
 			onValue(chatRef, (snapshot) => {
 				const data = snapshot.val();
 				if (data) {
-					const nestedKey = Object.entries(data);
-					setNewMessage(nestedKey);
+					const newMessages = Object.values(data);
+					setNewMessage(newMessages);
 				}
 			});
 			setIsSending(false);
