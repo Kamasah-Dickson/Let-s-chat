@@ -56,22 +56,38 @@ function Sidebar_Singlechat() {
 	//====================
 
 	// ==============CountNewMessage===========
-	// useEffect(() => {
-	// 	const messagesRef = ref(db, "chats/");
-	// 	const messagesListener = onValue(messagesRef, (snapshot) => {
-	// 		const data = snapshot.val();
-	// 		const messageArray = Object.keys(data || {})?.map((key) => ({
-	// 			id: key,
-	// 			...data[key],
-	// 		}));
-	// 		const messagesFromContacts = Object.values(...messageArray)[1];
-	// 		console.log(Object.values(messagesFromContacts));
-	// 	});
 
-	// 	return () => {
-	// 		off(messagesRef, messagesListener);
-	// 	};
-	// }, []);
+	// async function updateCountMessage(uid) {
+	// 	try {
+	// 		const counterRef = ref(db, `/messageCount/${uid}`);
+	// 		const snapshot = await get(counterRef);
+	// 		let currentCount = 0;
+	// 		if (snapshot.exists()) {
+	// 			currentCount = snapshot.val();
+	// 		}
+	// 		const newCount = currentCount + 1;
+	// 		await update(counterRef, { count: newCount });
+	// 	} catch (error) {
+	// 		console.lo(error);
+	// 	}
+	// }
+
+	// async function countMessages(uid) {
+	// 	try {
+	// 	await updateCountMessage(uid)
+	// 		const counterRef = ref(db, `/messageCount/${uid}`);
+	// 		const snapshot = await get(counterRef);
+	// 		if (snapshot.exists()) {
+	// 			return snapshot.val();
+	// 		} else {
+	// 			return 0;
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 		return 0;
+	// 	}
+	// }
+
 	// const getMessagesToCount = messageArray.map((messages) => ({
 	// 	...messages,
 	// 	seen: false,
