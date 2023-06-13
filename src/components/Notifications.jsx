@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 function Notifications() {
 	const [alert, setAlert] = useState(false);
 	const { setToggleSettingsCategory } = useContext(AllContext);
+
 	const dispatch = useDispatch();
 
 	const allNotificationState = useSelector(allNotifications);
@@ -42,10 +43,9 @@ function Notifications() {
 	]);
 
 	const findSettings = (settingsName) => {
-		const { name, value } = allNotificationState.find(
+		return allNotificationState.find(
 			(settings) => settings.name === settingsName
 		);
-		return { name, value };
 	};
 
 	return (
@@ -97,6 +97,7 @@ function Notifications() {
 										type="checkbox"
 										name={findSettings("inAppSound").name}
 										value={findSettings("inAppSound").value}
+										checked={!!findSettings("inAppSound").value}
 										onChange={() => dispatch(updateNotification("inAppSound"))}
 									/>
 									<span className="checkmark"></span>
@@ -112,8 +113,12 @@ function Notifications() {
 										className="border-none outline-none "
 										id="app-preview"
 										type="checkbox"
-										name={findSettings("inAppPreview").name}
-										value={findSettings("inAppPreview").value}
+										name={findSettings("inAppPreview")?.name}
+										value={findSettings("inAppPreview")?.value}
+										checked={findSettings("inAppPreview").value}
+										onChange={() =>
+											dispatch(updateNotification("inAppPreview"))
+										}
 									/>
 									<span className="checkmark"></span>
 								</div>
@@ -132,8 +137,10 @@ function Notifications() {
 									className="border-none outline-none "
 									id="app-unread"
 									type="checkbox"
-									name={findSettings("countUnreadMessages").name}
-									value={findSettings("countUnreadMessages").value}
+									name={findSettings("countMessage")?.name}
+									value={findSettings("countMessage")?.value}
+									checked={findSettings("countMessage").value}
+									onChange={() => dispatch(updateNotification("countMessage"))}
 								/>
 								<span className="checkmark"></span>
 							</div>
