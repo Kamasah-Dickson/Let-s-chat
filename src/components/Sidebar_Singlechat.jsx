@@ -53,52 +53,6 @@ function Sidebar_Singlechat() {
 			off(dataRef, contactListener);
 		};
 	}, []);
-	//====================
-
-	// ==============CountNewMessage===========
-
-	// async function updateCountMessage(uid) {
-	// 	try {
-	// 		const counterRef = ref(db, `/messageCount/${uid}`);
-	// 		const snapshot = await get(counterRef);
-	// 		let currentCount = 0;
-	// 		if (snapshot.exists()) {
-	// 			currentCount = snapshot.val();
-	// 		}
-	// 		const newCount = currentCount + 1;
-	// 		await update(counterRef, { count: newCount });
-	// 	} catch (error) {
-	// 		console.lo(error);
-	// 	}
-	// }
-
-	// async function countMessages(uid) {
-	// 	try {
-	// 	await updateCountMessage(uid)
-	// 		const counterRef = ref(db, `/messageCount/${uid}`);
-	// 		const snapshot = await get(counterRef);
-	// 		if (snapshot.exists()) {
-	// 			return snapshot.val();
-	// 		} else {
-	// 			return 0;
-	// 		}
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		return 0;
-	// 	}
-	// }
-
-	// const getMessagesToCount = messageArray.map((messages) => ({
-	// 	...messages,
-	// 	seen: false,
-	// }));
-	// setNewMessageCounter(getMessagesToCount);
-
-	// const getMessagesToCount = messageArray.map((messages) => ({
-	// 	...messages,
-	// 	seen: false,
-	// }));
-	// setNewMessageCounter(getMessagesToCount);
 
 	//change from here
 	const countNewMessage = (contactId) => {
@@ -363,9 +317,9 @@ function Sidebar_Singlechat() {
 
 	function contactNewMessage(uid) {
 		return (
-			newMessage
+			[...newMessage]
 				?.find((message) => message?.id === uid)
-				?.newMessage?.slice(0, 15) ?? "" + "..."
+				?.newMessage?.slice(0, 15) ?? ""
 		);
 	}
 
