@@ -33,8 +33,15 @@ function Main() {
 	const scrollRef = useRef(null);
 	const scrolltoBottomRef = useRef(null);
 	const mainRef = useRef(null);
-	const { data, setNewMessage, selectedUserID, messages, setMessages } =
-		useContext(ChatContext);
+	const {
+		data,
+		setNewMessage,
+		messages,
+		setMessages,
+		setNewMessageCounter,
+		newMessageCounter,
+		selectedUserID,
+	} = useContext(ChatContext);
 	const [text, setText] = useState("");
 	const [img, setImg] = useState(null);
 	const [scroller, setScroller] = useState(false);
@@ -46,6 +53,43 @@ function Main() {
 			textareaRef?.current?.focus();
 		}, 0);
 	};
+
+	useEffect(() => {
+		const updateSeenMessages = () => {
+			mainRef?.current?.addEventListener("scroll", handleScroll);
+			function handleScroll() {
+				if (currentUserId) {
+					const remainingNewMessages = newMessageCounter.filter(
+						(sentMessage) =>
+							!messages.some((message) => message.uuid === sentMessage.uuid)
+					);
+
+					const messagesSeen = newMessageCounter.filter((sentMessage) =>
+						messages.some((message) => message.uuid === sentMessage.uuid)
+					);
+					if (messagesSeen.length > 0) {
+						messagesSeen.forEach((message) => {
+							const newMessage = {
+								...message,
+								seen: true,
+							};
+							const newChatRef = ref(
+								db,
+								`countNewChats/messages/${newMessage.id}`
+							);
+							set(newChatRef, newMessage);
+						});
+					}
+					setNewMessageCounter(remainingNewMessages);
+				}
+			}
+
+			return () => {
+				mainRef?.current?.removeEventListener("scroll", handleScroll);
+			};
+		};
+		updateSeenMessages();
+	}, [newMessageCounter, messages]);
 
 	useEffect(() => {
 		try {
@@ -198,7 +242,6 @@ function Main() {
 				await update(currentUserChatRef, {
 					newMessage: text,
 					date: serverTimestamp(),
-					id: selectedUserID,
 				});
 			} else {
 				await set(currentUserChatRef, {
@@ -208,13 +251,15 @@ function Main() {
 				});
 			}
 
-			onValue(chatRef, (snapshot) => {
-				const data = snapshot.val();
+			const updatedSnapshot = await get(currentUserChatRef);
+
+			if (updatedSnapshot.exists()) {
+				const data = updatedSnapshot.val();
 				if (data) {
-					const newMessages = Object.values(data);
-					setNewMessage(newMessages);
+					setNewMessage(data);
 				}
-			});
+			}
+
 			setIsSending(false);
 		} else {
 			return;
