@@ -276,9 +276,6 @@ function Search({ searchFocus }) {
 							<div>
 								<div className="flex items-end flex-col gap-2 text-light_white">
 									<p className="text-sm">{getTime(user?.uid) || ""}</p>
-									<span className="text-sm text-white bg-blue rounded-full w-5 h-5 flex items-center justify-center text-center">
-										2
-									</span>
 								</div>
 							</div>
 						</div>
