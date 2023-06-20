@@ -256,7 +256,7 @@ function Main() {
 			if (updatedSnapshot.exists()) {
 				const data = updatedSnapshot.val();
 				if (data) {
-					setNewMessage(data);
+					setNewMessage([data]);
 				}
 			}
 
