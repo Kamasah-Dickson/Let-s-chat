@@ -252,7 +252,7 @@ function Sidebar_Singlechat() {
 				const userInfo = {
 					uid: user.uid,
 					displayName: user.displayName,
-					photoURL: user?.photoURL,
+					photoURL: user?.photoURL || "",
 				};
 
 				await update(currentUserChatRef, {
@@ -266,7 +266,7 @@ function Sidebar_Singlechat() {
 						userInfo: {
 							uid: currentUserId,
 							displayName: auth.currentUser.displayName,
-							photoURL: auth.currentUser.photoURL,
+							photoURL: auth.currentUser.photoURL || "",
 						},
 						date: serverTimestamp(),
 					},
@@ -278,24 +278,26 @@ function Sidebar_Singlechat() {
 	};
 
 	function myNewMessage(user) {
-		const matchedArray = newMessage?.find((arr) => arr[0] === user?.uid);
-		if (matchedArray) {
-			const targetMessage = matchedArray[1];
-			return {
-				newMessage: targetMessage?.newMessage,
-				date: targetMessage?.date,
-			};
+		const matchedArray = newMessage.filter((arr) => arr.id === user.uid);
+
+		if (matchedArray.length > 0) {
+			return matchedArray.map((arr) => ({
+				newMessage: arr.newMessage,
+				date: arr.date,
+			}));
 		}
+
+		return [];
 	}
 
 	function getTime(uid) {
-		//wrong
-		const timestamp = Number(
-			newMessage.find((message) => message?.chatId === uid)?.date
-		);
-		const messageTime = isNaN(timestamp) ? "" : timestamp;
-		if (messageTime) {
-			return getTimeDifference(messageTime) || "";
+		const matchedArray = [...newMessage]?.find((arr) => arr?.id == uid);
+		if (matchedArray) {
+			const timestamp = Number(matchedArray.date);
+			const messageTime = isNaN(timestamp) ? "" : timestamp;
+			if (messageTime) {
+				return getTimeDifference(messageTime) || "";
+			}
 		}
 	}
 
@@ -316,11 +318,12 @@ function Sidebar_Singlechat() {
 	}, []);
 
 	function contactNewMessage(uid) {
-		return (
-			[...newMessage]
-				?.find((message) => message?.id === uid)
-				?.newMessage?.slice(0, 15) ?? ""
-		);
+		const matchedArray = [...newMessage]?.find((arr) => arr?.id == uid);
+
+		if (matchedArray) {
+			return matchedArray?.newMessage;
+		}
+		return "";
 	}
 
 	return (
@@ -386,7 +389,7 @@ function Sidebar_Singlechat() {
 								<h3 className="name">{displayName}</h3>
 
 								<span className="message text-light_white">
-									{contactNewMessage(uid)}
+									{contactNewMessage(uid) ? contactNewMessage(uid) + "..." : ""}
 								</span>
 							</div>
 							<div>
