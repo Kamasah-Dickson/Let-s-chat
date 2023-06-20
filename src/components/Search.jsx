@@ -178,11 +178,11 @@ function Search({ searchFocus }) {
 	};
 
 	const myNewMessage = (user) => {
-		const matchedArray = newMessage?.find((arr) => arr[0] === user.uid);
-		if (matchedArray) {
-			const targetMessage = matchedArray[1];
-			return targetMessage?.newMessage;
+		const matchedArray = [...newMessage]?.filter((arr) => arr.id === user?.uid);
+		if (matchedArray.length > 0) {
+			return matchedArray?.map((arr) => arr?.newMessage);
 		}
+		return "";
 	};
 
 	function getTime(uid) {
