@@ -7,6 +7,7 @@ import { IChat, setShowSidebar } from "../Store/features/chatSlice";
 import ChatInput from "./ChatInput";
 import BodyChat from "./BodyChat";
 import { MdMenu } from "react-icons/md";
+import { useEffect } from "react";
 
 export type ImgType = {
 	type: Blob | MediaSource;
@@ -28,6 +29,10 @@ function Main() {
 	) as IChat;
 
 	const dispatch = useDispatch<AppDispatch>();
+
+	useEffect(() => {
+		document.body.style.overflow = "hidden";
+	}, []);
 
 	return (
 		<div className="main-bg">
