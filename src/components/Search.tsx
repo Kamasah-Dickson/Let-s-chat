@@ -69,7 +69,7 @@ function Search({ activeTab }: { activeTab: "community" | "contacts" }) {
 			<div
 				onClick={() => dispatch(setSearchFocus({ searchFocus: true }))}
 				onBlur={() => dispatch(setSearchFocus({ searchFocus: false }))}
-				className=" bg-gray-700 py-[10px] px-2"
+				className=" bg-gray-700 py-[10px] px-2 w-full"
 			>
 				<input
 					ref={inputFocus}
