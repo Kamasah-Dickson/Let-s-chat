@@ -47,6 +47,7 @@ const Emoji = ({
 				lazyLoadEmojis
 				onSkinToneChange={(skinTone) => setDefaultSkinTone(skinTone)}
 				defaultSkinTone={defaultSkinTone}
+				searchDisabled
 			/>
 		</div>
 	);

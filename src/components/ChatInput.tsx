@@ -296,7 +296,7 @@ const ChatInput = ({ partneredChat }: IChatInput) => {
 						src={emoji}
 						id="emoji"
 						alt="record"
-						className="cursor-pointer h-6 w-6"
+						className="cursor-pointer h-auto w-6"
 					/>
 				</label>
 				<button type="button" className="h-12 flex items-center">
