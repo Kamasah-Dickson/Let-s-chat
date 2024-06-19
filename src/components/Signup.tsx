@@ -143,7 +143,7 @@ function Signup() {
 					<img className="w-full h-auto object-cover" src={signupImage} />
 				</div>
 				<div className="h-screen max-w-lg mx-auto flex z-10 flex-col justify-center text-white flex-1">
-					<h1 className="clamp-h1 font-bold">
+					<h1 className="text-4xl md:clamp-h1 font-bold">
 						Join <span className="text-[#5640eb]"> {`Let's`} chat</span> today
 						<span className="sm:text-4xl md:text-7xl">💬</span>
 					</h1>
