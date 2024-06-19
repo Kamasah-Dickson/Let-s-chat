@@ -29,25 +29,25 @@ function Sidebar() {
 	return (
 		<>
 			<Menu_settings settings={settings} />
-			<div className="z-10 relative min-h-screen border-[#191D24] border-r">
+			<div className="z-10 relative h-screen border-[#191D24] border-r">
 				<div className="shadow gradient shadow-[#00000049] flex-col sticky top-0 bg-light_brown z-10">
-					<div className="p-3">
-						<MdOutlineSettingsSuggest
-							onClick={() => dispatch(setSettings({ settings: true }))}
-							color="white"
-							size={25}
-							cursor={"pointer"}
-						/>
-					</div>
 					<div
 						className={` ${
 							activeTab == "community"
-								? "border-white"
+								? "border-gray-800"
 								: "border-b border-gray-600"
 						}
-								 font-medium text-white h-12 flex items-center border-b justify-between
-								 `}
+						font-medium text-white h-14 flex items-center border-b justify-between
+						`}
 					>
+						<div className="p-3">
+							<MdOutlineSettingsSuggest
+								onClick={() => dispatch(setSettings({ settings: true }))}
+								color="white"
+								size={25}
+								cursor={"pointer"}
+							/>
+						</div>
 						<button
 							onClick={() => setActiveTab("community")}
 							className={`${
