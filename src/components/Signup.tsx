@@ -137,13 +137,13 @@ function Signup() {
 	};
 
 	return (
-		<div className="h-screen overflow-y-scroll flex w-full items-center justify-center bg-[#0F172A]">
-			<div className=" py-7 md:py-0 flex max-h-screen  items-center flex-col md:flex-row gap-10 md:gap-24 my-width">
-				<div className="hidden md:flex flex-1 relative h-full py-5 md:p-0">
+		<div className="overflow-y-auto h-screen bg-[#0F172A]">
+			<div className="flex w-full items-center justify-center min-h-screen flex-col md:flex-row gap-10 md:gap-24 my-width">
+				<div className="hidden lg:flex flex-1 relative h-full py-5 md:p-0">
 					<img className="w-full h-full object-cover " src={signupImage} />
 				</div>
 
-				<div className="flex z-10 flex-col justify-center text-white py-5 md:py-0 flex-1 h-auto">
+				<div className="flex z-10 max-w-lg mx-auto flex-col justify-center text-white flex-1">
 					<h1 className="clamp2-h1 leading-[1.2] md:leading-tight font-bold">
 						Join <span className="text-[#5640eb]"> {`Let's`} chat</span> today
 						<span className="sm:text-4xl md:text-7xl">💬</span>

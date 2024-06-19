@@ -127,14 +127,14 @@ function Login() {
 	};
 
 	return (
-		<div className="h-screen overflow-y-scroll flex w-full items-center justify-center bg-[#0F172A]">
-			<div className=" py-7 md:py-0 flex max-h-screen  items-center flex-col md:flex-row gap-10 md:gap-24 my-width">
-				<div className="hidden md:flex flex-1 relative h-full py-5 md:p-0">
+		<div className="h-screen overflow-y-auto bg-[#0F172A]">
+			<div className="flex w-full items-center justify-center min-h-screen flex-col md:flex-row gap-10 md:gap-24 my-width">
+				<div className="hidden lg:flex flex-1 relative h-full py-5 md:p-0">
 					<img className="w-full h-full object-cover " src={signupImage} />
 					<div className="blur h-36 w-36 block inset-0 rounded-full translate-y-10 absolute"></div>
 					<div className="blur h-64 w-40 block translate-y-28 translate-x-40 inset-0 rounded-full   absolute"></div>
 				</div>
-				<div className="flex z-10 flex-col justify-center text-white py-5 md:py-0 flex-1 h-auto">
+				<div className="h-screen max-w-lg mx-auto flex z-10 flex-col justify-center text-white flex-1">
 					<h1 className="clamp-h1 font-bold">
 						Hey there, <span className="text-[#5640eb]">welcome</span>
 						<span className="sm:text-4xl md:text-7xl">💬</span>
