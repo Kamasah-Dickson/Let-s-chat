@@ -144,12 +144,12 @@ function Signup() {
 				</div>
 
 				<div className="flex z-10 max-w-lg mx-auto flex-col justify-center text-white flex-1">
-					<h1 className="clamp2-h1 leading-[1.2] md:leading-tight font-bold">
+					<h1 className="clamp2-h1 md:leading-tight font-bold">
 						Join <span className="text-[#5640eb]"> {`Let's`} chat</span> today
 						<span className="sm:text-4xl md:text-7xl">💬</span>
 					</h1>
 					<p className="clamp-p font-normal text-[#95a2b8] py-3">
-						Signup and enjoy the best experience with your friends, family and
+						Signup and have the best experience with your friends, family and
 						loved ones
 					</p>
 					<button
@@ -236,7 +236,7 @@ function Signup() {
 							</p>
 						)}
 
-						<p className="text-white mt-3">
+						<p className="text-white pt-3 pb-5">
 							Already having an account ?{" "}
 							<Link
 								to={inviteId ? `/login?inviteId=${inviteId}` : "/login"}
@@ -245,7 +245,7 @@ function Signup() {
 								Sign in
 							</Link>
 						</p>
-						<div className="mt-5">
+						<div>
 							{loading ? (
 								<p className=" font-medium text-[#5184f1]">
 									Creating your account please wait...
