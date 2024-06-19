@@ -143,13 +143,13 @@ function Signup() {
 					<img className="w-full h-full object-cover " src={signupImage} />
 				</div>
 
-				<div className="flex z-10 max-w-lg mx-auto flex-col justify-center text-white flex-1">
+				<div className="overflow-y-auto flex z-10 max-w-lg mx-auto flex-col justify-center text-white flex-1">
 					<h1 className="clamp2-h1 md:leading-tight font-bold">
 						Join <span className="text-[#5640eb]"> {`Let's`} chat</span> today
 						<span className="sm:text-4xl md:text-7xl">💬</span>
 					</h1>
-					<p className="clamp-p font-normal text-[#95a2b8] py-3">
-						Signup and have the best experience with your friends, family and
+					<p className="clamp-p text-center font-normal text-[#95a2b8] py-3">
+						Signup to have the best experience with your friends, family and
 						loved ones
 					</p>
 					<button
