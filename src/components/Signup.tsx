@@ -137,7 +137,7 @@ function Signup() {
 	};
 
 	return (
-		<div className="overflow-y-auto pb-5 sm:pb-0 h-screen bg-[#0F172A]">
+		<div className="overflow-y-auto min-h-screen bg-[#0F172A]">
 			<div className="flex w-full items-center h-full justify-center flex-col md:flex-row gap-10 md:gap-24 my-width">
 				<div className="hidden lg:flex flex-1 relative">
 					<img className="w-full h-full object-cover " src={signupImage} />
