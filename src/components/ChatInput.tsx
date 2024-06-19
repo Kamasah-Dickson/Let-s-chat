@@ -278,13 +278,13 @@ const ChatInput = ({ partneredChat }: IChatInput) => {
 					autoComplete="off"
 					id="message"
 					value={text}
-					className="w-full mx-auto max-h-64 py-1/2  h-[48px] py-3 overflow-y-auto rounded-md bg-transparent object-cover border-none outline-none resize-none overflow-hidden"
+					className="w-full relative mx-auto max-h-64 py-1/2  h-[48px] py-3 overflow-y-auto rounded-md bg-transparent object-cover border-none outline-none resize-none overflow-hidden"
 					placeholder="Write a message..."
 				></textarea>
 				<label
 					ref={emojiRef}
 					htmlFor="emoji"
-					className="h-12 flex items-center relative"
+					className="h-12 flex items-center"
 				>
 					<Emoji
 						emojiOpen={emojiOpen}

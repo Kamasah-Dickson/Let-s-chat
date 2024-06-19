@@ -40,6 +40,7 @@ const Emoji = ({
 		<div className="absolute bottom-16 right-0">
 			<EmojiPicker
 				open={emojiOpen}
+				height={400}
 				theme={Theme.DARK}
 				emojiStyle={EmojiStyle.APPLE}
 				onEmojiClick={handleEmojiClick}

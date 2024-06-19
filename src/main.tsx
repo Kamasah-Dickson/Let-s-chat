@@ -7,8 +7,8 @@ import Loading from "./components/Loading.tsx";
 import { createRoot } from "react-dom/client";
 
 const App = lazy(() => import("./App.tsx"));
-const Login = lazy(() => import("./components/Login.tsx"));
-const Signup = lazy(() => import("./components/Signup.tsx"));
+const Login = lazy(() => import("./pages/Login.tsx"));
+const Signup = lazy(() => import("./pages/Signup.tsx"));
 const PageNotFound = lazy(() => import("./components/PageNotFound.tsx"));
 
 const container = document.getElementById("root") as HTMLElement;

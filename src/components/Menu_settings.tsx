@@ -82,109 +82,112 @@ const Menu_settings = ({ settings }: { settings: boolean }) => {
 		(state) => state.settings
 	) as ISettings;
 	return (
-		<div
-			className={`fixed right-0 z-20 w-full flex ${
-				settings ? "translate-x-0" : "-translate-x-full"
-			} `}
-		>
-			{
-				<div
-					className={`${settings ? "translate-x-0" : "-translate-x-full"} 
+		<>
+			<div
+				className={`fixed right-0 z-20 w-full flex ${
+					settings ? "translate-x-0" : "-translate-x-full"
+				} `}
+			>
+				{
+					<div
+						className={`${settings ? "translate-x-0" : "-translate-x-full"} 
 						 "flex" : "hidden"
 					 left-0 transition-all w-full md:w-[450px] bg-sidebar_color h-screen overflow-y-auto px-2`}
-				>
-					<div className="flex items-center py-3 gap-5">
-						<Link to={"/"}>
-							<HiOutlineArrowSmLeft
-								onClick={() => dispatch(setSettings({ settings: false }))}
-								color="white"
-								size={25}
-								cursor={"pointer"}
-							/>
-						</Link>
-						<span className="text-white font-medium">Settings</span>
-					</div>
-					<User setSelectedSettings={setSelectedSettings} />
-					<div>
-						<div className=" mt-5 mb-3 flex flex-col gap-3">
-							{settingsData.map((data) => {
-								return (
-									<button
-										type="button"
-										onClick={() => {
-											const parts = data.path.split("/");
-											setSelectedSettings(parts[1] as selectedSettings);
-											dispatch(
-												setShowSettingsOnMobile({ showSettingsOnMobile: true })
-											);
-										}}
-										className={` ${
-											data.name === `${selectedSettings}` &&
-											"active bg-[rgba(255,255,255,0.06)]"
-										} 
+					>
+						<div className="flex items-center py-3 gap-5">
+							<Link to={"/"}>
+								<HiOutlineArrowSmLeft
+									onClick={() => dispatch(setSettings({ settings: false }))}
+									color="white"
+									size={25}
+									cursor={"pointer"}
+								/>
+							</Link>
+							<span className="text-white font-medium">Settings</span>
+						</div>
+						<User setSelectedSettings={setSelectedSettings} />
+						<div>
+							<div className=" mt-5 mb-3 flex flex-col gap-3">
+								{settingsData.map((data) => {
+									return (
+										<button
+											type="button"
+											onClick={() => {
+												const parts = data.path.split("/");
+												setSelectedSettings(parts[1] as selectedSettings);
+												dispatch(
+													setShowSettingsOnMobile({
+														showSettingsOnMobile: true,
+													})
+												);
+											}}
+											className={` ${
+												data.name === `${selectedSettings}` &&
+												"active bg-[rgba(255,255,255,0.06)]"
+											} 
 							 hover:bg-[rgba(255,255,255,0.06)] cursor-pointer rounded-md p-2 flex items-center text-white gap-3`}
-										key={data.id}
-									>
-										<div className="w-[20px] h-[20px]">
-											<img
-												src={data.icon}
-												className="w-full h-full"
-												alt={data.name}
-											/>
-										</div>
-										<div>
-											<p className="font-medium text-white">{data.name}</p>
-										</div>
-									</button>
-								);
-							})}
-							<div className="h-[1px] mt-3 opacity-10 w-full bg-white"></div>
-						</div>
-
-						<div
-							onClick={() => setAlert(true)}
-							className="mt-10  hover:bg-[rgba(255,255,255,0.06)] cursor-pointer rounded-md p-2 flex items-center text-white gap-3"
-						>
-							<div className="w-[20px] h-[20px]">
-								<TbLogout size={20} color="white" />
+											key={data.id}
+										>
+											<div className="w-[20px] h-[20px]">
+												<img
+													src={data.icon}
+													className="w-full h-full"
+													alt={data.name}
+												/>
+											</div>
+											<div>
+												<p className="font-medium text-white">{data.name}</p>
+											</div>
+										</button>
+									);
+								})}
+								<div className="h-[1px] mt-3 opacity-10 w-full bg-white"></div>
 							</div>
-							<div>
-								<p className="font-medium">Logout</p>
+
+							<div
+								onClick={() => setAlert(true)}
+								className="mt-10  hover:bg-[rgba(255,255,255,0.06)] cursor-pointer rounded-md p-2 flex items-center text-white gap-3"
+							>
+								<div className="w-[20px] h-[20px]">
+									<TbLogout size={20} color="white" />
+								</div>
+								<div>
+									<p className="font-medium">Logout</p>
+								</div>
 							</div>
 						</div>
 					</div>
+				}
 
-					{alert && (
-						<Modal
-							notify={"Are you sure you want to log out from this account?"}
-							setAlert={setAlert}
-							type="logout"
-						/>
+				<div
+					className={`${
+						settings
+							? " md:block md:opacity-100 md:visible"
+							: "md:opacity-0 md:invisible"
+					} transition-all ${
+						showSettingsOnMobile ? "z-30 absolute md:relative md:z-0" : "hidden"
+					} md:visible h-full w-full `}
+				>
+					{selectedSettings == "" ? (
+						<div
+							onClick={() => dispatch(setSettings({ settings: false }))}
+							className={`hidden md:flex ${
+								settings ? "opacity-100 visible" : "md:opacity-0 md:invisible"
+							} transition-all md:visible bg-[#000000a1] inset-0 h-screen w-full  `}
+						></div>
+					) : (
+						SettingsPage(selectedSettings)
 					)}
 				</div>
-			}
-
-			<div
-				className={`${
-					settings
-						? " md:block md:opacity-100 md:visible"
-						: "md:opacity-0 md:invisible"
-				} transition-all ${
-					showSettingsOnMobile ? "z-30 absolute md:relative md:z-0" : "hidden"
-				} md:visible h-full w-full `}
-			>
-				{selectedSettings == "" ? (
-					<div
-						onClick={() => dispatch(setSettings({ settings: false }))}
-						className={`hidden md:flex ${
-							settings ? "opacity-100 visible" : "md:opacity-0 md:invisible"
-						} transition-all md:visible bg-[#000000a1] inset-0 h-screen w-full  `}
-					></div>
-				) : (
-					SettingsPage(selectedSettings)
-				)}
 			</div>
-		</div>
+			{alert && (
+				<Modal
+					notify={"Are you sure you want to log out from this account?"}
+					setAlert={setAlert}
+					type="logout"
+				/>
+			)}
+		</>
 	);
 };
 
