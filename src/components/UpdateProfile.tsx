@@ -5,17 +5,13 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { updateProfile, User } from "firebase/auth";
 import toast, { Toaster } from "react-hot-toast";
 import testImg from "../assets/background.svg";
-import { HiOutlineArrowSmLeft } from "react-icons/hi";
 import { update, ref as databaseRef } from "firebase/database";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../Store/store";
-import { setToggleSettingsCategory } from "../Store/features/settingsSlice";
+import GoBackToSettings from "./GoBackToSettings";
 
 function UpdateUserProfile() {
 	const [updates, setUpdates] = useState(false);
 	const [userName, setUserName] = useState("");
 	const nameRef = useRef<HTMLInputElement | null>(null);
-	const dispatch = useDispatch<AppDispatch>();
 	useEffect(() => {
 		if (updates && nameRef.current) {
 			nameRef.current.focus();
@@ -88,17 +84,7 @@ function UpdateUserProfile() {
 		<div className="main-bg">
 			<div className="gradient py-5 h-full overflow-y-auto flex flex-col ">
 				<form className="px-4 h-full md:px-8" onSubmit={handleSubmit}>
-					<HiOutlineArrowSmLeft
-						onClick={() =>
-							dispatch(
-								setToggleSettingsCategory({ toggleSettingsCategory: false })
-							)
-						}
-						className="md:hidden m-3 flex"
-						color="white"
-						size={25}
-						cursor={"pointer"}
-					/>
+					<GoBackToSettings />
 					<h2 className="text-white py-7 md:py-10 text-3xl sm:text-4xl md:text-5xl font-semibold">
 						Update Profile
 					</h2>

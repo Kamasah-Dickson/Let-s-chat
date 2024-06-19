@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-	HiOutlineArrowSmLeft,
-	HiOutlineUser,
-	HiOutlineUserGroup,
-} from "react-icons/hi";
+import { HiOutlineUser, HiOutlineUserGroup } from "react-icons/hi";
 import { TfiAnnouncement } from "react-icons/tfi";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Modal from "./Modal";
@@ -13,7 +9,7 @@ import {
 	INotification,
 	updateNotification,
 } from "../Store/features/notificationSlice";
-import { Link } from "react-router-dom";
+import GoBackToSettings from "./GoBackToSettings";
 
 function Notifications() {
 	const [alert, setAlert] = useState(false);
@@ -60,15 +56,9 @@ function Notifications() {
 	return (
 		<div className="main-bg">
 			<div className="gradient h-full flex flex-col justify-center">
-				<div className="py-10 p-6 flex-[3] px-8 overflow-y-auto ">
+				<div className="py-10 p-5 flex-[3]  overflow-y-auto ">
 					<div className="flex items-center gap-5">
-						<Link to={"/"} className="md:hidden">
-							<HiOutlineArrowSmLeft
-								color="white"
-								size={25}
-								cursor={"pointer"}
-							/>
-						</Link>
+						<GoBackToSettings />
 						<h2 className="text-white text-3xl font-medium">Notifications</h2>
 					</div>
 					<div className="flex justify-center mt-5 flex-col gap-1">

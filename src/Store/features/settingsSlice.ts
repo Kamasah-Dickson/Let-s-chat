@@ -2,25 +2,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 export interface ISettings {
-	toggleSettingsCategory: boolean;
+	showSettingsOnMobile: boolean;
 	settings: boolean;
 }
 
 const initialState: ISettings = {
-	toggleSettingsCategory: false,
+	showSettingsOnMobile: false,
 	settings: false,
 };
 export const settingsSlice = createSlice({
 	name: "settings",
 	initialState,
 	reducers: {
-		setToggleSettingsCategory(
+		setShowSettingsOnMobile(
 			state = initialState,
-			action: PayloadAction<{ toggleSettingsCategory: boolean }>
+			action: PayloadAction<{ showSettingsOnMobile: boolean }>
 		) {
 			return {
 				...state,
-				toggleSettingsCategory: action.payload.toggleSettingsCategory,
+				showSettingsOnMobile: action.payload.showSettingsOnMobile,
 			};
 		},
 		setSettings(
@@ -36,11 +36,5 @@ export const settingsSlice = createSlice({
 });
 
 export default settingsSlice.reducer;
-export const { setSettings, setToggleSettingsCategory } = settingsSlice.actions;
+export const { setSettings, setShowSettingsOnMobile } = settingsSlice.actions;
 export const settingsState = (state: RootState) => state.settings;
-
-// export const toggleSettingsCategory = createAction<
-//   { toggleSettingsCategory: boolean }
-// >("settings/toggleSettingsCategory");
-
-// export const setSettings = createAction<{ settings: boolean }>("settings/setSettings");

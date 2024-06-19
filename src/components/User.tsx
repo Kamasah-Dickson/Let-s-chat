@@ -1,12 +1,16 @@
 import testImage from "../assets/background.svg";
 import edit from "../assets/edit.svg";
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../Store/store";
 import { auth } from "../firebase.ts";
-import { setToggleSettingsCategory } from "../Store/features/settingsSlice.ts";
+import { setShowSettingsOnMobile } from "../Store/features/settingsSlice.ts";
+import { selectedSettings } from "./Menu_settings.tsx";
 
-function User() {
+function User({
+	setSelectedSettings,
+}: {
+	setSelectedSettings: React.Dispatch<React.SetStateAction<selectedSettings>>;
+}) {
 	const dispatch = useDispatch<AppDispatch>();
 
 	return (
@@ -31,15 +35,16 @@ function User() {
 			</div>
 			<div
 				onClick={() =>
-					dispatch(setToggleSettingsCategory({ toggleSettingsCategory: true }))
+					dispatch(setShowSettingsOnMobile({ showSettingsOnMobile: true }))
 				}
 			>
-				<Link
-					to={"/profileupdate"}
+				<button
+					type="button"
+					onClick={() => setSelectedSettings("update-profile")}
 					className="w-[35px] flex items-center justify-center h-[35px] rounded-full bg-green"
 				>
 					<img src={edit} alt="" className="w-[15px] h-[15px] cursor-pointer" />
-				</Link>
+				</button>
 			</div>
 		</div>
 	);
