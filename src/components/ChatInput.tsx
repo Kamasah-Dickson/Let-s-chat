@@ -45,6 +45,12 @@ const ChatInput = ({ partneredChat }: IChatInput) => {
 		(state) => state.notification
 	) as INotification[];
 
+	useEffect(() => {
+		if (partneredChat.combinedId) {
+			textareaRef.current?.focus();
+		}
+	}, [partneredChat.combinedId]);
+
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		const { key, shiftKey } = event;
 		if (key === "Enter" && !shiftKey) {
