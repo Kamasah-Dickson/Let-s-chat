@@ -7,6 +7,7 @@ import { IChat, setShowSidebar } from "../Store/features/chatSlice";
 import ChatInput from "./ChatInput";
 import BodyChat from "./BodyChat";
 import { MdMenu } from "react-icons/md";
+import { useEffect } from "react";
 
 export type ImgType = {
 	type: Blob | MediaSource;
@@ -29,12 +30,16 @@ function Main() {
 
 	const dispatch = useDispatch<AppDispatch>();
 
+	useEffect(() => {
+		document.body.style.overflow = "hidden";
+	}, []);
+
 	return (
 		<div className="main-bg">
 			{partneredChat.user.uid ? (
 				<>
 					<Toaster />
-					<div className="gradient h-screen overflow-y-scroll flex flex-col justify-between">
+					<div className="gradient h-screen overflow-clip flex flex-col justify-between">
 						<Header_main />
 						<BodyChat messages={messages} />
 						<ChatInput partneredChat={partneredChat} />
