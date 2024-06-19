@@ -29,7 +29,7 @@ function Sidebar() {
 	return (
 		<>
 			<Menu_settings settings={settings} />
-			<div className="z-10 relative h-full border-[#191D24] border-r">
+			<div className="z-10 relative h-screen border-[#191D24] border-r">
 				<div className="shadow gradient shadow-[#00000049] flex-col sticky top-0 bg-light_brown z-10">
 					<div className="p-3">
 						<MdOutlineSettingsSuggest

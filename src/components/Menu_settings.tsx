@@ -2,7 +2,6 @@ import { useState, lazy, Suspense } from "react";
 import User from "./User";
 import { HiOutlineArrowSmLeft } from "react-icons/hi";
 import { settingsData } from "../settingsData";
-import { Link } from "react-router-dom";
 import { TbLogout } from "react-icons/tb";
 import Modal from "./Modal";
 import { AppDispatch, RootState } from "../Store/store";
@@ -84,25 +83,24 @@ const Menu_settings = ({ settings }: { settings: boolean }) => {
 	return (
 		<>
 			<div
-				className={`fixed right-0 z-20 w-full flex ${
-					settings ? "translate-x-0" : "-translate-x-full"
-				} `}
+				className={`fixed right-0 z-20 w-full flex
+					 ${settings ? "visible" : "invisible delay-200"}
+					`}
 			>
 				{
 					<div
-						className={`${settings ? "translate-x-0" : "-translate-x-full"} 
-						 "flex" : "hidden"
-					 left-0 transition-all w-full md:w-[450px] bg-sidebar_color h-screen overflow-y-auto px-2`}
+						className={`transform transition duration-150 ease-linear ${
+							settings ? "translate-x-0" : "-translate-x-full"
+						} left-0 w-full md:w-[450px] bg-sidebar_color h-screen overflow-y-auto px-2`}
 					>
 						<div className="flex items-center py-3 gap-5">
-							<Link to={"/"}>
-								<HiOutlineArrowSmLeft
-									onClick={() => dispatch(setSettings({ settings: false }))}
-									color="white"
-									size={25}
-									cursor={"pointer"}
-								/>
-							</Link>
+							<HiOutlineArrowSmLeft
+								onClick={() => dispatch(setSettings({ settings: false }))}
+								color="white"
+								className="cursor-pointer"
+								size={25}
+								cursor={"pointer"}
+							/>
 							<span className="text-white font-medium">Settings</span>
 						</div>
 						<User setSelectedSettings={setSelectedSettings} />
