@@ -137,18 +137,17 @@ function Signup() {
 	};
 
 	return (
-		<div className="overflow-y-auto min-h-screen bg-[#0F172A]">
-			<div className="flex w-full items-center h-full justify-center flex-col md:flex-row gap-10 md:gap-24 my-width">
-				<div className="hidden lg:flex flex-1 relative">
+		<div className="h-screen overflow-y-auto bg-[#0F172A]">
+			<div className="flex w-full items-center justify-center min-h-screen flex-col md:flex-row gap-10 md:gap-24 my-width">
+				<div className="hidden lg:flex flex-1 relative h-full py-5 md:p-0">
 					<img className="w-full h-full object-cover " src={signupImage} />
 				</div>
-
-				<div className="flex z-10 max-w-lg mx-auto flex-col justify-center text-white flex-1">
-					<h1 className="clamp2-h1 md:leading-tight font-bold">
+				<div className="h-screen max-w-lg mx-auto flex z-10 flex-col justify-center text-white flex-1">
+					<h1 className="clamp-h1 font-bold">
 						Join <span className="text-[#5640eb]"> {`Let's`} chat</span> today
 						<span className="sm:text-4xl md:text-7xl">💬</span>
 					</h1>
-					<p className="clamp-p text-center font-normal text-[#95a2b8] py-3">
+					<p className="clamp-p text-center sm:text-left text-[#95a2b8] py-5">
 						Signup to have the best experience with your friends, family and
 						loved ones
 					</p>
@@ -253,7 +252,6 @@ function Signup() {
 							) : (
 								<button
 									className="py-3
-								
 								active:scale-[1.02]
 								disabled:active:scale-100
 								disabled:cursor-default disabled:bg-[#8080808c] px-12 cursor-pointer font-semibold hover:bg-[#2f3dbe] bg-[#4254eb] rounded-full  transition-all"
