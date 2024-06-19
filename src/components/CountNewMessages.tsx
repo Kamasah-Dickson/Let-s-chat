@@ -5,6 +5,7 @@ import { IChat } from "../Store/features/chatSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../Store/store";
 import newMessageSound from "../new-notification.mp3";
+import { INotification } from "../Store/features/notificationSlice";
 
 const CountNewMessages = ({ uid }: { uid: string }) => {
 	const [newMessageCount, setNewMessageCount] = useState(0);
@@ -12,14 +13,24 @@ const CountNewMessages = ({ uid }: { uid: string }) => {
 		(state) => state.chat
 	) as IChat;
 
+	const notificationSettings = useSelector<RootState>(
+		(state) => state.notification
+	) as INotification[];
+
 	useEffect(() => {
 		let playedOnce = false;
-
-		if (!playedOnce && newMessageCount > 0) {
-			new Audio(newMessageSound).play();
-			playedOnce = true;
+		const inAppSound = notificationSettings?.find(
+			(settings: INotification) => settings.name === "inAppSound"
+		);
+		if (inAppSound) {
+			if (!playedOnce && newMessageCount > 0) {
+				if (inAppSound) {
+					inAppSound.value && new Audio(newMessageSound).play();
+					playedOnce = true;
+				}
+			}
 		}
-	}, [newMessageCount]);
+	}, [newMessageCount, notificationSettings]);
 
 	useEffect(() => {
 		const combinedId = [uid, auth.currentUser?.uid].sort().join("_");

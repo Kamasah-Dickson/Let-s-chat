@@ -19,6 +19,9 @@ import {
 } from "firebase/database";
 import Emoji from "./EmojiPicker";
 import sentNotificationSound from "../message-sent.mp3";
+import { RootState } from "../Store/store";
+import { useSelector } from "react-redux";
+import { INotification } from "../Store/features/notificationSlice";
 
 interface IChatInput {
 	partneredChat: {
@@ -38,33 +41,34 @@ const ChatInput = ({ partneredChat }: IChatInput) => {
 	const [emojiOpen, setEmojiOpen] = useState(false);
 	const emojiRef = useRef<HTMLLabelElement | null>(null);
 	const currentUserId = auth?.currentUser?.uid;
+	const notificationSettings = useSelector<RootState>(
+		(state) => state.notification
+	) as INotification[];
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		const { key, shiftKey } = event;
-
-		if (key === "Enter") {
-			event.preventDefault(); //prevent default line breaks
+		if (key === "Enter" && !shiftKey) {
 			handleSend();
-			if (shiftKey) {
-				const textAreaInput = textareaRef.current;
-				if (textAreaInput) {
-					const start = textAreaInput.selectionStart as number;
-					const end = textAreaInput.selectionEnd as number;
-					const value = textAreaInput.value;
-					const newValue = `${value.substring(0, start)}\n${value.substring(
-						end
-					)}`;
-					setText(newValue);
-					textAreaInput.selectionStart = textAreaInput.selectionEnd = start + 1;
-					textAreaInput.style.height = `${textAreaInput.scrollHeight}px`;
+			event.preventDefault(); //prevent default line breaks
+		} else if (shiftKey && key === "Enter") {
+			const textAreaInput = textareaRef.current;
+			if (textAreaInput) {
+				const start = textAreaInput.selectionStart as number;
+				const end = textAreaInput.selectionEnd as number;
+				const value = textAreaInput.value;
+				const newValue = `${value.substring(0, start)}\n${value.substring(
+					end
+				)}`;
+				setText(newValue);
+				textAreaInput.selectionStart = textAreaInput.selectionEnd = start + 1;
+				textAreaInput.style.height = `auto`;
 
-					setTimeout(() => {
-						if (textAreaInput) {
-							textAreaInput.style.height = `${textAreaInput.scrollHeight}px`;
-						}
-					}, 0);
-					!isSending && textareaRef?.current?.focus();
-				}
+				setTimeout(() => {
+					if (textAreaInput) {
+						textAreaInput.style.height = `${textAreaInput.scrollHeight}px`;
+					}
+				}, 0);
+				!isSending && textareaRef?.current?.focus();
 			}
 		}
 	};
@@ -150,7 +154,12 @@ const ChatInput = ({ partneredChat }: IChatInput) => {
 					const newMessageRef = push(userRef);
 					await set(newMessageRef, message);
 
-					new Audio(sentNotificationSound).play();
+					const inAppSound = notificationSettings.find(
+						(settings) => settings.name === "inAppSound"
+					);
+					if (inAppSound) {
+						inAppSound.value && new Audio(sentNotificationSound).play();
+					}
 					setText("");
 				}
 			);
@@ -169,7 +178,12 @@ const ChatInput = ({ partneredChat }: IChatInput) => {
 				const messageRef = push(userRef);
 				await set(messageRef, message);
 
-				new Audio(sentNotificationSound).play();
+				const inAppSound = notificationSettings.find(
+					(settings) => settings.name === "inAppSound"
+				);
+				if (inAppSound) {
+					inAppSound.value && new Audio(sentNotificationSound).play();
+				}
 				setText("");
 			} catch (error) {
 				console.error("Error saving text message:", error);

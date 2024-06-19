@@ -138,12 +138,8 @@ const SingleChatContact = ({
 				<div className="flex px-3 py-3 flex-col justify-center gap-3 w-full">
 					{(!contactsChat || contactsChat.length === 0) &&
 						SearchedUsers.length === 0 && (
-							<p className="text-white text-md">
-								You currently have no contacts please search for friends e.g
-								<span className="text-[#6044db] font-medium">
-									{" "}
-									Kamasah Dickson
-								</span>
+							<p className="text-gray-500 text-center text-md">
+								You currently have no contacts
 							</p>
 						)}
 					{loading && !error && (
