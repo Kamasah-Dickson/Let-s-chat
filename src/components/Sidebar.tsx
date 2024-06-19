@@ -85,13 +85,8 @@ function Sidebar() {
 							Invite Someone
 						</button>
 					)}
-					<div
-						className={`md:${
-							contactsChat?.length >= 1 && chat?.length >= 1 ? "flex" : "hidden"
-						}`}
-					>
+				
 						<Search activeTab={activeTab} />
-					</div>
 				</div>
 				{activeTab === "community" && <Community />}
 				{activeTab === "contacts" && (
