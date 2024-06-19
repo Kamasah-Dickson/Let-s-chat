@@ -66,7 +66,7 @@ const CountNewMessages = ({ uid }: { uid: string }) => {
 	}, [partneredChat, showSidebar, uid]);
 	return (
 		newMessageCount >= 1 && (
-			<span className="text-xs text-white bg-blue font-medium rounded-full p-1 aspect-square flex items-center justify-center text-center">
+			<span className="text-xs text-white bg-blue font-medium rounded-full p-1 aspect-square h-5 w-auto flex items-center justify-center text-center">
 				{newMessageCount}
 			</span>
 		)
