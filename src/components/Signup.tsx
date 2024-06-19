@@ -139,7 +139,7 @@ function Signup() {
 	return (
 		<div className="h-screen overflow-y-scroll flex w-full items-center justify-center bg-[#0F172A]">
 			<div className=" py-7 md:py-0 flex max-h-screen  items-center flex-col md:flex-row gap-10 md:gap-24 my-width">
-				<div className="flex-1 relative h-full py-5 md:p-0">
+				<div className="hidden md:flex flex-1 relative h-full py-5 md:p-0">
 					<img className="w-full h-full object-cover " src={signupImage} />
 				</div>
 
