@@ -16,7 +16,7 @@ function Sidebar() {
 	const [activeTab, setActiveTab] = useState<"community" | "contacts">(
 		"community"
 	);
-	const { contactsChat, chat } = useSelector<RootState>(
+	const { contactsChat } = useSelector<RootState>(
 		(state) => state.chat
 	) as IChat;
 	const dispatch = useDispatch<AppDispatch>();
