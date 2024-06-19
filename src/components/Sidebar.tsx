@@ -85,8 +85,8 @@ function Sidebar() {
 							Invite Someone
 						</button>
 					)}
-				
-					 	 <Search activeTab={activeTab} />
+
+					<Search activeTab={activeTab} />
 				</div>
 				{activeTab === "community" && <Community />}
 				{activeTab === "contacts" && (
