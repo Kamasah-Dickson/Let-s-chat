@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { HashLoader } from "react-spinners";
 import { ref, update } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
+import { send as emailSend } from "@emailjs/browser";
 
 type IModal =
 	| {
@@ -25,7 +26,8 @@ function Modal({ setAlert, notify, type }: IModal) {
 	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [name, setName] = useState("");
-	const [loading] = useState(false);
+	const [loading, setLoading] = useState(false);
+
 	function handleClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 		if (e.target === overlayRef.current) {
 			setAlert(false);
@@ -46,43 +48,46 @@ function Modal({ setAlert, notify, type }: IModal) {
 			auth.signOut();
 			navigate("/login");
 		} else if (type === "invite") {
-			console.log(import.meta?.env?.VITE_EMAILJS_PUBLIC_KEY);
-			// setLoading(true);
-			// emailSend(
-			// 	import.meta?.env?.VITE_EMAILJS_SERVICE_ID,
-			// 	import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-			// 	{
-			// 		from_name: "lets-chat💬",
-			// 		from_email: auth.currentUser?.email,
-			// 		to_email: email,
-			// 		to_name: name,
-			// 		message: `You have been invited by ${
-			// 			auth.currentUser?.displayName
-			// 		} to join let's-chat as a friend. Click the link to accept the invitation ${
-			// 			import.meta.env.VITE_WEBSITE_URL
-			// 		}/signup?inviteId=${auth?.currentUser?.uid}`,
-			// 	},
-			// 	import.meta?.env?.VITE_EMAILJS_PUBLIC_KEY
-			// )
-			// 	.then(
-			// 		(response) => {
-			// 			if (response.status == 200) {
-			// 				toast.success("invite has been sent");
-			// 				setLoading(false);
-			// 			}
-			// 		},
-			// 		(error) => {
-			// 			console.log(error);
-			// 			setLoading(false);
-			// 			toast.error("Something went wrong");
-			// 		}
-			// 	)
-			// 	.finally(() => {
-			// 		setAlert(false);
-			// 	});
+			setLoading(true);
+			emailSend(
+				import.meta.env.VITE_EMAILJS_SERVICE_ID,
+				import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+				{
+					from_name: "lets-chat💬",
+					from_email: auth.currentUser?.email,
+					to_email: email,
+					to_name: name,
+					message: `You have been invited by ${
+						auth.currentUser?.displayName
+					} to join let's-chat as a friend. Click the link to accept the invitation ${
+						import.meta.env.VITE_WEBSITE_URL
+					}/signup?inviteId=${auth?.currentUser?.uid}`,
+				},
+				import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+			)
+				.then(
+					(response) => {
+						if (response.status == 200) {
+							toast.success("invite has been sent");
+							setLoading(false);
+						}
+					},
+					(error) => {
+						console.log(error);
+						setLoading(false);
+						toast.error("Something went wrong");
+					}
+				)
+				.finally(() => {
+					setAlert(false);
+				});
 		}
 	};
 
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		modalAction();
+	};
 	return type == "logout" ? (
 		<div
 			ref={overlayRef}
@@ -121,7 +126,7 @@ function Modal({ setAlert, notify, type }: IModal) {
 			className="z-50 cursor-pointer absolute bg-[#000000c2] top-0 left-0 h-screen flex items-center w-full"
 		>
 			<form
-				onSubmit={modalAction}
+				onSubmit={(e) => handleSubmit(e)}
 				className="flex justify-between gap-5 bg-slate-900 cursor-default my-max p-6 sm:p-10 rounded-md text-white"
 			>
 				<div className="flex gap-2 w-full">
@@ -144,7 +149,6 @@ function Modal({ setAlert, notify, type }: IModal) {
 				</div>
 				<div className="flex flex-col gap-2">
 					<button
-						onClick={modalAction}
 						disabled={!email || loading}
 						className=" disabled:bg-blue/30 enabled:cursor-pointer disabled:cursor-not-allowed transition text-md rounded cursor-pointer bg-blue/90 active:bg-blue p-1 px-10"
 						type="submit"
