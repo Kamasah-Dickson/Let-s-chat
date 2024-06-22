@@ -102,7 +102,7 @@ const BodyChat = ({ messages }: IBodyChat) => {
 					/>
 				))
 			) : (
-				<span className="flex-1 text-center text-lg font-medium text-gray-400 w-full grid place-content-center">
+				<span className="h-full text-center text-lg font-medium overflow-clip text-gray-400 w-full grid place-content-center">
 					There are no messages yet. Be the first to say hi! 😀
 				</span>
 			)}
