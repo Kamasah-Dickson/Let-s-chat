@@ -235,12 +235,13 @@ const ChatInput = ({ partneredChat }: IChatInput) => {
 	}, []);
 
 	return (
-		<div className={`sticky bottom-7 mx-5`}>
+		<div className={`sticky mx-5`}>
+			{/* <div className={`sticky bottom-7 mx-5`}> */}
 			{img && (
 				<div className="px-5">
 					<div
 						className="
-                    flex gap-5 p-3 w-full  h-72 rounded-tr-md rounded-tl-md -mb-1 flex-col justify-center shadow shadow-[#0000004f] bg-[#2E323C]"
+                    flex gap-5 p-3 w-full h-72 rounded-tr-md rounded-tl-md -mb-1 flex-col justify-center shadow shadow-[#0000004f] bg-[#2E323C]"
 					>
 						<div className="h-auto w-96 rounded-md relative flex gap-2">
 							<div>
