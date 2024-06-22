@@ -1,4 +1,4 @@
-import Header_main from "./Header_main";
+// import Header_main from "./Header_main";
 
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,8 +34,8 @@ function Main() {
 			{partneredChat.user.uid ? (
 				<>
 					<Toaster />
-					<div className="gradient h-full flex flex-col justify-between">
-						<Header_main />
+					<div className="gradient h-screen flex flex-col justify-between">
+						{/* <Header_main /> */}
 						<BodyChat messages={messages} />
 						<ChatInput partneredChat={partneredChat} />
 					</div>
