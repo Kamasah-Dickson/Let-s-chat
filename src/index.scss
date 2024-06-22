@@ -6,6 +6,7 @@
 
 @layer utilities {
 	* {
+		margin: 0 !important;
 		&::selection {
 			background-color: #0f80d7;
 			color: white;
