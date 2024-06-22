@@ -31,7 +31,7 @@ function Main() {
 	return (
 		<>
 			<Toaster />
-			<div className="main-bg overflow-hidden">
+			<div className="main-bg">
 				{partneredChat.user.uid ? (
 					<div className="gradient h-screen flex flex-col justify-center">
 						<Header_main />
