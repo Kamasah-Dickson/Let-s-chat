@@ -4,7 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../Store/store";
 import { IChat, setShowSidebar } from "../Store/features/chatSlice";
-import ChatInput from "./ChatInput";
+// import ChatInput from "./ChatInput";
 import BodyChat from "./BodyChat";
 import { MdMenu } from "react-icons/md";
 
@@ -37,7 +37,7 @@ function Main() {
 					<div className="gradient h-screen flex flex-col justify-between">
 						{/* <Header_main /> */}
 						<BodyChat messages={messages} />
-						<ChatInput partneredChat={partneredChat} />
+						{/* <ChatInput partneredChat={partneredChat} /> */}
 					</div>
 				</>
 			) : (
