@@ -7,6 +7,7 @@ import { IChat, setShowSidebar } from "../Store/features/chatSlice";
 import ChatInput from "./ChatInput";
 import { MdMenu } from "react-icons/md";
 import { useEffect } from "react";
+import BodyChat from "./BodyChat";
 
 export type ImgType = {
 	type: Blob | MediaSource;
@@ -23,7 +24,7 @@ export interface IMessage {
 	isNew: boolean;
 }
 function Main() {
-	const { partneredChat } = useSelector<RootState>(
+	const { messages, partneredChat } = useSelector<RootState>(
 		(state) => state.chat
 	) as IChat;
 
@@ -40,7 +41,7 @@ function Main() {
 					<Toaster />
 					<div className="gradient h-screen flex flex-col overflow-y-clip justify-between">
 						<Header_main />
-						{/* <BodyChat messages={messages} /> */}
+						<BodyChat messages={messages} />
 						<ChatInput partneredChat={partneredChat} />
 					</div>
 				</>
