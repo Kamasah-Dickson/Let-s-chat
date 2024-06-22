@@ -34,7 +34,7 @@ function Main() {
 			<Toaster />
 			<div className="main-bg">
 				{partneredChat.user.uid ? (
-					<div className="gradient h-screen flex flex-col justify-between">
+					<div className="gradient h-screen overflow-y-hidden flex flex-col justify-between">
 						<Header_main />
 						<BodyChat messages={messages} />
 						<ChatInput partneredChat={partneredChat} />
