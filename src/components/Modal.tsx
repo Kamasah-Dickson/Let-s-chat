@@ -3,7 +3,6 @@ import { TbAlertTriangleFilled } from "react-icons/tb";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import { RiLinkM } from "react-icons/ri";
-import { send as emailSend } from "@emailjs/browser";
 import toast from "react-hot-toast";
 import { HashLoader } from "react-spinners";
 import { ref, update } from "firebase/database";
