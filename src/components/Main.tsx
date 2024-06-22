@@ -1,11 +1,12 @@
 import Header_main from "./Header_main";
+
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../Store/store";
 import { IChat, setShowSidebar } from "../Store/features/chatSlice";
 import ChatInput from "./ChatInput";
-// import BodyChat from "./BodyChat";
 import { MdMenu } from "react-icons/md";
+import { useEffect } from "react";
 
 export type ImgType = {
 	type: Blob | MediaSource;
@@ -28,12 +29,16 @@ function Main() {
 
 	const dispatch = useDispatch<AppDispatch>();
 
+	useEffect(() => {
+		document.body.style.overflowY = "hidden";
+	}, []);
+
 	return (
 		<div className="main-bg">
 			{partneredChat.user.uid ? (
 				<>
 					<Toaster />
-					<div className="gradient h-screen flex flex-col justify-between">
+					<div className="gradient h-screen flex flex-col overflow-y-clip justify-between">
 						<Header_main />
 						{/* <BodyChat messages={messages} /> */}
 						<ChatInput partneredChat={partneredChat} />
