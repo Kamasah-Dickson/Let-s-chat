@@ -1,11 +1,10 @@
-// import Header_main from "./Header_main";
-
+import Header_main from "./Header_main";
 import { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../Store/store";
 import { IChat, setShowSidebar } from "../Store/features/chatSlice";
-// import ChatInput from "./ChatInput";
-import BodyChat from "./BodyChat";
+import ChatInput from "./ChatInput";
+// import BodyChat from "./BodyChat";
 import { MdMenu } from "react-icons/md";
 
 export type ImgType = {
@@ -23,7 +22,7 @@ export interface IMessage {
 	isNew: boolean;
 }
 function Main() {
-	const { messages, partneredChat } = useSelector<RootState>(
+	const { partneredChat } = useSelector<RootState>(
 		(state) => state.chat
 	) as IChat;
 
@@ -35,9 +34,9 @@ function Main() {
 				<>
 					<Toaster />
 					<div className="gradient h-screen flex flex-col justify-between">
-						{/* <Header_main /> */}
-						<BodyChat messages={messages} />
-						{/* <ChatInput partneredChat={partneredChat} /> */}
+						<Header_main />
+						{/* <BodyChat messages={messages} /> */}
+						<ChatInput partneredChat={partneredChat} />
 					</div>
 				</>
 			) : (
