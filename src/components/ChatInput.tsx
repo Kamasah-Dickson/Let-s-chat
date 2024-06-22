@@ -235,7 +235,7 @@ const ChatInput = ({ partneredChat }: IChatInput) => {
 	}, []);
 
 	return (
-		<div className={`sticky bottom-7 mt-5 mx-5`}>
+		<div className={`sticky bottom-7 mx-5`}>
 			{img && (
 				<div className="px-5">
 					<div
