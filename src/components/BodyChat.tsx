@@ -91,8 +91,7 @@ const BodyChat = ({ messages }: IBodyChat) => {
 			onClick={() =>
 				dispatch({ type: "setOptions", payload: { options: false } })
 			}
-			className="h-full"
-			// className="flex flex-col mt-3 gap-7 py-2 px-5 flex-1 overflow-y-auto h-full"
+			className="flex flex-col mt-3 gap-7 py-2 px-5 flex-1 overflow-y-auto h-full"
 		>
 			{messages.length >= 1 ? (
 				messages.map((message: IMessage, index) => (
