@@ -91,7 +91,7 @@ const BodyChat = ({ messages }: IBodyChat) => {
 			onClick={() =>
 				dispatch({ type: "setOptions", payload: { options: false } })
 			}
-			className="flex h-full flex-col flex-1 overflow-y-auto"
+			className="flex h-full p-5 flex-col flex-1 overflow-y-auto"
 		>
 			{messages.length >= 1 ? (
 				messages.map((message: IMessage, index) => (
@@ -102,7 +102,7 @@ const BodyChat = ({ messages }: IBodyChat) => {
 					/>
 				))
 			) : (
-				<span className="h-full text-center text-lg font-medium text-gray-400 w-full grid place-content-center">
+				<span className="h-full p-5 text-center text-lg font-medium text-gray-400 w-full grid place-content-center">
 					There are no messages yet. Be the first to say hi! 😀
 				</span>
 			)}
