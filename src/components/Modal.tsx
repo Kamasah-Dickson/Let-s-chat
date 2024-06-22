@@ -137,6 +137,7 @@ function Modal({ setAlert, notify, type }: IModal) {
 							className="w-full h-8 placeholder:text-sm rounded-md text-white bg-white/10 border-none outline-none px-2"
 							type="text"
 							placeholder="Email Of Friend"
+							required
 						/>
 						<input
 							onChange={(e) => setName(e.target.value)}
