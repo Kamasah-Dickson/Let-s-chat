@@ -26,7 +26,7 @@ function Modal({ setAlert, notify, type }: IModal) {
 	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [name, setName] = useState("");
-	const [loading, setLoading] = useState(false);
+	const [loading] = useState(false);
 	function handleClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 		if (e.target === overlayRef.current) {
 			setAlert(false);
