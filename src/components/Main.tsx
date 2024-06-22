@@ -30,33 +30,33 @@ function Main() {
 	const dispatch = useDispatch<AppDispatch>();
 
 	return (
-		<div className="main-bg">
-			{partneredChat.user.uid ? (
-				<>
-					<Toaster />
-					<div className="gradient h-screen flex flex-col overflow-y-clip justify-between">
+		<>
+			<Toaster />
+			<div className="main-bg">
+				{partneredChat.user.uid ? (
+					<div className="gradient h-screen gap-5 flex flex-col justify-between">
 						<Header_main />
 						<BodyChat messages={messages} />
 						<ChatInput partneredChat={partneredChat} />
 					</div>
-				</>
-			) : (
-				<>
-					<div className="flex h-full items-center justify-center">
-						<MdMenu
-							onClick={() => dispatch(setShowSidebar({ showSidebar: true }))}
-							cursor={"pointer"}
-							size={25}
-							className="absolute text-white/80 active:scale-[1.02] hover:text-white transition top-5 left-5"
-						/>
-						<h1 className="flex items-center  justify-center bg-[#0000003b] py-1 px-4 rounded-3xl text-white">
-							Select a chat to start messaging{" "}
-							<span className="text-2xl">💬</span>
-						</h1>
-					</div>
-				</>
-			)}
-		</div>
+				) : (
+					<>
+						<div className="flex h-full items-center justify-center">
+							<MdMenu
+								onClick={() => dispatch(setShowSidebar({ showSidebar: true }))}
+								cursor={"pointer"}
+								size={25}
+								className="absolute text-white/80 active:scale-[1.02] hover:text-white transition top-5 left-5"
+							/>
+							<h1 className="flex items-center  justify-center bg-[#0000003b] py-1 px-4 rounded-3xl text-white">
+								Select a chat to start messaging{" "}
+								<span className="text-2xl">💬</span>
+							</h1>
+						</div>
+					</>
+				)}
+			</div>
+		</>
 	);
 }
 
