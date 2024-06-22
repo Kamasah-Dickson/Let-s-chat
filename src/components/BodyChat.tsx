@@ -91,23 +91,21 @@ const BodyChat = ({ messages }: IBodyChat) => {
 			onClick={() =>
 				dispatch({ type: "setOptions", payload: { options: false } })
 			}
-			className="h-full overflow-hidden"
+			className="h-full flex p-5 flex-col overflow-auto gap-5"
 		>
-			<div className="flex p-5 flex-col h-full overflow-auto gap-5">
-				{messages.length >= 1 ? (
-					messages.map((message: IMessage, index) => (
-						<Message
-							key={message.id}
-							message={message}
-							isNew={index === messages.length - 1}
-						/>
-					))
-				) : (
-					<span className="flex-1 h-full overflow-hidden text-center text-lg font-medium text-gray-400 w-full grid place-content-center">
-						There are no messages yet. Be the first to say hi! 😀
-					</span>
-				)}
-			</div>
+			{messages.length >= 1 ? (
+				messages.map((message: IMessage, index) => (
+					<Message
+						key={message.id}
+						message={message}
+						isNew={index === messages.length - 1}
+					/>
+				))
+			) : (
+				<span className="flex-1 h-full overflow-hidden text-center text-lg font-medium text-gray-400 w-full grid place-content-center">
+					There are no messages yet. Be the first to say hi! 😀
+				</span>
+			)}
 
 			<div ref={scrollRef}></div>
 
