@@ -40,7 +40,9 @@ function Header_main() {
 	}, [dispatch]);
 
 	return (
-		<div className="sticky top-0 left-0 bg-[#232733] border-[#191D24] border-b px-5 flex transition-colors p-3 sm:p-2 items-center gap-5 w-full">
+		<div
+		// className="sticky top-0 left-0 bg-[#232733] border-[#191D24] border-b px-5 flex transition-colors p-3 sm:p-2 items-center gap-5 w-full"
+		>
 			<HiOutlineArrowSmLeft
 				onClick={() => dispatch(setShowSidebar({ showSidebar: true }))}
 				className="md:hidden flex"
