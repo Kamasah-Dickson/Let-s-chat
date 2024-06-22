@@ -86,41 +86,43 @@ const BodyChat = ({ messages }: IBodyChat) => {
 	}, [dispatch, partneredChat.combinedId]);
 
 	return (
-		<div
-			ref={mainRef}
-			onClick={() =>
-				dispatch({ type: "setOptions", payload: { options: false } })
-			}
-			className="flex h-full p-5 flex-col flex-1 overflow-y-auto"
-		>
-			{messages.length >= 1 ? (
-				messages.map((message: IMessage, index) => (
-					<Message
-						key={message.id}
-						message={message}
-						isNew={index === messages.length - 1}
-					/>
-				))
-			) : (
-				<span className="h-full p-5 text-center text-lg font-medium text-gray-400 w-full grid place-content-center">
-					There are no messages yet. Be the first to say hi! 😀
-				</span>
-			)}
+		<div className="overflow-hidden h-full">
+			<div
+				ref={mainRef}
+				onClick={() =>
+					dispatch({ type: "setOptions", payload: { options: false } })
+				}
+				className="flex h-full p-5 flex-col flex-1 overflow-y-auto"
+			>
+				{messages.length >= 1 ? (
+					messages.map((message: IMessage, index) => (
+						<Message
+							key={message.id}
+							message={message}
+							isNew={index === messages.length - 1}
+						/>
+					))
+				) : (
+					<span className="h-full p-5 text-center text-lg font-medium text-gray-400 w-full grid place-content-center">
+						There are no messages yet. Be the first to say hi! 😀
+					</span>
+				)}
 
-			<div ref={scrollRef}></div>
+				<div ref={scrollRef}></div>
 
-			{scroller && (
-				<button
-					type="button"
-					onClick={scrollToBottom}
-					className="fixed bottom-32 right-10 z-50"
-				>
-					<BsArrowDownCircleFill
-						size={25}
-						className="text-[#ffffff80] hover:text-white"
-					/>
-				</button>
-			)}
+				{scroller && (
+					<button
+						type="button"
+						onClick={scrollToBottom}
+						className="fixed bottom-32 right-10 z-50"
+					>
+						<BsArrowDownCircleFill
+							size={25}
+							className="text-[#ffffff80] hover:text-white"
+						/>
+					</button>
+				)}
+			</div>
 		</div>
 	);
 };
