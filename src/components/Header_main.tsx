@@ -41,7 +41,7 @@ function Header_main() {
 
 	return (
 		<div
-			className="bg-[#232733] border-[#191D24] border-b px-5 flex transition-colors p-3 sm:p-2 items-center gap-5 w-full"
+			className="flex-1 bg-[#232733] border-[#191D24] border-b px-5 flex transition-colors p-3 sm:p-2 items-center gap-5 w-full"
 			// className="position sticky top-0 left-0 bg-[#232733] border-[#191D24] border-b px-5 flex transition-colors p-3 sm:p-2 items-center gap-5 w-full"
 		>
 			<HiOutlineArrowSmLeft
