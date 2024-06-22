@@ -47,39 +47,40 @@ function Modal({ setAlert, notify, type }: IModal) {
 			auth.signOut();
 			navigate("/login");
 		} else if (type === "invite") {
-			setLoading(true);
-			emailSend(
-				import.meta?.env?.VITE_EMAILJS_SERVICE_ID,
-				import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-				{
-					from_name: "lets-chat💬",
-					from_email: auth.currentUser?.email,
-					to_email: email,
-					to_name: name,
-					message: `You have been invited by ${
-						auth.currentUser?.displayName
-					} to join let's-chat as a friend. Click the link to accept the invitation ${
-						import.meta.env.VITE_WEBSITE_URL
-					}/signup?inviteId=${auth?.currentUser?.uid}`,
-				},
-				import.meta?.env?.VITE_EMAILJS_PUBLIC_KEY
-			)
-				.then(
-					(response) => {
-						if (response.status == 200) {
-							toast.success("invite has been sent");
-							setLoading(false);
-						}
-					},
-					(error) => {
-						console.log(error);
-						setLoading(false);
-						toast.error("Something went wrong");
-					}
-				)
-				.finally(() => {
-					setAlert(false); //remove modal
-				});
+			console.log(import.meta?.env?.VITE_EMAILJS_PUBLIC_KEY);
+			// setLoading(true);
+			// emailSend(
+			// 	import.meta?.env?.VITE_EMAILJS_SERVICE_ID,
+			// 	import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+			// 	{
+			// 		from_name: "lets-chat💬",
+			// 		from_email: auth.currentUser?.email,
+			// 		to_email: email,
+			// 		to_name: name,
+			// 		message: `You have been invited by ${
+			// 			auth.currentUser?.displayName
+			// 		} to join let's-chat as a friend. Click the link to accept the invitation ${
+			// 			import.meta.env.VITE_WEBSITE_URL
+			// 		}/signup?inviteId=${auth?.currentUser?.uid}`,
+			// 	},
+			// 	import.meta?.env?.VITE_EMAILJS_PUBLIC_KEY
+			// )
+			// 	.then(
+			// 		(response) => {
+			// 			if (response.status == 200) {
+			// 				toast.success("invite has been sent");
+			// 				setLoading(false);
+			// 			}
+			// 		},
+			// 		(error) => {
+			// 			console.log(error);
+			// 			setLoading(false);
+			// 			toast.error("Something went wrong");
+			// 		}
+			// 	)
+			// 	.finally(() => {
+			// 		setAlert(false);
+			// 	});
 		}
 	};
 
