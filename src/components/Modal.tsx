@@ -152,7 +152,12 @@ function Modal({ setAlert, notify, type }: IModal) {
 						{loading ? <HashLoader color="white" size={25} /> : "Invite"}
 					</button>
 					<button
-						onClick={() => navigator.clipboard.writeText(email)}
+						type="button"
+						onClick={() => (
+							navigator.clipboard.writeText(email),
+							toast.success("Link Copied"),
+							setAlert(false)
+						)}
 						className="flex active:bg-gray-800 cursor-pointer transition text-sm gap-1 items-center bg-gray-800/80 p-2 rounded-md w-full"
 					>
 						<RiLinkM size={20} color="white" />

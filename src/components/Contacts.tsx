@@ -2,15 +2,8 @@ import { useSelector } from "react-redux";
 import SingleChatContact from "./SingleChatContact";
 import { RootState } from "../Store/store";
 import { IChat } from "../Store/features/chatSlice";
-import Modal from "./Modal";
 
-const Contacts = ({
-	showModal,
-	setShowModal,
-}: {
-	showModal: boolean;
-	setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+const Contacts = () => {
 	const { contactsChat, partneredChat, searchedUsers } = useSelector<RootState>(
 		(state) => state.chat
 	) as IChat;
@@ -21,7 +14,6 @@ const Contacts = ({
 				partneredChat={partneredChat}
 				searchedUsers={searchedUsers}
 			/>
-			{showModal && <Modal type="invite" setAlert={setShowModal} />}
 		</>
 	);
 };

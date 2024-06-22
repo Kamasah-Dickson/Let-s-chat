@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { IChat } from "../Store/features/chatSlice";
 import Contacts from "./Contacts";
 import Community from "./Community";
+import Modal from "./Modal";
 
 function Sidebar() {
 	const { settings } = useSelector<RootState>(
@@ -89,10 +90,9 @@ function Sidebar() {
 					<Search activeTab={activeTab} />
 				</div>
 				{activeTab === "community" && <Community />}
-				{activeTab === "contacts" && (
-					<Contacts showModal={showModal} setShowModal={setShowModal} />
-				)}
+				{activeTab === "contacts" && <Contacts />}
 			</div>
+			{showModal && <Modal type="invite" setAlert={setShowModal} />}
 		</>
 	);
 }
