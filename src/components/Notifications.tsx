@@ -55,7 +55,7 @@ function Notifications() {
 
 	return (
 		<div className="main-bg">
-			<div className="gradient h-full flex flex-col justify-center">
+			<div className="gradient h-screen flex flex-col justify-center">
 				<div className="py-10 p-5 flex-[3]  overflow-y-auto ">
 					<div className="flex items-center gap-5">
 						<GoBackToSettings />

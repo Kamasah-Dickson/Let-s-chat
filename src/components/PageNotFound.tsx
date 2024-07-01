@@ -4,7 +4,7 @@ export default function PageNotFound() {
 	return (
 		<div className="h-screen flex items-center justify-center flex-col">
 			<span className="text-7xl mb-5">💬</span>
-			<h1 className="text-3xl text-center md:text-4xl font-medium text-white mb-5">
+			<h1 className="text-3xl text-center md:text-4xl font-medium text-black mb-5">
 				Oops Page Not Found🚧
 			</h1>
 			<Link
